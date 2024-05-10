@@ -1,3 +1,5 @@
 package merail.life.mejourney.data
 
-class HomeItem
+data class HomeItem(
+    val url: String = "",
+)

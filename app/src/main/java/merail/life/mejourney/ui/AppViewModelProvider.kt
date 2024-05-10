@@ -11,8 +11,11 @@ object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             HomeViewModel(
+                firebaseAuthRepository = mejourneyApplication()
+                    .authContainer
+                    .firebaseAuthRepository,
                 firebaseStorageRepository = mejourneyApplication()
-                    .container
+                    .dataContainer
                     .firebaseStorageRepository,
             )
         }
