@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.SubcomposeAsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.data.HomeItem
 import merail.life.mejourney.navigation.NavigationDestination
@@ -66,13 +67,32 @@ private fun Error(
 private fun MainList(
     items: ImmutableList<HomeItem>,
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
         items(items) {
-            Text(
-                text = it.url,
+            SubcomposeAsyncImage(
+                model = it.url,
+                contentDescription = null,
+                loading = {
+                    ImageLoading()
+                },
                 modifier = Modifier
                     .padding(12.dp),
             )
         }
+    }
+}
+
+@Composable
+private fun ImageLoading() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(64.dp),
+    ) {
+        CircularProgressIndicator()
     }
 }
