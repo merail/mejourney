@@ -13,18 +13,36 @@ class FirebaseStorageRepository(
         private const val TAG = "FirebaseStorageRepository"
 
         private const val BUCKET_REFERENCE = "gs://mejourney-c86ca.appspot.com"
-
-        private const val FOLDER_NAME = "main"
     }
 
     private val storageReference = firebaseStorage.getReferenceFromUrl(BUCKET_REFERENCE)
 
-    private val mainFolderReference = storageReference.child(FOLDER_NAME)
+    override suspend fun getItems(
+        folderName: String,
+    ): List<HomeItem> = storageReference
+        .child(folderName)
+        .listAll()
+        .addOnFailureListener {
+            Log.w(TAG, "Getting $folderName folder from Firebase Storage. Failure")
+        }
+        .addOnSuccessListener {
+            Log.d(TAG, "Getting $folderName folder from Firebase Storage. Success")
+        }
+        .await()
+        .items
+        .map {
+            getItem(
+                folderName = folderName,
+                fileName = it.name,
+            )
+        }
 
-    override suspend fun getUrl(
+
+    override suspend fun getItem(
+        folderName: String,
         fileName: String,
     ): HomeItem {
-        val fileReference = mainFolderReference.child(fileName)
+        val fileReference = storageReference.child(folderName).child(fileName)
         val url = fileReference.getUrl(fileName)
         return HomeItem(url)
     }

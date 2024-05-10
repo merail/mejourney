@@ -2,10 +2,14 @@ package merail.life.mejourney.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.mejourney.auth.IFirebaseAuthRepository
+import merail.life.mejourney.data.FolderName
 import merail.life.mejourney.data.HomeItem
 import merail.life.mejourney.data.IFirebaseStorageRepository
 
@@ -14,7 +18,7 @@ class HomeViewModel(
     private val firebaseStorageRepository: IFirebaseStorageRepository,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Success())
+    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
 
     val uiState: StateFlow<HomeUiState> = _uiState
 
@@ -34,17 +38,19 @@ class HomeViewModel(
     }
 
     private suspend fun getItems() = runCatching {
-        firebaseStorageRepository.getUrl("IMG_0781.HEIC")
+        firebaseStorageRepository.getItems(FolderName.MAIN.value)
     }.onFailure {
         _uiState.value = HomeUiState.Error(it)
     }.onSuccess {
-        _uiState.value = HomeUiState.Success(it)
+        _uiState.value = HomeUiState.Success(it.toImmutableList())
     }
 }
 
 sealed class HomeUiState {
 
+    data object Loading: HomeUiState()
+
     data class Error(val exception: Throwable): HomeUiState()
 
-    data class Success(val item: HomeItem = HomeItem()): HomeUiState()
+    data class Success(val items: ImmutableList<HomeItem> = persistentListOf()): HomeUiState()
 }

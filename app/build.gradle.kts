@@ -72,4 +72,6 @@ dependencies {
     implementation(libs.firebase.auth)
 
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.kotlinx.immutable.collections)
 }
