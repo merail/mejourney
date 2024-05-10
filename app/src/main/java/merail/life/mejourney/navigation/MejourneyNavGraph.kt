@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import merail.life.mejourney.home.HomeDestination
-import merail.life.mejourney.home.HomeScreen
+import merail.life.mejourney.ui.home.HomeDestination
+import merail.life.mejourney.ui.home.HomeScreen
 
 @Composable
 fun MejourneyNavHost(
