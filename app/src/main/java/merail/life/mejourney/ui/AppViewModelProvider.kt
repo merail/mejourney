@@ -16,7 +16,7 @@ object AppViewModelProvider {
                     .firebaseAuthRepository,
                 firebaseStorageRepository = mejourneyApplication()
                     .dataContainer
-                    .firebaseStorageRepository,
+                    .firebaseRepository,
             )
         }
     }

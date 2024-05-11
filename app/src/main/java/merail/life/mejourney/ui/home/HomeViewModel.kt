@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.mejourney.auth.IFirebaseAuthRepository
-import merail.life.mejourney.data.FolderName
 import merail.life.mejourney.data.HomeItem
-import merail.life.mejourney.data.IFirebaseStorageRepository
+import merail.life.mejourney.data.IFirebaseRepository
 
 class HomeViewModel(
     private val firebaseAuthRepository: IFirebaseAuthRepository,
-    private val firebaseStorageRepository: IFirebaseStorageRepository,
+    private val firebaseStorageRepository: IFirebaseRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
@@ -38,7 +37,7 @@ class HomeViewModel(
     }
 
     private suspend fun getItems() = runCatching {
-        firebaseStorageRepository.getItems(FolderName.MAIN.value)
+        firebaseStorageRepository.getHomeItems()
     }.onFailure {
         _uiState.value = HomeUiState.Error(it)
     }.onSuccess {
