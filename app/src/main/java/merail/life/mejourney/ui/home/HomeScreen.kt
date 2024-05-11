@@ -1,10 +1,12 @@
 package merail.life.mejourney.ui.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,9 +75,13 @@ private fun Error(
 private fun MainList(
     items: ImmutableList<HomeItem>,
 ) {
-    LazyColumn(
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        verticalItemSpacing = 4.dp,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(4.dp),
     ) {
         items(items) {
             Cover(it)
@@ -87,10 +93,7 @@ private fun MainList(
 private fun Cover(
     item: HomeItem,
 ) {
-    Box(
-        modifier = Modifier
-            .padding(12.dp),
-    ) {
+    Box {
         val isImageLoaded = remember {
             mutableStateOf(false)
         }
@@ -110,8 +113,9 @@ private fun Cover(
             Text(
                 text = item.title.uppercase(),
                 color = Color.White,
-                fontSize = 48.sp,
+                fontSize = 32.sp,
                 fontFamily = FontFamily(Font(R.font.open_sans_bold)),
+                lineHeight = 36.sp,
                 modifier = Modifier
                     .padding(12.dp),
             )
