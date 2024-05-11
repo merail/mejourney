@@ -79,7 +79,7 @@ class FirebaseRepository(
     }
 
     private fun QueryDocumentSnapshot.getCoverData() = Triple(
-        first = data["year"] as Int,
+        first = data["year"] as Long,
         second = data["title"] as String,
         third = data["description"] as String,
     )

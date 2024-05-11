@@ -9,13 +9,19 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.mejourney.R
 import merail.life.mejourney.data.HomeItem
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.AppViewModelProvider
@@ -72,12 +78,40 @@ private fun MainList(
             .fillMaxSize(),
     ) {
         items(items) {
-            SubcomposeAsyncImage(
-                model = it.url,
-                contentDescription = null,
-                loading = {
-                    ImageLoading()
-                },
+            Cover(it)
+        }
+    }
+}
+
+@Composable
+private fun Cover(
+    item: HomeItem,
+) {
+    Box(
+        modifier = Modifier
+            .padding(12.dp),
+    ) {
+        val isImageLoaded = remember {
+            mutableStateOf(false)
+        }
+
+        SubcomposeAsyncImage(
+            model = item.url,
+            contentDescription = null,
+            loading = {
+                ImageLoading()
+            },
+            onSuccess = {
+                isImageLoaded.value = true
+            },
+        )
+
+        if (isImageLoaded.value) {
+            Text(
+                text = item.title.uppercase(),
+                color = Color.White,
+                fontSize = 48.sp,
+                fontFamily = FontFamily(Font(R.font.open_sans_bold)),
                 modifier = Modifier
                     .padding(12.dp),
             )
