@@ -1,7 +1,14 @@
 package merail.life.mejourney.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -89,12 +96,16 @@ private fun MainList(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Cover(
     item: HomeItem,
 ) {
-    Box {
-        val isImageLoaded = remember {
+    Column(
+        modifier = Modifier
+            .animateContentSize(),
+    ) {
+        val isImageLongClicked = remember {
             mutableStateOf(false)
         }
 
@@ -104,21 +115,40 @@ private fun Cover(
             loading = {
                 ImageLoading()
             },
-            onSuccess = {
-                isImageLoaded.value = true
-            },
+            modifier = Modifier
+                .combinedClickable(
+                    onLongClick = {
+                        isImageLongClicked.value = isImageLongClicked.value.not()
+                    },
+                    onClick = {},
+                ),
         )
 
-        if (isImageLoaded.value) {
-            Text(
-                text = item.title.uppercase(),
-                color = Color.White,
-                fontSize = 32.sp,
-                fontFamily = FontFamily(Font(R.font.open_sans_bold)),
-                lineHeight = 36.sp,
+        AnimatedVisibility(
+            visible = isImageLongClicked.value,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            Column(
                 modifier = Modifier
                     .padding(12.dp),
-            )
+            ) {
+                Text(
+                    text = item.title,
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.open_sans_bold)),
+                    lineHeight = 28.sp,
+                )
+
+                Text(
+                    text = item.description,
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.open_sans_bold)),
+                    lineHeight = 20.sp,
+                )
+            }
         }
     }
 }

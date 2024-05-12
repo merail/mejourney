@@ -16,7 +16,7 @@ class FirebaseRepository(
     companion object {
         private const val TAG = "FirebaseRepository"
 
-        private const val MAIN_PATH = "main"
+        private const val MAIN_PATH = "dev"
 
         private const val HOME_COVERS_PATH = "$MAIN_PATH/home_covers"
 
