@@ -12,8 +12,11 @@ import merail.life.mejourney.ui.theme.MejourneyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
+
         setContent {
             MejourneyTheme {
                 Surface(

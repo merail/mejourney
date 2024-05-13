@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.tasks.await
 
 class FirebaseRepository(
@@ -23,17 +24,34 @@ class FirebaseRepository(
         private const val BUCKET_REFERENCE = "gs://mejourney-c86ca.appspot.com"
     }
 
+    private val mutex = Mutex()
+
+    private val items = mutableListOf<HomeItem>()
+
     override suspend fun getHomeItems(): List<HomeItem> {
-        val firestoreData = getFirestoreData(HOME_COVERS_PATH)
-        val storageData = getStorageData(HOME_COVERS_PATH)
-        return firestoreData.zip(storageData).map { (info, file) ->
-            HomeItem(
-                year = info.getCoverData().first,
-                title = info.getCoverData().second,
-                description = info.getCoverData().third,
-                url = file.getCoverUrl(),
-            )
+        if (items.isNotEmpty()) {
+            return items
         }
+        if (!mutex.isLocked) {
+            mutex.lock()
+            val firestoreData = getFirestoreData(HOME_COVERS_PATH)
+            val storageData = getStorageData(HOME_COVERS_PATH)
+            val newItems = firestoreData.zip(storageData).map { (info, file) ->
+                HomeItem(
+                    year = info.getCoverData().first,
+                    title = info.getCoverData().second,
+                    description = info.getCoverData().third,
+                    url = file.getCoverUrl(),
+                )
+            }
+            items.clear()
+            items.addAll(newItems)
+            mutex.unlock()
+        } else {
+            mutex.lock()
+            mutex.unlock()
+        }
+        return items
     }
 
     private suspend fun getFirestoreData(

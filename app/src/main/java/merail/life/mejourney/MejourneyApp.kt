@@ -9,5 +9,7 @@ import merail.life.mejourney.navigation.MejourneyNavHost
 fun MejourneyApp(
     navController: NavHostController = rememberNavController(),
 ) {
-    MejourneyNavHost(navController = navController)
+    MejourneyNavHost(
+        navController = navController,
+    )
 }

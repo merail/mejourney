@@ -8,12 +8,10 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.auth.IFirebaseAuthRepository
 import merail.life.mejourney.data.HomeItem
 import merail.life.mejourney.data.IFirebaseRepository
 
 class HomeViewModel(
-    private val firebaseAuthRepository: IFirebaseAuthRepository,
     private val firebaseStorageRepository: IFirebaseRepository,
 ) : ViewModel() {
 
@@ -23,17 +21,8 @@ class HomeViewModel(
 
     init {
         viewModelScope.launch {
-            val authResult = auth()
-            if (authResult.isSuccess) {
-                getItems()
-            }
+            getItems()
         }
-    }
-
-    private suspend fun auth() = runCatching {
-        firebaseAuthRepository.auth()
-    }.onFailure {
-        _uiState.value = HomeUiState.Error(it)
     }
 
     private suspend fun getItems() = runCatching {

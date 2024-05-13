@@ -7,14 +7,22 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import merail.life.mejourney.MejourneyApplication
 import merail.life.mejourney.ui.event.EventViewModel
 import merail.life.mejourney.ui.home.HomeViewModel
+import merail.life.mejourney.ui.splash.SplashViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            HomeViewModel(
+            SplashViewModel(
                 firebaseAuthRepository = mejourneyApplication()
                     .authContainer
                     .firebaseAuthRepository,
+                firebaseStorageRepository = mejourneyApplication()
+                    .dataContainer
+                    .firebaseRepository,
+            )
+        }
+        initializer {
+            HomeViewModel(
                 firebaseStorageRepository = mejourneyApplication()
                     .dataContainer
                     .firebaseRepository,

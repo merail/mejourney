@@ -9,6 +9,8 @@ import merail.life.mejourney.ui.event.EventDestination
 import merail.life.mejourney.ui.event.EventScreen
 import merail.life.mejourney.ui.home.HomeDestination
 import merail.life.mejourney.ui.home.HomeScreen
+import merail.life.mejourney.ui.splash.SplashDestination
+import merail.life.mejourney.ui.splash.SplashScreen
 
 @Composable
 fun MejourneyNavHost(
@@ -17,9 +19,18 @@ fun MejourneyNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = HomeDestination.route,
+        startDestination = SplashDestination.route,
         modifier = modifier,
     ) {
+        composable(
+            route = SplashDestination.route,
+        ) {
+            SplashScreen(
+                navigateToHome = {
+                    navController.navigate(HomeDestination.route)
+                }
+            )
+        }
         composable(
             route = HomeDestination.route,
         ) {
@@ -29,7 +40,9 @@ fun MejourneyNavHost(
                 },
             )
         }
-        composable(route = EventDestination.route) {
+        composable(
+            route = EventDestination.route,
+        ) {
             EventScreen()
         }
     }
