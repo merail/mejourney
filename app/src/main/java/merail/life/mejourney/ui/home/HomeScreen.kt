@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -135,18 +136,12 @@ private fun Cover(
             ) {
                 Text(
                     text = item.title,
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily(Font(R.font.open_sans_bold)),
-                    lineHeight = 28.sp,
+                    style = MaterialTheme.typography.titleLarge,
                 )
 
                 Text(
                     text = item.description,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.open_sans_bold)),
-                    lineHeight = 20.sp,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }
