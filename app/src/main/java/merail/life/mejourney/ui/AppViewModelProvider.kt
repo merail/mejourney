@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import merail.life.mejourney.MejourneyApplication
+import merail.life.mejourney.ui.event.EventViewModel
 import merail.life.mejourney.ui.home.HomeViewModel
 
 object AppViewModelProvider {
@@ -18,6 +19,9 @@ object AppViewModelProvider {
                     .dataContainer
                     .firebaseRepository,
             )
+        }
+        initializer {
+            EventViewModel()
         }
     }
 }

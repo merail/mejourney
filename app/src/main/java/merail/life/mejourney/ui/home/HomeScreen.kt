@@ -42,13 +42,17 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
+    navigateToEvent: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is HomeUiState.Loading -> Loading()
         is HomeUiState.Error -> Error(uiState.exception.message.orEmpty())
-        is HomeUiState.Success -> MainList(uiState.items)
+        is HomeUiState.Success -> MainList(
+            items = uiState.items,
+            navigateToEvent = navigateToEvent,
+        )
     }
 }
 
@@ -82,6 +86,7 @@ private fun Error(
 @Composable
 private fun MainList(
     items: ImmutableList<HomeItem>,
+    navigateToEvent: () -> Unit,
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
@@ -92,7 +97,10 @@ private fun MainList(
             .padding(4.dp),
     ) {
         items(items) {
-            Cover(it)
+            Cover(
+                item = it,
+                navigateToEvent = navigateToEvent,
+            )
         }
     }
 }
@@ -101,6 +109,7 @@ private fun MainList(
 @Composable
 private fun Cover(
     item: HomeItem,
+    navigateToEvent: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -121,7 +130,9 @@ private fun Cover(
                     onLongClick = {
                         isImageLongClicked.value = isImageLongClicked.value.not()
                     },
-                    onClick = {},
+                    onClick = {
+                        navigateToEvent.invoke()
+                    },
                 ),
         )
 
