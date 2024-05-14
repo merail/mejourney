@@ -32,7 +32,7 @@ class FirebaseRepository(
         if (items.isNotEmpty()) {
             return items
         }
-        if (!mutex.isLocked) {
+        if (mutex.isLocked.not()) {
             mutex.lock()
             val firestoreData = getFirestoreData(HOME_COVERS_PATH)
             val storageData = getStorageData(HOME_COVERS_PATH)
