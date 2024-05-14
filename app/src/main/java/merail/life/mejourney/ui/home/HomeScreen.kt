@@ -56,7 +56,7 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToEvent: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is HomeUiState.Loading -> Loading()
@@ -64,6 +64,9 @@ fun HomeScreen(
         is HomeUiState.Success -> Content(
             items = uiState.items,
             navigateToEvent = navigateToEvent,
+            onTabClick = {
+                viewModel.getItems(it)
+            },
         )
     }
 }
@@ -99,6 +102,7 @@ private fun Error(
 private fun Content(
     items: ImmutableList<HomeItem>,
     navigateToEvent: () -> Unit,
+    onTabClick: (TabFilter) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -110,7 +114,7 @@ private fun Content(
             navigateToEvent = navigateToEvent,
         )
 
-        MainTabs()
+        MainTabs(onTabClick)
     }
 }
 
@@ -137,12 +141,14 @@ private fun ColumnScope.MainList(
 }
 
 @Composable
-private fun MainTabs() {
+private fun MainTabs(
+    onTabClick: (TabFilter) -> Unit,
+) {
     val list = listOf(
-        stringResource(R.string.main_tab_years_name),
-        stringResource(R.string.main_tab_countries_name),
-        stringResource(R.string.main_tab_places_name),
-        stringResource(R.string.main_tab_all_name),
+        Pair(TabFilter.YEAR, stringResource(R.string.main_tab_years_name)),
+        Pair(TabFilter.COUNTRY, stringResource(R.string.main_tab_countries_name)),
+        Pair(TabFilter.PLACE, stringResource(R.string.main_tab_places_name)),
+        Pair(TabFilter.ALL, stringResource(R.string.main_tab_all_name)),
     )
     var selectedIndex by remember {
         mutableIntStateOf(list.size - 1)
@@ -161,7 +167,7 @@ private fun MainTabs() {
             )
             .clip(RoundedCornerShape(64)),
     ) {
-        list.forEachIndexed { index, text ->
+        list.forEachIndexed { index, (filter, text) ->
             Box(
                 modifier = Modifier
                     .height(40.dp)
@@ -172,6 +178,7 @@ private fun MainTabs() {
                     selected = selected,
                     onClick = {
                         selectedIndex = index
+                        onTabClick.invoke(filter)
                     },
                     text = {
                         Text(

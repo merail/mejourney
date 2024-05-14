@@ -20,17 +20,19 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
-        viewModelScope.launch {
-            getItems()
-        }
+        getItems(TabFilter.ALL)
     }
 
-    private suspend fun getItems() = runCatching {
-        firebaseStorageRepository.getHomeItems()
-    }.onFailure {
-        _uiState.value = HomeUiState.Error(it)
-    }.onSuccess {
-        _uiState.value = HomeUiState.Success(it.toImmutableList())
+    fun getItems(
+        filter: TabFilter,
+    ) = viewModelScope.launch {
+        runCatching {
+            firebaseStorageRepository.getHomeItems(filter)
+        }.onFailure {
+            _uiState.value = HomeUiState.Error(it)
+        }.onSuccess {
+            _uiState.value = HomeUiState.Success(it.toImmutableList())
+        }
     }
 }
 
@@ -40,5 +42,7 @@ sealed class HomeUiState {
 
     data class Error(val exception: Throwable): HomeUiState()
 
-    data class Success(val items: ImmutableList<HomeItem> = persistentListOf()): HomeUiState()
+    data class Success(
+        val items: ImmutableList<HomeItem> = persistentListOf(),
+    ): HomeUiState()
 }

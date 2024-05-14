@@ -8,6 +8,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.tasks.await
+import merail.life.mejourney.ui.home.TabFilter
 
 class FirebaseRepository(
     private val firebaseStorage: FirebaseStorage,
@@ -28,9 +29,11 @@ class FirebaseRepository(
 
     private val items = mutableListOf<HomeItem>()
 
-    override suspend fun getHomeItems(): List<HomeItem> {
+    override suspend fun getHomeItems(
+        filter: TabFilter,
+    ): List<HomeItem> {
         if (items.isNotEmpty()) {
-            return items
+            return items.filter(filter)
         }
         if (mutex.isLocked.not()) {
             mutex.lock()
@@ -38,9 +41,11 @@ class FirebaseRepository(
             val storageData = getStorageData(HOME_COVERS_PATH)
             val newItems = firestoreData.zip(storageData).map { (info, file) ->
                 HomeItem(
-                    year = info.getCoverData().first,
-                    title = info.getCoverData().second,
-                    description = info.getCoverData().third,
+                    year = info.getCoverData().year,
+                    country = info.getCoverData().country,
+                    place = info.getCoverData().place,
+                    title = info.getCoverData().title,
+                    description = info.getCoverData().description,
                     url = file.getCoverUrl(),
                 )
             }
@@ -51,7 +56,28 @@ class FirebaseRepository(
             mutex.lock()
             mutex.unlock()
         }
-        return items
+        return items.filter(filter)
+    }
+
+    private fun MutableList<HomeItem>.filter(
+        filter: TabFilter,
+    ) = when (filter) {
+        TabFilter.YEAR -> groupBy {
+            it.year
+        }.values.map {
+            it[0]
+        }
+        TabFilter.PLACE -> groupBy {
+            it.place
+        }.values.map {
+            it[0]
+        }
+        TabFilter.COUNTRY -> groupBy {
+            it.country
+        }.values.map {
+            it[0]
+        }
+        TabFilter.ALL -> this
     }
 
     private suspend fun getFirestoreData(
@@ -96,10 +122,12 @@ class FirebaseRepository(
         throw IllegalStateException("Empty path in Firestore database!")
     }
 
-    private fun QueryDocumentSnapshot.getCoverData() = Triple(
-        first = data["year"] as Long,
-        second = data["title"] as String,
-        third = data["description"] as String,
+    private fun QueryDocumentSnapshot.getCoverData() = CoverData(
+        year = data["year"] as Long,
+        country = data["country"] as String,
+        place = data["place"] as String,
+        title = data["title"] as String,
+        description = data["description"] as String,
     )
 
     private suspend fun StorageReference.getCoverUrl() = downloadUrl
