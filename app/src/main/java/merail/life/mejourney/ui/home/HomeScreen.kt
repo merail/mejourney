@@ -103,11 +103,11 @@ private fun Content(
         }
 
         when (tabFilter) {
-            TabFilter.YEAR -> CommonList(
+            TabFilter.YEAR -> YearsList(
                 items = items,
                 navigateToEvent = navigateToEvent,
             )
-            TabFilter.COUNTRY -> CommonList(
+            TabFilter.COUNTRY -> CountriesList(
                 items = items,
                 navigateToEvent = navigateToEvent,
             )
@@ -115,7 +115,7 @@ private fun Content(
                 items = items,
                 navigateToEvent = navigateToEvent,
             )
-            TabFilter.COMMON -> CommonList(
+            TabFilter.COMMON -> YearsList(
                 items = items,
                 navigateToEvent = navigateToEvent,
             )
