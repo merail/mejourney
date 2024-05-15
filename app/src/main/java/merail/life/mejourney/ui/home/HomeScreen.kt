@@ -1,23 +1,13 @@
 package merail.life.mejourney.ui.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.SubcomposeAsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.R
 import merail.life.mejourney.data.HomeItem
@@ -109,46 +98,47 @@ private fun Content(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        MainList(
-            items = items,
-            navigateToEvent = navigateToEvent,
-        )
+        var tabFilter by remember {
+            mutableStateOf(TabFilter.COMMON)
+        }
 
-        MainTabs(onTabClick)
-    }
-}
-
-@Composable
-private fun ColumnScope.MainList(
-    items: ImmutableList<HomeItem>,
-    navigateToEvent: () -> Unit,
-) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        verticalItemSpacing = 4.dp,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .weight(1f)
-            .padding(4.dp),
-    ) {
-        items(items) {
-            Cover(
-                item = it,
+        when (tabFilter) {
+            TabFilter.YEAR -> CommonList(
+                items = items,
+                navigateToEvent = navigateToEvent,
+            )
+            TabFilter.COUNTRY -> CommonList(
+                items = items,
+                navigateToEvent = navigateToEvent,
+            )
+            TabFilter.PLACE -> PlacesList(
+                items = items,
+                navigateToEvent = navigateToEvent,
+            )
+            TabFilter.COMMON -> CommonList(
+                items = items,
                 navigateToEvent = navigateToEvent,
             )
         }
+
+        HomeTabs(
+            onTabClick = {
+                tabFilter = it
+                onTabClick.invoke(it)
+            },
+        )
     }
 }
 
 @Composable
-private fun MainTabs(
+private fun HomeTabs(
     onTabClick: (TabFilter) -> Unit,
 ) {
     val list = listOf(
         Pair(TabFilter.YEAR, stringResource(R.string.main_tab_years_name)),
         Pair(TabFilter.COUNTRY, stringResource(R.string.main_tab_countries_name)),
         Pair(TabFilter.PLACE, stringResource(R.string.main_tab_places_name)),
-        Pair(TabFilter.ALL, stringResource(R.string.main_tab_all_name)),
+        Pair(TabFilter.COMMON, stringResource(R.string.main_tab_all_name)),
     )
     var selectedIndex by remember {
         mutableIntStateOf(list.size - 1)
@@ -173,9 +163,9 @@ private fun MainTabs(
                     .height(40.dp)
                     .padding(4.dp),
             ) {
-                val selected = selectedIndex == index
+                val isSelected = selectedIndex == index
                 Tab(
-                    selected = selected,
+                    selected = isSelected,
                     onClick = {
                         selectedIndex = index
                         onTabClick.invoke(filter)
@@ -207,71 +197,5 @@ private fun MainTabs(
                 )
             }
         }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun Cover(
-    item: HomeItem,
-    navigateToEvent: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .animateContentSize(),
-    ) {
-        val isImageLongClicked = remember {
-            mutableStateOf(false)
-        }
-
-        SubcomposeAsyncImage(
-            model = item.url,
-            contentDescription = null,
-            loading = {
-                ImageLoading()
-            },
-            modifier = Modifier
-                .combinedClickable(
-                    onLongClick = {
-                        isImageLongClicked.value = isImageLongClicked.value.not()
-                    },
-                    onClick = {
-                        navigateToEvent.invoke()
-                    },
-                ),
-        )
-
-        AnimatedVisibility(
-            visible = isImageLongClicked.value,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(12.dp),
-            ) {
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-
-                Text(
-                    text = item.description,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ImageLoading() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(64.dp),
-    ) {
-        CircularProgressIndicator()
     }
 }

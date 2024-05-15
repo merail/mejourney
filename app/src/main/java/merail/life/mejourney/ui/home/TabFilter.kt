@@ -4,6 +4,6 @@ enum class TabFilter {
     YEAR,
     COUNTRY,
     PLACE,
-    ALL,
+    COMMON,
     ;
 }

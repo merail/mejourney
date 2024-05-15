@@ -20,7 +20,7 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
-        getItems(TabFilter.ALL)
+        getItems(TabFilter.COMMON)
     }
 
     fun getItems(

@@ -4,6 +4,6 @@ import merail.life.mejourney.ui.home.TabFilter
 
 interface IFirebaseRepository {
     suspend fun getHomeItems(
-        filter: TabFilter = TabFilter.ALL,
+        filter: TabFilter = TabFilter.COMMON,
     ): List<HomeItem>
 }

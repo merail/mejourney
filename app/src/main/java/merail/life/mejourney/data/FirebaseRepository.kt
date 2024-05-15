@@ -77,7 +77,7 @@ class FirebaseRepository(
         }.values.map {
             it[0]
         }
-        TabFilter.ALL -> this
+        TabFilter.COMMON -> this
     }
 
     private suspend fun getFirestoreData(
