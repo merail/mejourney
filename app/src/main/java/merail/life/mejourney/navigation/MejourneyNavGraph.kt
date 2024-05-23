@@ -9,6 +9,8 @@ import merail.life.mejourney.ui.event.EventDestination
 import merail.life.mejourney.ui.event.EventScreen
 import merail.life.mejourney.ui.home.HomeDestination
 import merail.life.mejourney.ui.home.HomeScreen
+import merail.life.mejourney.ui.selector.SelectorDestination
+import merail.life.mejourney.ui.selector.SelectorScreen
 import merail.life.mejourney.ui.splash.SplashDestination
 import merail.life.mejourney.ui.splash.SplashScreen
 
@@ -35,10 +37,18 @@ fun MejourneyNavHost(
             route = HomeDestination.route,
         ) {
             HomeScreen(
+                navigateToSelector = {
+                     navController.navigate(SelectorDestination.route)
+                },
                 navigateToEvent = {
                     navController.navigate(EventDestination.route)
                 },
             )
+        }
+        composable(
+            route = SelectorDestination.route,
+        ) {
+            SelectorScreen()
         }
         composable(
             route = EventDestination.route,

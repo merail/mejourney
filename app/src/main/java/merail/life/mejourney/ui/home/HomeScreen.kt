@@ -52,6 +52,7 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
+    navigateToSelector: () -> Unit,
     navigateToEvent: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -60,6 +61,7 @@ fun HomeScreen(
         is HomeUiState.Error -> Error(uiState.exception.message.orEmpty())
         is HomeUiState.Success -> Content(
             items = uiState.items,
+            navigateToSelector = navigateToSelector,
             navigateToEvent = navigateToEvent,
             onTabClick = {
                 viewModel.getItems(it)
@@ -72,6 +74,7 @@ fun HomeScreen(
 @Composable
 private fun Content(
     @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
+    navigateToSelector: () -> Unit = {},
     navigateToEvent: () -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
@@ -87,15 +90,33 @@ private fun Content(
         when (tabFilter) {
             TabFilter.YEAR -> YearsList(
                 items = items,
-                navigateToEvent = navigateToEvent,
+                navigateToEvent = {
+                    if (items.size == 1) {
+                        navigateToEvent.invoke()
+                    } else {
+                        navigateToSelector.invoke()
+                    }
+                },
             )
             TabFilter.COUNTRY -> CountriesList(
                 items = items,
-                navigateToEvent = navigateToEvent,
+                navigateToEvent = {
+                    if (items.size == 1) {
+                        navigateToEvent.invoke()
+                    } else {
+                        navigateToSelector.invoke()
+                    }
+                },
             )
             TabFilter.PLACE -> PlacesList(
                 items = items,
-                navigateToEvent = navigateToEvent,
+                navigateToEvent = {
+                    if (items.size == 1) {
+                        navigateToEvent.invoke()
+                    } else {
+                        navigateToSelector.invoke()
+                    }
+                },
             )
             TabFilter.COMMON -> CommonList(
                 items = items,
