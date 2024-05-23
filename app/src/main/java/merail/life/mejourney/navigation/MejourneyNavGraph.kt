@@ -3,8 +3,11 @@ package merail.life.mejourney.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import merail.life.mejourney.data.TabFilter
 import merail.life.mejourney.ui.event.EventDestination
 import merail.life.mejourney.ui.event.EventScreen
 import merail.life.mejourney.ui.home.HomeDestination
@@ -38,7 +41,7 @@ fun MejourneyNavHost(
         ) {
             HomeScreen(
                 navigateToSelector = {
-                     navController.navigate(SelectorDestination.route)
+                     navController.navigate("${SelectorDestination.route}/$it")
                 },
                 navigateToEvent = {
                     navController.navigate(EventDestination.route)
@@ -46,7 +49,10 @@ fun MejourneyNavHost(
             )
         }
         composable(
-            route = SelectorDestination.route,
+            route = SelectorDestination.routeWithArgs,
+            arguments = listOf(navArgument(SelectorDestination.TAB_FILTER_ARG) {
+                type = NavType.EnumType(TabFilter::class.java)
+            })
         ) {
             SelectorScreen()
         }

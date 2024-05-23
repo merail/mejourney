@@ -13,7 +13,7 @@ import merail.life.mejourney.data.IFirebaseRepository
 import merail.life.mejourney.data.TabFilter
 
 class HomeViewModel(
-    private val firebaseStorageRepository: IFirebaseRepository,
+    private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
@@ -28,7 +28,7 @@ class HomeViewModel(
         filter: TabFilter,
     ) = viewModelScope.launch {
         runCatching {
-            firebaseStorageRepository.getHomeItems(filter)
+            firebaseRepository.getHomeItems(filter)
         }.onFailure {
             _uiState.value = HomeUiState.Error(it)
         }.onSuccess {

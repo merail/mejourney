@@ -52,7 +52,7 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
-    navigateToSelector: () -> Unit,
+    navigateToSelector: (TabFilter) -> Unit,
     navigateToEvent: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -74,7 +74,7 @@ fun HomeScreen(
 @Composable
 private fun Content(
     @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
-    navigateToSelector: () -> Unit = {},
+    navigateToSelector: (TabFilter) -> Unit = {},
     navigateToEvent: () -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
@@ -94,7 +94,7 @@ private fun Content(
                     if (items.size == 1) {
                         navigateToEvent.invoke()
                     } else {
-                        navigateToSelector.invoke()
+                        navigateToSelector.invoke(TabFilter.YEAR)
                     }
                 },
             )
@@ -104,7 +104,7 @@ private fun Content(
                     if (items.size == 1) {
                         navigateToEvent.invoke()
                     } else {
-                        navigateToSelector.invoke()
+                        navigateToSelector.invoke(TabFilter.COUNTRY)
                     }
                 },
             )
@@ -114,7 +114,7 @@ private fun Content(
                     if (items.size == 1) {
                         navigateToEvent.invoke()
                     } else {
-                        navigateToSelector.invoke()
+                        navigateToSelector.invoke(TabFilter.COUNTRY)
                     }
                 },
             )
