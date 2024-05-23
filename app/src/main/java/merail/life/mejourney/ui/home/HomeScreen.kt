@@ -34,9 +34,13 @@ import merail.life.mejourney.data.HomeItem
 import merail.life.mejourney.data.TabFilter
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.AppViewModelProvider
-import merail.life.mejourney.ui.home.common.Error
-import merail.life.mejourney.ui.home.common.ItemsParameterProvider
-import merail.life.mejourney.ui.home.common.Loading
+import merail.life.mejourney.ui.common.Error
+import merail.life.mejourney.ui.common.ItemsParameterProvider
+import merail.life.mejourney.ui.common.Loading
+import merail.life.mejourney.ui.home.tabs.CommonList
+import merail.life.mejourney.ui.home.tabs.CountriesList
+import merail.life.mejourney.ui.home.tabs.PlacesList
+import merail.life.mejourney.ui.home.tabs.YearsList
 import merail.life.mejourney.ui.theme.selectedTabColor
 import merail.life.mejourney.ui.theme.tabsContainerColor
 import merail.life.mejourney.ui.theme.unselectedTabTextColor

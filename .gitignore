@@ -90,5 +90,5 @@ lint/tmp/
 # App Specific cases
 app/release/output.json
 
-app/src/main/java/merail/life/mejourney/ui/home/common/ItemParameterProvider.kt
-app/src/main/java/merail/life/mejourney/ui/home/common/ItemsParameterProvider.kt
+app/src/main/java/merail/life/mejourney/ui/common/ItemParameterProvider.kt
+app/src/main/java/merail/life/mejourney/ui/common/ItemsParameterProvider.kt

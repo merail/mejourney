@@ -1,4 +1,4 @@
-package merail.life.mejourney.ui.home.common
+package merail.life.mejourney.ui.common
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image

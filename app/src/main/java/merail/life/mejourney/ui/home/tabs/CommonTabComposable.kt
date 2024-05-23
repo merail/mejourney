@@ -1,4 +1,4 @@
-package merail.life.mejourney.ui.home
+package merail.life.mejourney.ui.home.tabs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.data.HomeItem
-import merail.life.mejourney.ui.home.common.Cover
-import merail.life.mejourney.ui.home.common.ItemsParameterProvider
+import merail.life.mejourney.ui.common.Cover
+import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.theme.MejourneyTheme
 
 @Composable
