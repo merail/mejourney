@@ -1,4 +1,4 @@
-package merail.life.mejourney.ui.home
+package merail.life.mejourney.data
 
 enum class TabFilter {
     YEAR,

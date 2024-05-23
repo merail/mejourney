@@ -7,6 +7,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -17,44 +18,51 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.ui.home.common.Cover
+import merail.life.mejourney.ui.home.common.ItemsParameterProvider
+import merail.life.mejourney.ui.theme.MejourneyTheme
 
 @Composable
 fun ColumnScope.CommonList(
     items: ImmutableList<HomeItem>,
     navigateToEvent: () -> Unit,
 ) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        verticalItemSpacing = 4.dp,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .weight(1f)
-            .padding(4.dp),
-    ) {
-        items(items) {
-            Column(
-                modifier = Modifier
-                    .animateContentSize(),
-            ) {
-                val isImageLongClicked = remember {
-                    mutableStateOf(false)
+    MejourneyTheme {
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
+            verticalItemSpacing = 4.dp,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(4.dp),
+        ) {
+            items(items) {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize(),
+                ) {
+                    val isImageLongClicked = remember {
+                        mutableStateOf(false)
+                    }
+
+                    Cover(
+                        item = it,
+                        navigateToEvent = navigateToEvent,
+                        onLongClick = {
+                            isImageLongClicked.value = isImageLongClicked.value.not()
+                        },
+                    )
+
+                    AnimatedImageText(
+                        isVisible = isImageLongClicked.value,
+                        item = it,
+                    )
                 }
-
-                Cover(
-                    item = it,
-                    navigateToEvent = navigateToEvent,
-                    onLongClick = {
-                        isImageLongClicked.value = isImageLongClicked.value.not()
-                    },
-                )
-
-                AnimatedImageText(
-                    isVisible = isImageLongClicked.value,
-                    item = it,
-                )
             }
         }
     }
@@ -84,5 +92,22 @@ private fun AnimatedImageText(
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun CommonListPreview(
+    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
+) {
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        CommonList(
+            items = items,
+            navigateToEvent = {},
+        )
     }
 }
