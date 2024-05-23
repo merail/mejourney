@@ -12,8 +12,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -41,41 +44,67 @@ fun ColumnScope.YearsList(
                     bottom = 4.dp,
                 ),
         ) {
-            items(items) { it ->
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            vertical = 12.dp
-                        ),
-                ) {
-                    Text(
-                        text = stringResource(
-                            id = R.string.years_tab_element_title,
-                            it.year,
-                        ),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(
-                                start = 16.dp,
-                            ),
-                    )
-
-                    Card(
-                        colors = CardDefaults.cardColors().copy(
-                            containerColor = Color.Black,
-                        ),
-                        modifier = Modifier
-                            .padding(
-                                top = 12.dp,
-                            ),
-                    ) {
-                        Cover(
-                            item = it,
-                            navigateToEvent = navigateToEvent,
-                        )
-                    }
-                }
+            items(items) {
+                YearItem(
+                    item = it,
+                    navigateToEvent = navigateToEvent,
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun YearItem(
+    item: HomeItem,
+    navigateToEvent: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .padding(
+                vertical = 12.dp
+            ),
+    ) {
+        val isImageLoaded = if (LocalInspectionMode.current) {
+            remember {
+                mutableStateOf(true)
+            }
+        } else {
+            remember {
+                mutableStateOf(false)
+            }
+        }
+
+        if (isImageLoaded.value) {
+            Text(
+                text = stringResource(
+                    id = R.string.years_tab_element_title,
+                    item.year,
+                ),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(
+                        start = 16.dp,
+                    ),
+            )
+        }
+
+        Card(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.Black,
+            ),
+            modifier = Modifier
+                .padding(
+                    top = 12.dp,
+                ),
+        ) {
+            Cover(
+                item = item,
+                onLoadingSuccess = {
+                    isImageLoaded.value = true
+                },
+                navigateToEvent = navigateToEvent,
+            )
         }
     }
 }

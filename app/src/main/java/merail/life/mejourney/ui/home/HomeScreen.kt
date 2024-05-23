@@ -14,11 +14,12 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +53,6 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToEvent: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
@@ -80,7 +80,7 @@ private fun Content(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        var tabFilter by remember {
+        var tabFilter by rememberSaveable {
             mutableStateOf(TabFilter.COMMON)
         }
 
@@ -122,11 +122,11 @@ private fun HomeTabs(
         Pair(TabFilter.PLACE, stringResource(R.string.main_tab_places_name)),
         Pair(TabFilter.COMMON, stringResource(R.string.main_tab_all_name)),
     )
-    var selectedIndex by remember {
+    val selectedIndex = rememberSaveable {
         mutableIntStateOf(list.size - 1)
     }
     TabRow(
-        selectedTabIndex = selectedIndex,
+        selectedTabIndex = selectedIndex.intValue,
         containerColor = tabsContainerColor,
         indicator = {},
         divider = {},
@@ -139,45 +139,60 @@ private fun HomeTabs(
             )
             .clip(RoundedCornerShape(64)),
     ) {
-        list.forEachIndexed { index, (filter, text) ->
-            Box(
-                modifier = Modifier
-                    .height(40.dp)
-                    .padding(4.dp),
-            ) {
-                val isSelected = selectedIndex == index
-                Tab(
-                    selected = isSelected,
-                    onClick = {
-                        selectedIndex = index
-                        onTabClick.invoke(filter)
-                    },
-                    text = {
-                        Text(
-                            text = text,
-                            color = if (selectedIndex == index) {
-                                Color.White
-                            } else {
-                                unselectedTabTextColor
-                            },
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier
-                                .wrapContentWidth(
-                                    unbounded = true,
-                                ),
-                        )
-                    },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(64))
-                        .background(
-                            color = if (selectedIndex == index) {
-                                selectedTabColor
-                            } else {
-                                tabsContainerColor
-                            },
-                        ),
+        list.forEachIndexed { index, tabElement ->
+            with(tabElement) {
+                HomeTab(
+                    selectedIndex = selectedIndex,
+                    index = index,
+                    onTabClick = onTabClick
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun Pair<TabFilter, String>.HomeTab(
+    selectedIndex: MutableState<Int>,
+    index: Int,
+    onTabClick: (TabFilter) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .height(40.dp)
+            .padding(4.dp),
+    ) {
+        val isSelected = selectedIndex.value == index
+        Tab(
+            selected = isSelected,
+            onClick = {
+                selectedIndex.value = index
+                onTabClick.invoke(first)
+            },
+            text = {
+                Text(
+                    text = second,
+                    color = if (selectedIndex.value == index) {
+                        Color.White
+                    } else {
+                        unselectedTabTextColor
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier
+                        .wrapContentWidth(
+                            unbounded = true,
+                        ),
+                )
+            },
+            modifier = Modifier
+                .clip(RoundedCornerShape(64))
+                .background(
+                    color = if (selectedIndex.value == index) {
+                        selectedTabColor
+                    } else {
+                        tabsContainerColor
+                    },
+                ),
+        )
     }
 }

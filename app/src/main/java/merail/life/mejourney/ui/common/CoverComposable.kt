@@ -28,6 +28,7 @@ fun Cover(
     @PreviewParameter(ItemParameterProvider::class) item: HomeItem,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
+    onLoadingSuccess: () -> Unit = {},
     navigateToEvent: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -42,6 +43,9 @@ fun Cover(
                 } else {
                     ImageLoading()
                 }
+            },
+            onSuccess = {
+                onLoadingSuccess.invoke()
             },
             modifier = modifier
                 .combinedClickable(

@@ -15,9 +15,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -44,30 +47,57 @@ fun ColumnScope.CountriesList(
                 ),
         ) {
             items(items) {
-                Card(
-                    colors = CardDefaults.cardColors().copy(
-                        containerColor = Color.Black,
-                        contentColor = Color.White,
-                    ),
-                ) {
-                    Box {
-                        Cover(
-                            item = it,
-                            contentScale = ContentScale.FillWidth,
-                            navigateToEvent = navigateToEvent,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(256.dp),
-                        )
+                CountryItem(
+                    item = it,
+                    navigateToEvent = navigateToEvent,
+                )
+            }
+        }
+    }
+}
 
-                        Text(
-                            text = it.country,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .padding(16.dp),
-                        )
-                    }
+@Composable
+private fun CountryItem(
+    item: HomeItem,
+    navigateToEvent: () -> Unit,
+) {
+    Card(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = Color.Black,
+            contentColor = Color.White,
+        ),
+    ) {
+        Box {
+            val isImageLoaded = if (LocalInspectionMode.current) {
+                remember {
+                    mutableStateOf(true)
                 }
+            } else {
+                remember {
+                    mutableStateOf(false)
+                }
+            }
+
+
+            Cover(
+                item = item,
+                contentScale = ContentScale.FillWidth,
+                onLoadingSuccess = {
+                    isImageLoaded.value = true
+                },
+                navigateToEvent = navigateToEvent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(256.dp),
+            )
+
+            if (isImageLoaded.value) {
+                Text(
+                    text = item.country,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .padding(16.dp),
+                )
             }
         }
     }

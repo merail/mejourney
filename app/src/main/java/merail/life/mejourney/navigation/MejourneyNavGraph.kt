@@ -28,7 +28,7 @@ fun MejourneyNavHost(
             SplashScreen(
                 navigateToHome = {
                     navController.navigate(HomeDestination.route)
-                }
+                },
             )
         }
         composable(

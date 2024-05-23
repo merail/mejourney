@@ -13,9 +13,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -38,34 +41,60 @@ fun ColumnScope.PlacesList(
                 .padding(4.dp),
         ) {
             items(items) {
-                Column {
-                    Card(
-                        colors = CardDefaults.cardColors().copy(
-                            containerColor = Color.Black,
-                        ),
-                        border = BorderStroke(1.dp, Color.White),
-                        modifier = Modifier
-                            .padding(
-                                top = 12.dp,
-                            ),
-                    ) {
-                        Cover(
-                            item = it,
-                            navigateToEvent = navigateToEvent,
-                        )
-                    }
-
-                    Text(
-                        text = it.place,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(
-                                vertical = 12.dp,
-                            ),
-                    )
-                }
+                PlaceItem(
+                    item = it,
+                    navigateToEvent = navigateToEvent,
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun PlaceItem(
+    item: HomeItem,
+    navigateToEvent: () -> Unit,
+) {
+    Column {
+        val isImageLoaded = if (LocalInspectionMode.current) {
+            remember {
+                mutableStateOf(true)
+            }
+        } else {
+            remember {
+                mutableStateOf(false)
+            }
+        }
+
+        Card(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.Black,
+            ),
+            border = BorderStroke(1.dp, Color.White),
+            modifier = Modifier
+                .padding(
+                    top = 12.dp,
+                ),
+        ) {
+            Cover(
+                item = item,
+                onLoadingSuccess = {
+                    isImageLoaded.value = true
+                },
+                navigateToEvent = navigateToEvent,
+            )
+        }
+
+        if (isImageLoaded.value) {
+            Text(
+                text = item.place,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(
+                        vertical = 12.dp,
+                    ),
+            )
         }
     }
 }
