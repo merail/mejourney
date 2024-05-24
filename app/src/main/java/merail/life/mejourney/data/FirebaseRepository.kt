@@ -3,11 +3,16 @@ package merail.life.mejourney.data
 import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.tasks.await
+import merail.life.mejourney.data.firestore_dto.ContentFirestoreDto
+import merail.life.mejourney.data.firestore_dto.CoversFirestoreDto
+import merail.life.mejourney.data.firestore_dto.toDto
+import merail.life.mejourney.data.model.ContentItem
+import merail.life.mejourney.data.model.HomeItem
+import merail.life.mejourney.data.model.TabFilter
 
 class FirebaseRepository(
     private val firebaseStorage: FirebaseStorage,
@@ -20,6 +25,8 @@ class FirebaseRepository(
         private const val MAIN_PATH = "dev"
 
         private const val HOME_COVERS_PATH = "$MAIN_PATH/home_covers"
+
+        private const val CONTENT_PATH = "$MAIN_PATH/"
 
         private const val BUCKET_REFERENCE = "gs://mejourney-c86ca.appspot.com"
     }
@@ -36,16 +43,17 @@ class FirebaseRepository(
         }
         if (mutex.isLocked.not()) {
             mutex.lock()
-            val firestoreData = getFirestoreData(HOME_COVERS_PATH)
+            val firestoreData = CoversFirestoreDto(getFirestoreData(HOME_COVERS_PATH))
             val storageData = getStorageData(HOME_COVERS_PATH)
-            val newItems = firestoreData.zip(storageData).map { (info, file) ->
+            val newItems = firestoreData.toDto().zip(storageData).map { (info, file) ->
                 HomeItem(
-                    year = info.getCoverData().year,
-                    country = info.getCoverData().country,
-                    place = info.getCoverData().place,
-                    title = info.getCoverData().title,
-                    description = info.getCoverData().description,
-                    url = file.getCoverUrl(),
+                    id = info.id,
+                    year = info.year,
+                    country = info.country,
+                    place = info.place,
+                    title = info.title,
+                    description = info.description,
+                    url = file.getUrl(),
                 )
             }
             items.clear()
@@ -56,6 +64,21 @@ class FirebaseRepository(
             mutex.unlock()
         }
         return items.filter(filter)
+    }
+
+    override suspend fun getContentItem(
+        id: String,
+    ): ContentItem {
+        val firestoreData = ContentFirestoreDto(getFirestoreData("$CONTENT_PATH$id"))
+        val storageData = getStorageData("$CONTENT_PATH$id")
+        val text = firestoreData.toDto().text
+        val imagesUrls = storageData.map { file ->
+            file.getUrl()
+        }
+        return ContentItem(
+            text = text,
+            imagesUrls = imagesUrls
+        )
     }
 
     private fun MutableList<HomeItem>.filter(
@@ -121,15 +144,7 @@ class FirebaseRepository(
         throw IllegalStateException("Empty path in Firestore database!")
     }
 
-    private fun QueryDocumentSnapshot.getCoverData() = CoverData(
-        year = data["year"] as Long,
-        country = data["country"] as String,
-        place = data["place"] as String,
-        title = data["title"] as String,
-        description = data["description"] as String,
-    )
-
-    private suspend fun StorageReference.getCoverUrl() = downloadUrl
+    private suspend fun StorageReference.getUrl() = downloadUrl
         .addOnFailureListener {
             Log.w(TAG, "Getting $name url from Firebase Storage. Failure")
         }

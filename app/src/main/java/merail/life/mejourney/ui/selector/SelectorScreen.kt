@@ -1,6 +1,7 @@
 package merail.life.mejourney.ui.selector
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.AppViewModelProvider
 import merail.life.mejourney.ui.common.Cover
@@ -40,12 +41,16 @@ object SelectorDestination : NavigationDestination {
 
 @Composable
 fun SelectorScreen(
+    navigateToContent: (String) -> Unit,
     viewModel: SelectorViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is SelectorUiState.Loading -> Loading()
         is SelectorUiState.Error -> Error(uiState.exception.message.orEmpty())
-        is SelectorUiState.Success -> Content(uiState.items)
+        is SelectorUiState.Success -> Content(
+            items = uiState.items,
+            navigateToContent = navigateToContent,
+        )
     }
 }
 
@@ -54,6 +59,7 @@ fun SelectorScreen(
 @Composable
 private fun Content(
     @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
+    navigateToContent: (String) -> Unit = {},
 ) {
     MejourneyTheme {
         val pagerState = rememberPagerState(
@@ -64,7 +70,10 @@ private fun Content(
         HorizontalPager(
             state = pagerState,
         ) { page ->
-            SelectorItem(items[page])
+            SelectorItem(
+                item = items[page],
+                navigateToContent = navigateToContent,
+            )
         }
     }
 }
@@ -72,12 +81,16 @@ private fun Content(
 @Composable
 private fun SelectorItem(
     item: HomeItem,
+    navigateToContent: (String) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(36.dp),
+            .padding(36.dp)
+            .clickable {
+                navigateToContent.invoke(item.id)
+            },
     ) {
         Card(
             colors = CardDefaults.cardColors().copy(
@@ -86,6 +99,9 @@ private fun SelectorItem(
         ) {
             Cover(
                 item = item,
+                navigateToContent = {
+                    navigateToContent.invoke(item.id)
+                },
             )
         }
 

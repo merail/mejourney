@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.R
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.theme.MejourneyTheme
@@ -31,7 +31,7 @@ import merail.life.mejourney.ui.theme.MejourneyTheme
 @Composable
 fun ColumnScope.YearsList(
     items: ImmutableList<HomeItem>,
-    navigateToEvent: () -> Unit,
+    navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
         LazyColumn(
@@ -47,7 +47,7 @@ fun ColumnScope.YearsList(
             items(items) {
                 YearItem(
                     item = it,
-                    navigateToEvent = navigateToEvent,
+                    navigateToContent = navigateToContent,
                 )
             }
         }
@@ -57,7 +57,7 @@ fun ColumnScope.YearsList(
 @Composable
 private fun YearItem(
     item: HomeItem,
-    navigateToEvent: () -> Unit,
+    navigateToContent: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -103,7 +103,7 @@ private fun YearItem(
                 onLoadingSuccess = {
                     isImageLoaded.value = true
                 },
-                navigateToEvent = navigateToEvent,
+                navigateToContent = navigateToContent,
             )
         }
     }
@@ -121,7 +121,7 @@ private fun YearsListPreview(
     ) {
         YearsList(
             items = items,
-            navigateToEvent = {},
+            navigateToContent = {},
         )
     }
 }

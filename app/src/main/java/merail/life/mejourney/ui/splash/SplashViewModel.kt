@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.mejourney.auth.IFirebaseAuthRepository
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.IFirebaseRepository
 
 class SplashViewModel(

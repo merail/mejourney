@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.theme.MejourneyTheme
@@ -30,7 +30,7 @@ import merail.life.mejourney.ui.theme.MejourneyTheme
 @Composable
 fun ColumnScope.CommonList(
     items: ImmutableList<HomeItem>,
-    navigateToEvent: () -> Unit,
+    navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
         LazyVerticalStaggeredGrid(
@@ -52,7 +52,7 @@ fun ColumnScope.CommonList(
 
                     Cover(
                         item = it,
-                        navigateToEvent = navigateToEvent,
+                        navigateToContent = navigateToContent,
                         onLongClick = {
                             isImageLongClicked.value = isImageLongClicked.value.not()
                         },
@@ -107,7 +107,7 @@ private fun CommonListPreview(
     ) {
         CommonList(
             items = items,
-            navigateToEvent = {},
+            navigateToContent = {},
         )
     }
 }

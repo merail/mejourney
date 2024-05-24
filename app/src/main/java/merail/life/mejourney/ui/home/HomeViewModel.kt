@@ -8,9 +8,9 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.IFirebaseRepository
-import merail.life.mejourney.data.TabFilter
+import merail.life.mejourney.data.model.TabFilter
 
 class HomeViewModel(
     private val firebaseRepository: IFirebaseRepository,

@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import merail.life.mejourney.R
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.ui.theme.MejourneyTheme
 
 @Preview
@@ -29,7 +29,7 @@ fun Cover(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
     onLoadingSuccess: () -> Unit = {},
-    navigateToEvent: () -> Unit = {},
+    navigateToContent: (String) -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
     MejourneyTheme {
@@ -53,7 +53,7 @@ fun Cover(
                         onLongClick.invoke()
                     },
                     onClick = {
-                        navigateToEvent.invoke()
+                        navigateToContent.invoke(item.id)
                     },
                 ),
         )

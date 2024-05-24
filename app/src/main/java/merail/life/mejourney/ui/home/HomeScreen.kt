@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.R
-import merail.life.mejourney.data.HomeItem
-import merail.life.mejourney.data.TabFilter
+import merail.life.mejourney.data.model.TabFilter
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.AppViewModelProvider
 import merail.life.mejourney.ui.common.Error
@@ -53,7 +53,7 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToSelector: (TabFilter) -> Unit,
-    navigateToEvent: () -> Unit,
+    navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
@@ -62,7 +62,7 @@ fun HomeScreen(
         is HomeUiState.Success -> Content(
             items = uiState.items,
             navigateToSelector = navigateToSelector,
-            navigateToEvent = navigateToEvent,
+            navigateToContent = navigateToContent,
             onTabClick = {
                 viewModel.getItems(it)
             },
@@ -75,7 +75,7 @@ fun HomeScreen(
 private fun Content(
     @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
     navigateToSelector: (TabFilter) -> Unit = {},
-    navigateToEvent: () -> Unit = {},
+    navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
     Column(
@@ -90,9 +90,9 @@ private fun Content(
         when (tabFilter) {
             TabFilter.YEAR -> YearsList(
                 items = items,
-                navigateToEvent = {
+                navigateToContent = {
                     if (items.size == 1) {
-                        navigateToEvent.invoke()
+                        navigateToContent.invoke(it)
                     } else {
                         navigateToSelector.invoke(TabFilter.YEAR)
                     }
@@ -100,9 +100,9 @@ private fun Content(
             )
             TabFilter.COUNTRY -> CountriesList(
                 items = items,
-                navigateToEvent = {
+                navigateToContent = {
                     if (items.size == 1) {
-                        navigateToEvent.invoke()
+                        navigateToContent.invoke(it)
                     } else {
                         navigateToSelector.invoke(TabFilter.COUNTRY)
                     }
@@ -110,9 +110,9 @@ private fun Content(
             )
             TabFilter.PLACE -> PlacesList(
                 items = items,
-                navigateToEvent = {
+                navigateToContent = {
                     if (items.size == 1) {
-                        navigateToEvent.invoke()
+                        navigateToContent.invoke(it)
                     } else {
                         navigateToSelector.invoke(TabFilter.COUNTRY)
                     }
@@ -120,7 +120,7 @@ private fun Content(
             )
             TabFilter.COMMON -> CommonList(
                 items = items,
-                navigateToEvent = navigateToEvent,
+                navigateToContent = navigateToContent,
             )
         }
 

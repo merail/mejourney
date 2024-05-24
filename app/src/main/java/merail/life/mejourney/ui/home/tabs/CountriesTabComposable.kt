@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.mejourney.data.HomeItem
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.theme.MejourneyTheme
@@ -33,7 +33,7 @@ import merail.life.mejourney.ui.theme.MejourneyTheme
 @Composable
 fun ColumnScope.CountriesList(
     items: ImmutableList<HomeItem>,
-    navigateToEvent: () -> Unit,
+    navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
         LazyColumn(
@@ -49,7 +49,7 @@ fun ColumnScope.CountriesList(
             items(items) {
                 CountryItem(
                     item = it,
-                    navigateToEvent = navigateToEvent,
+                    navigateToContent = navigateToContent,
                 )
             }
         }
@@ -59,7 +59,7 @@ fun ColumnScope.CountriesList(
 @Composable
 private fun CountryItem(
     item: HomeItem,
-    navigateToEvent: () -> Unit,
+    navigateToContent: (String) -> Unit,
 ) {
     Card(
         colors = CardDefaults.cardColors().copy(
@@ -85,7 +85,7 @@ private fun CountryItem(
                 onLoadingSuccess = {
                     isImageLoaded.value = true
                 },
-                navigateToEvent = navigateToEvent,
+                navigateToContent = navigateToContent,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(256.dp),
@@ -115,7 +115,7 @@ private fun CountriesListPreview(
     ) {
         CountriesList(
             items = items,
-            navigateToEvent = {},
+            navigateToContent = {},
         )
     }
 }

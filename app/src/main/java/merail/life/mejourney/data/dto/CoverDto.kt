@@ -1,10 +1,10 @@
-package merail.life.mejourney.data
+package merail.life.mejourney.data.dto
 
-data class HomeItem(
+class CoverDto(
+    val id: String,
     val year: Long,
     val country: String,
     val place: String,
     val title: String,
     val description: String,
-    val url: String,
 )
