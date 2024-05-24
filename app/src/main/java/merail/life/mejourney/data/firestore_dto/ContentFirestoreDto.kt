@@ -13,6 +13,7 @@ fun ContentFirestoreDto.toDto() = contentSnapshot
     .first()
     .run {
         ContentDto(
+            title = data["title"] as String,
             text = data["text"] as String,
         )
     }

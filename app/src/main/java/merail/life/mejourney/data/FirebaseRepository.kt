@@ -5,6 +5,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.tasks.await
 import merail.life.mejourney.data.firestore_dto.ContentFirestoreDto
@@ -71,13 +72,14 @@ class FirebaseRepository(
     ): ContentItem {
         val firestoreData = ContentFirestoreDto(getFirestoreData("$CONTENT_PATH$id"))
         val storageData = getStorageData("$CONTENT_PATH$id")
-        val text = firestoreData.toDto().text
+        val contentDto = firestoreData.toDto()
         val imagesUrls = storageData.map { file ->
             file.getUrl()
         }
         return ContentItem(
-            text = text,
-            imagesUrls = imagesUrls
+            title = contentDto.title,
+            text = contentDto.text,
+            imagesUrls = imagesUrls.toImmutableList(),
         )
     }
 

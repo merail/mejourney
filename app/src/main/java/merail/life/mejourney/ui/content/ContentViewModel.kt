@@ -44,6 +44,6 @@ sealed class ContentUiState {
     data class Error(val exception: Throwable): ContentUiState()
 
     class Success(
-        val contentItem: ContentItem,
+        val item: ContentItem,
     ): ContentUiState()
 }
