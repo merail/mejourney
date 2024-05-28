@@ -3,17 +3,20 @@ package merail.life.mejourney.ui.selector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.IFirebaseRepository
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.model.TabFilter
+import javax.inject.Inject
 
-class SelectorViewModel(
+@HiltViewModel
+class SelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {

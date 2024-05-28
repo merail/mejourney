@@ -20,11 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.navigation.NavigationDestination
-import merail.life.mejourney.ui.AppViewModelProvider
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.Error
 import merail.life.mejourney.ui.common.ItemsParameterProvider
@@ -42,7 +41,7 @@ object SelectorDestination : NavigationDestination {
 @Composable
 fun SelectorScreen(
     navigateToContent: (String) -> Unit,
-    viewModel: SelectorViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is SelectorUiState.Loading -> Loading()

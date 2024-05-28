@@ -14,8 +14,9 @@ import merail.life.mejourney.data.firestore_dto.toDto
 import merail.life.mejourney.data.model.ContentItem
 import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.model.TabFilter
+import javax.inject.Inject
 
-class FirebaseRepository(
+class FirebaseRepository @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
     private val firebaseFirestore: FirebaseFirestore,
 ) : IFirebaseRepository {

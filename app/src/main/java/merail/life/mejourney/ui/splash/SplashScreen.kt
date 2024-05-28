@@ -6,10 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.mejourney.extensions.activity
 import merail.life.mejourney.navigation.NavigationDestination
-import merail.life.mejourney.ui.AppViewModelProvider
 import merail.life.mejourney.ui.common.Error
 
 object SplashDestination : NavigationDestination {
@@ -19,7 +18,7 @@ object SplashDestination : NavigationDestination {
 @Composable
 fun SplashScreen(
     navigateToHome: () -> Unit,
-    viewModel: SplashViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 

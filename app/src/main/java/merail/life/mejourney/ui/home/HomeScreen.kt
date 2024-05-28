@@ -28,13 +28,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.mejourney.R
-import merail.life.mejourney.data.model.TabFilter
 import merail.life.mejourney.data.model.HomeItem
+import merail.life.mejourney.data.model.TabFilter
 import merail.life.mejourney.navigation.NavigationDestination
-import merail.life.mejourney.ui.AppViewModelProvider
 import merail.life.mejourney.ui.common.Error
 import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.common.Loading
@@ -54,7 +53,7 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToSelector: (TabFilter) -> Unit,
     navigateToContent: (String) -> Unit,
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is HomeUiState.Loading -> Loading()

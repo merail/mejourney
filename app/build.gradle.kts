@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
+    alias(libs.plugins.hilt.gradle)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -79,4 +81,8 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

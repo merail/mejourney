@@ -2,6 +2,7 @@ package merail.life.mejourney.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -9,10 +10,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.mejourney.auth.IFirebaseAuthRepository
-import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.IFirebaseRepository
+import merail.life.mejourney.data.model.HomeItem
+import javax.inject.Inject
 
-class SplashViewModel(
+@HiltViewModel
+class SplashViewModel @Inject constructor(
     private val firebaseAuthRepository: IFirebaseAuthRepository,
     private val firebaseStorageRepository: IFirebaseRepository,
 ) : ViewModel() {

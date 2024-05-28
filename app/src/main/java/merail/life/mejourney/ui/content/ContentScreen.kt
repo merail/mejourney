@@ -12,12 +12,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import merail.life.mejourney.data.model.ContentItem
 import merail.life.mejourney.data.model.splitText
 import merail.life.mejourney.navigation.NavigationDestination
-import merail.life.mejourney.ui.AppViewModelProvider
 import merail.life.mejourney.ui.common.Error
 import merail.life.mejourney.ui.common.Loading
 
@@ -31,7 +30,7 @@ object ContentDestination : NavigationDestination {
 
 @Composable
 fun ContentScreen(
-    viewModel: ContentViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is ContentUiState.Loading -> Loading()

@@ -3,13 +3,16 @@ package merail.life.mejourney.ui.content
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.mejourney.data.IFirebaseRepository
 import merail.life.mejourney.data.model.ContentItem
+import javax.inject.Inject
 
-class ContentViewModel(
+@HiltViewModel
+class ContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {

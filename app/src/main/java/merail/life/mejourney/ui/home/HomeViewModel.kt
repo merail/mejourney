@@ -2,17 +2,20 @@ package merail.life.mejourney.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.IFirebaseRepository
+import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.data.model.TabFilter
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {
 
