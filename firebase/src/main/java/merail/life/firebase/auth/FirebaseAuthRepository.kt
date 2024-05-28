@@ -1,7 +1,6 @@
 package merail.life.firebase.auth
 
 import android.util.Log
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -14,7 +13,7 @@ class FirebaseAuthRepository @Inject constructor(
         private const val TAG = "FirebaseAuthRepository"
     }
 
-    override suspend fun auth(): AuthResult = firebaseAuth
+    override suspend fun auth() = firebaseAuth
         .signInAnonymously()
         .addOnFailureListener {
             Log.w(TAG, "Firebase Auth. Failure", it)
@@ -23,4 +22,7 @@ class FirebaseAuthRepository @Inject constructor(
             Log.d(TAG, "Firebase Auth. Success ${firebaseAuth.currentUser?.uid}")
         }
         .await()
+        .run {
+            Unit
+        }
 }

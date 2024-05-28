@@ -8,14 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import merail.life.firebase.data.model.HomeFilterType
-import merail.life.mejourney.ui.content.ContentDestination
-import merail.life.mejourney.ui.content.ContentScreen
-import merail.life.mejourney.ui.home.HomeDestination
-import merail.life.mejourney.ui.home.HomeScreen
-import merail.life.mejourney.ui.selector.SelectorDestination
-import merail.life.mejourney.ui.selector.SelectorScreen
-import merail.life.mejourney.ui.splash.SplashDestination
-import merail.life.mejourney.ui.splash.SplashScreen
+import merail.life.home.content.ContentDestination
+import merail.life.home.content.ContentScreen
+import merail.life.home.home.HomeDestination
+import merail.life.home.home.HomeScreen
+import merail.life.home.selector.SelectorDestination
+import merail.life.home.selector.SelectorScreen
+import merail.life.splash.SplashDestination
+import merail.life.splash.SplashScreen
 
 @Composable
 fun MejourneyNavHost(

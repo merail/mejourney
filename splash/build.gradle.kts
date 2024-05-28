@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.hilt.gradle)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
-    namespace = "merail.life.design"
+    namespace = "merail.life.splash"
     compileSdk = 34
 
     defaultConfig {
@@ -30,9 +32,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -42,7 +41,13 @@ dependencies {
 
     implementation(libs.kotlinx.immutable.collections)
 
-    implementation(libs.coil.compose)
+    implementation(libs.androidx.core.splashscreen)
 
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(project(":design"))
+    implementation(project(":core"))
     implementation(project(":firebase"))
 }

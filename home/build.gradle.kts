@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.hilt.gradle)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
-    namespace = "merail.life.design"
+    namespace = "merail.life.home"
     compileSdk = 34
 
     defaultConfig {
@@ -44,5 +46,11 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(project(":design"))
+    implementation(project(":core"))
     implementation(project(":firebase"))
 }

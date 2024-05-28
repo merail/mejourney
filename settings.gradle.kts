@@ -26,3 +26,9 @@ include(":app")
 include(":design")
 
 include(":firebase")
+
+include(":splash")
+
+include(":core")
+
+include(":home")

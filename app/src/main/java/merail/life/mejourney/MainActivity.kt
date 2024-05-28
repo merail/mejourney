@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
-import merail.life.mejourney.ui.theme.MejourneyTheme
+import merail.life.design.MejourneyTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
