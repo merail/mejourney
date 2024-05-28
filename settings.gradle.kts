@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mejourney"
 include(":app")
- 
+include(":design")
