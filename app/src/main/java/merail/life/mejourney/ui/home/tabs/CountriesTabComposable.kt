@@ -25,14 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.mejourney.data.model.HomeItem
+import merail.life.firebase.data.model.HomeModel
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.theme.MejourneyTheme
 
 @Composable
 fun ColumnScope.CountriesList(
-    items: ImmutableList<HomeItem>,
+    items: ImmutableList<HomeModel>,
     navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
@@ -58,7 +58,7 @@ fun ColumnScope.CountriesList(
 
 @Composable
 private fun CountryItem(
-    item: HomeItem,
+    item: HomeModel,
     navigateToContent: (String) -> Unit,
 ) {
     Card(
@@ -106,7 +106,7 @@ private fun CountryItem(
 @Preview
 @Composable
 private fun CountriesListPreview(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
+    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,

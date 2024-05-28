@@ -1,6 +1,6 @@
-package merail.life.mejourney.data.model
+package merail.life.firebase.data.model
 
-data class HomeItem(
+data class HomeModel(
     val id: String,
     val year: Long,
     val country: String,

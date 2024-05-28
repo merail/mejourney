@@ -17,15 +17,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import merail.life.firebase.data.model.HomeModel
 import merail.life.mejourney.R
-import merail.life.mejourney.data.model.HomeItem
 import merail.life.mejourney.ui.theme.MejourneyTheme
 
 @Preview
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Cover(
-    @PreviewParameter(ItemParameterProvider::class) item: HomeItem,
+    @PreviewParameter(ItemParameterProvider::class) item: HomeModel,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
     onLoadingSuccess: () -> Unit = {},

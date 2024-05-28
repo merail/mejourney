@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
-import merail.life.mejourney.data.model.ContentItem
-import merail.life.mejourney.data.model.splitText
+import merail.life.firebase.data.model.ContentItem
+import merail.life.firebase.data.model.splitText
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.common.Error
 import merail.life.mejourney.ui.common.Loading

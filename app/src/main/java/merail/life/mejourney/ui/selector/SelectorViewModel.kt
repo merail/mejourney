@@ -10,9 +10,9 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.data.IFirebaseRepository
-import merail.life.mejourney.data.model.HomeItem
-import merail.life.mejourney.data.model.TabFilter
+import merail.life.firebase.data.IFirebaseRepository
+import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.HomeFilterType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +21,7 @@ class SelectorViewModel @Inject constructor(
     private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {
 
-    private val tabFilter: TabFilter = checkNotNull(savedStateHandle[SelectorDestination.TAB_FILTER_ARG])
+    private val tabFilter: HomeFilterType = checkNotNull(savedStateHandle[SelectorDestination.TAB_FILTER_ARG])
 
     private val _uiState: MutableStateFlow<SelectorUiState> = MutableStateFlow(SelectorUiState.Loading)
 
@@ -32,7 +32,7 @@ class SelectorViewModel @Inject constructor(
     }
 
     private fun getItems(
-        filter: TabFilter,
+        filter: HomeFilterType,
     ) = viewModelScope.launch {
         runCatching {
             firebaseRepository.getHomeItems(filter)
@@ -51,6 +51,6 @@ sealed class SelectorUiState {
     data class Error(val exception: Throwable): SelectorUiState()
 
     data class Success(
-        val items: ImmutableList<HomeItem> = persistentListOf(),
+        val items: ImmutableList<HomeModel> = persistentListOf(),
     ): SelectorUiState()
 }

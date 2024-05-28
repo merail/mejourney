@@ -1,11 +1,19 @@
-package merail.life.mejourney.data.firestore_dto
+package merail.life.firebase.data.dto
 
 import com.google.firebase.firestore.QuerySnapshot
-import merail.life.mejourney.data.dto.CoverDto
 
 @JvmInline
 value class CoversFirestoreDto(
     val coverSnapshot: QuerySnapshot,
+)
+
+class CoverDto(
+    val id: String,
+    val year: Long,
+    val country: String,
+    val place: String,
+    val title: String,
+    val description: String,
 )
 
 fun CoversFirestoreDto.toDto() = coverSnapshot

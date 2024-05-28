@@ -9,15 +9,15 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.auth.IFirebaseAuthRepository
-import merail.life.mejourney.data.IFirebaseRepository
-import merail.life.mejourney.data.model.HomeItem
+import merail.life.firebase.auth.IFirebaseAuthRepository
+import merail.life.firebase.data.IFirebaseRepository
+import merail.life.firebase.data.model.HomeModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val firebaseAuthRepository: IFirebaseAuthRepository,
-    private val firebaseStorageRepository: IFirebaseRepository,
+    private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<SplashUiState> = MutableStateFlow(SplashUiState.Loading)
@@ -40,7 +40,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun getItems() = runCatching {
-        firebaseStorageRepository.getHomeItems()
+        firebaseRepository.getHomeItems()
     }.onFailure {
         _uiState.value = SplashUiState.Error(it)
     }.onSuccess {
@@ -55,6 +55,6 @@ sealed class SplashUiState {
     data class Error(val exception: Throwable): SplashUiState()
 
     data class Success(
-        val items: ImmutableList<HomeItem> = persistentListOf(),
+        val items: ImmutableList<HomeModel> = persistentListOf(),
     ): SplashUiState()
 }

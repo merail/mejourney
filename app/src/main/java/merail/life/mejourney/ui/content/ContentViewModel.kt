@@ -7,8 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.mejourney.data.IFirebaseRepository
-import merail.life.mejourney.data.model.ContentItem
+import merail.life.firebase.data.IFirebaseRepository
+import merail.life.firebase.data.model.ContentItem
 import javax.inject.Inject
 
 @HiltViewModel

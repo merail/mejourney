@@ -1,4 +1,4 @@
-package merail.life.mejourney.data.model
+package merail.life.firebase.data.model
 
 import kotlinx.collections.immutable.ImmutableList
 

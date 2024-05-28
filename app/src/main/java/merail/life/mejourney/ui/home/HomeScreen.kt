@@ -30,9 +30,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.HomeFilterType
 import merail.life.mejourney.R
-import merail.life.mejourney.data.model.HomeItem
-import merail.life.mejourney.data.model.TabFilter
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.common.Error
 import merail.life.mejourney.ui.common.ItemsParameterProvider
@@ -51,7 +51,7 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
-    navigateToSelector: (TabFilter) -> Unit,
+    navigateToSelector: (HomeFilterType) -> Unit,
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
@@ -72,10 +72,10 @@ fun HomeScreen(
 @Preview
 @Composable
 private fun Content(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
-    navigateToSelector: (TabFilter) -> Unit = {},
+    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
+    navigateToSelector: (HomeFilterType) -> Unit = {},
     navigateToContent: (String) -> Unit = {},
-    onTabClick: (TabFilter) -> Unit = {},
+    onTabClick: (HomeFilterType) -> Unit = {},
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -83,41 +83,41 @@ private fun Content(
             .fillMaxSize(),
     ) {
         var tabFilter by rememberSaveable {
-            mutableStateOf(TabFilter.COMMON)
+            mutableStateOf(HomeFilterType.COMMON)
         }
 
         when (tabFilter) {
-            TabFilter.YEAR -> YearsList(
+            HomeFilterType.YEAR -> YearsList(
                 items = items,
                 navigateToContent = {
                     if (items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        navigateToSelector.invoke(TabFilter.YEAR)
+                        navigateToSelector.invoke(HomeFilterType.YEAR)
                     }
                 },
             )
-            TabFilter.COUNTRY -> CountriesList(
+            HomeFilterType.COUNTRY -> CountriesList(
                 items = items,
                 navigateToContent = {
                     if (items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        navigateToSelector.invoke(TabFilter.COUNTRY)
+                        navigateToSelector.invoke(HomeFilterType.COUNTRY)
                     }
                 },
             )
-            TabFilter.PLACE -> PlacesList(
+            HomeFilterType.PLACE -> PlacesList(
                 items = items,
                 navigateToContent = {
                     if (items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        navigateToSelector.invoke(TabFilter.COUNTRY)
+                        navigateToSelector.invoke(HomeFilterType.COUNTRY)
                     }
                 },
             )
-            TabFilter.COMMON -> CommonList(
+            HomeFilterType.COMMON -> CommonList(
                 items = items,
                 navigateToContent = navigateToContent,
             )
@@ -134,13 +134,13 @@ private fun Content(
 
 @Composable
 private fun HomeTabs(
-    onTabClick: (TabFilter) -> Unit,
+    onTabClick: (HomeFilterType) -> Unit,
 ) {
     val list = listOf(
-        Pair(TabFilter.YEAR, stringResource(R.string.main_tab_years_name)),
-        Pair(TabFilter.COUNTRY, stringResource(R.string.main_tab_countries_name)),
-        Pair(TabFilter.PLACE, stringResource(R.string.main_tab_places_name)),
-        Pair(TabFilter.COMMON, stringResource(R.string.main_tab_all_name)),
+        Pair(HomeFilterType.YEAR, stringResource(R.string.main_tab_years_name)),
+        Pair(HomeFilterType.COUNTRY, stringResource(R.string.main_tab_countries_name)),
+        Pair(HomeFilterType.PLACE, stringResource(R.string.main_tab_places_name)),
+        Pair(HomeFilterType.COMMON, stringResource(R.string.main_tab_all_name)),
     )
     val selectedIndex = rememberSaveable {
         mutableIntStateOf(list.size - 1)
@@ -172,10 +172,10 @@ private fun HomeTabs(
 }
 
 @Composable
-private fun Pair<TabFilter, String>.HomeTab(
+private fun Pair<HomeFilterType, String>.HomeTab(
     selectedIndex: MutableState<Int>,
     index: Int,
-    onTabClick: (TabFilter) -> Unit,
+    onTabClick: (HomeFilterType) -> Unit,
 ) {
     Box(
         modifier = Modifier

@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import merail.life.mejourney.data.model.TabFilter
+import merail.life.firebase.data.model.HomeFilterType
 import merail.life.mejourney.ui.content.ContentDestination
 import merail.life.mejourney.ui.content.ContentScreen
 import merail.life.mejourney.ui.home.HomeDestination
@@ -51,7 +51,7 @@ fun MejourneyNavHost(
         composable(
             route = SelectorDestination.routeWithArgs,
             arguments = listOf(navArgument(SelectorDestination.TAB_FILTER_ARG) {
-                type = NavType.EnumType(TabFilter::class.java)
+                type = NavType.EnumType(HomeFilterType::class.java)
             }),
         ) {
             SelectorScreen(

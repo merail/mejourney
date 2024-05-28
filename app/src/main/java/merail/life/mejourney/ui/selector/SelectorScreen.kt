@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.mejourney.data.model.HomeItem
+import merail.life.firebase.data.model.HomeModel
 import merail.life.mejourney.navigation.NavigationDestination
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.Error
@@ -57,7 +57,7 @@ fun SelectorScreen(
 @Preview
 @Composable
 private fun Content(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
+    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
     navigateToContent: (String) -> Unit = {},
 ) {
     MejourneyTheme {
@@ -79,7 +79,7 @@ private fun Content(
 
 @Composable
 private fun SelectorItem(
-    item: HomeItem,
+    item: HomeModel,
     navigateToContent: (String) -> Unit,
 ) {
     Column(

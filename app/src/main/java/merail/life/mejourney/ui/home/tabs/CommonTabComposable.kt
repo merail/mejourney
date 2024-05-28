@@ -22,14 +22,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.mejourney.data.model.HomeItem
+import merail.life.firebase.data.model.HomeModel
 import merail.life.mejourney.ui.common.Cover
 import merail.life.mejourney.ui.common.ItemsParameterProvider
 import merail.life.mejourney.ui.theme.MejourneyTheme
 
 @Composable
 fun ColumnScope.CommonList(
-    items: ImmutableList<HomeItem>,
+    items: ImmutableList<HomeModel>,
     navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
@@ -71,7 +71,7 @@ fun ColumnScope.CommonList(
 @Composable
 private fun AnimatedImageText(
     isVisible: Boolean,
-    item: HomeItem,
+    item: HomeModel,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -98,7 +98,7 @@ private fun AnimatedImageText(
 @Preview
 @Composable
 private fun CommonListPreview(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeItem>,
+    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,

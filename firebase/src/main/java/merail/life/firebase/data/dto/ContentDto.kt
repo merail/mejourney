@@ -1,11 +1,15 @@
-package merail.life.mejourney.data.firestore_dto
+package merail.life.firebase.data.dto
 
 import com.google.firebase.firestore.QuerySnapshot
-import merail.life.mejourney.data.dto.ContentDto
 
 @JvmInline
 value class ContentFirestoreDto(
     val contentSnapshot: QuerySnapshot,
+)
+
+class ContentDto(
+    val title: String,
+    val text: String,
 )
 
 fun ContentFirestoreDto.toDto() = contentSnapshot

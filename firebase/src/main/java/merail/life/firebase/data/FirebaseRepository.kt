@@ -1,4 +1,4 @@
-package merail.life.mejourney.data
+package merail.life.firebase.data
 
 import android.util.Log
 import com.google.firebase.firestore.CollectionReference
@@ -8,12 +8,12 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.tasks.await
-import merail.life.mejourney.data.firestore_dto.ContentFirestoreDto
-import merail.life.mejourney.data.firestore_dto.CoversFirestoreDto
-import merail.life.mejourney.data.firestore_dto.toDto
-import merail.life.mejourney.data.model.ContentItem
-import merail.life.mejourney.data.model.HomeItem
-import merail.life.mejourney.data.model.TabFilter
+import merail.life.firebase.data.dto.ContentFirestoreDto
+import merail.life.firebase.data.dto.CoversFirestoreDto
+import merail.life.firebase.data.dto.toDto
+import merail.life.firebase.data.model.ContentItem
+import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.HomeFilterType
 import javax.inject.Inject
 
 class FirebaseRepository @Inject constructor(
@@ -35,11 +35,11 @@ class FirebaseRepository @Inject constructor(
 
     private val mutex = Mutex()
 
-    private val items = mutableListOf<HomeItem>()
+    private val items = mutableListOf<HomeModel>()
 
     override suspend fun getHomeItems(
-        filter: TabFilter,
-    ): List<HomeItem> {
+        filter: HomeFilterType,
+    ): List<HomeModel> {
         if (items.isNotEmpty()) {
             return items.filter(filter)
         }
@@ -48,7 +48,7 @@ class FirebaseRepository @Inject constructor(
             val firestoreData = CoversFirestoreDto(getFirestoreData(HOME_COVERS_PATH))
             val storageData = getStorageData(HOME_COVERS_PATH)
             val newItems = firestoreData.toDto().zip(storageData).map { (info, file) ->
-                HomeItem(
+                HomeModel(
                     id = info.id,
                     year = info.year,
                     country = info.country,
@@ -84,25 +84,25 @@ class FirebaseRepository @Inject constructor(
         )
     }
 
-    private fun MutableList<HomeItem>.filter(
-        filter: TabFilter,
+    private fun MutableList<HomeModel>.filter(
+        filter: HomeFilterType,
     ) = when (filter) {
-        TabFilter.YEAR -> groupBy {
+        HomeFilterType.YEAR -> groupBy {
             it.year
         }.values.map {
             it[0]
         }
-        TabFilter.PLACE -> groupBy {
+        HomeFilterType.PLACE -> groupBy {
             it.place
         }.values.map {
             it[0]
         }
-        TabFilter.COUNTRY -> groupBy {
+        HomeFilterType.COUNTRY -> groupBy {
             it.country
         }.values.map {
             it[0]
         }
-        TabFilter.COMMON -> this
+        HomeFilterType.COMMON -> this
     }
 
     private suspend fun getFirestoreData(
