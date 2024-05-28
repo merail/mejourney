@@ -13,19 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import merail.life.design.MejourneyTheme
 import merail.life.design.R
-import merail.life.firebase.data.model.HomeModel
 
-@Preview
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Cover(
-    @PreviewParameter(ItemParameterProvider::class) item: HomeModel,
+    id: String,
+    url: String,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
     onLoadingSuccess: () -> Unit = {},
@@ -34,7 +31,7 @@ fun Cover(
 ) {
     MejourneyTheme {
         SubcomposeAsyncImage(
-            model = item.url,
+            model = url,
             contentDescription = null,
             contentScale = contentScale,
             loading = {
@@ -53,7 +50,7 @@ fun Cover(
                         onLongClick.invoke()
                     },
                     onClick = {
-                        navigateToContent.invoke(item.id)
+                        navigateToContent.invoke(id)
                     },
                 ),
         )

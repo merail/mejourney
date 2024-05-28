@@ -27,7 +27,7 @@ fun SplashScreen(
         mutableStateOf(activity?.installSplashScreen())
     }
     splashScreen.value?.setKeepOnScreenCondition {
-        uiState !is SplashUiState.Success
+        uiState is SplashUiState.Loading
     }
 
     when (uiState) {

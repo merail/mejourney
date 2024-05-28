@@ -10,8 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.firebase.data.IFirebaseRepository
-import merail.life.firebase.data.model.HomeFilterType
-import merail.life.firebase.data.model.HomeModel
+import merail.life.home.model.HomeItem
+import merail.life.home.model.TabFilter
+import merail.life.home.model.toItems
+import merail.life.home.model.toModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,18 +26,18 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
-        getItems(HomeFilterType.COMMON)
+        getItems(TabFilter.COMMON)
     }
 
     fun getItems(
-        filter: HomeFilterType,
+        filter: TabFilter,
     ) = viewModelScope.launch {
         runCatching {
-            firebaseRepository.getHomeItems(filter)
+            firebaseRepository.getHomeItems(filter.toModel())
         }.onFailure {
             _uiState.value = HomeUiState.Error(it)
         }.onSuccess {
-            _uiState.value = HomeUiState.Success(it.toImmutableList())
+            _uiState.value = HomeUiState.Success(it.toItems().toImmutableList())
         }
     }
 }
@@ -47,6 +49,6 @@ sealed class HomeUiState {
     data class Error(val exception: Throwable): HomeUiState()
 
     data class Success(
-        val items: ImmutableList<HomeModel> = persistentListOf(),
+        val items: ImmutableList<HomeItem> = persistentListOf(),
     ): HomeUiState()
 }

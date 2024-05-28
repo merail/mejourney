@@ -17,8 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -26,9 +24,8 @@ import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.Cover
 import merail.life.design.components.Error
-import merail.life.design.components.ItemsParameterProvider
 import merail.life.design.components.Loading
-import merail.life.firebase.data.model.HomeModel
+import merail.life.home.model.HomeItem
 
 object SelectorDestination : NavigationDestination {
     override val route = "selector"
@@ -54,10 +51,9 @@ fun SelectorScreen(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
 @Composable
 private fun Content(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
+    items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit = {},
 ) {
     MejourneyTheme {
@@ -79,7 +75,7 @@ private fun Content(
 
 @Composable
 private fun SelectorItem(
-    item: HomeModel,
+    item: HomeItem,
     navigateToContent: (String) -> Unit,
 ) {
     Column(
@@ -97,7 +93,8 @@ private fun SelectorItem(
             ),
         ) {
             Cover(
-                item = item,
+                id = item.id,
+                url = item.url,
                 navigateToContent = {
                     navigateToContent.invoke(item.id)
                 },

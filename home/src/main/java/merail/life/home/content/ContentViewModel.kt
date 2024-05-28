@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.firebase.data.IFirebaseRepository
-import merail.life.firebase.data.model.ContentItem
+import merail.life.home.model.ContentItem
+import merail.life.home.model.toItem
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +36,7 @@ class ContentViewModel @Inject constructor(
         }.onFailure {
             _uiState.value = ContentUiState.Error(it)
         }.onSuccess {
-            _uiState.value = ContentUiState.Success(it)
+            _uiState.value = ContentUiState.Success(it.toItem())
         }
     }
 }

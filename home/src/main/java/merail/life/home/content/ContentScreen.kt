@@ -17,8 +17,8 @@ import coil.compose.SubcomposeAsyncImage
 import merail.life.core.NavigationDestination
 import merail.life.design.components.Error
 import merail.life.design.components.Loading
-import merail.life.firebase.data.model.ContentItem
-import merail.life.firebase.data.model.splitText
+import merail.life.home.model.ContentItem
+import merail.life.home.model.splitText
 
 object ContentDestination : NavigationDestination {
     override val route = "content"

@@ -1,9 +1,7 @@
 package merail.life.home.home.tabs
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,19 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.Cover
-import merail.life.design.components.ItemsParameterProvider
-import merail.life.firebase.data.model.HomeModel
 import merail.life.home.R
+import merail.life.home.model.HomeItem
 
 @Composable
 fun ColumnScope.YearsList(
-    items: ImmutableList<HomeModel>,
+    items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
@@ -56,7 +51,7 @@ fun ColumnScope.YearsList(
 
 @Composable
 private fun YearItem(
-    item: HomeModel,
+    item: HomeItem,
     navigateToContent: (String) -> Unit,
 ) {
     Column(
@@ -99,29 +94,13 @@ private fun YearItem(
                 ),
         ) {
             Cover(
-                item = item,
+                id = item.id,
+                url = item.url,
                 onLoadingSuccess = {
                     isImageLoaded.value = true
                 },
                 navigateToContent = navigateToContent,
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun YearsListPreview(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
-) {
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        YearsList(
-            items = items,
-            navigateToContent = {},
-        )
     }
 }

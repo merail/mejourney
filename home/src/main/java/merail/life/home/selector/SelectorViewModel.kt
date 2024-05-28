@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.firebase.data.IFirebaseRepository
 import merail.life.firebase.data.model.HomeFilterType
-import merail.life.firebase.data.model.HomeModel
-import merail.life.home.selector.SelectorDestination
+import merail.life.home.model.HomeItem
+import merail.life.home.model.toItems
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +40,7 @@ class SelectorViewModel @Inject constructor(
         }.onFailure {
             _uiState.value = SelectorUiState.Error(it)
         }.onSuccess {
-            _uiState.value = SelectorUiState.Success(it.toImmutableList())
+            _uiState.value = SelectorUiState.Success(it.toItems().toImmutableList())
         }
     }
 }
@@ -52,6 +52,6 @@ sealed class SelectorUiState {
     data class Error(val exception: Throwable): SelectorUiState()
 
     data class Success(
-        val items: ImmutableList<HomeModel> = persistentListOf(),
+        val items: ImmutableList<HomeItem> = persistentListOf(),
     ): SelectorUiState()
 }

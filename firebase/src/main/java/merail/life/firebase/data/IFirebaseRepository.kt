@@ -1,8 +1,8 @@
 package merail.life.firebase.data
 
-import merail.life.firebase.data.model.ContentItem
-import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.ContentModel
 import merail.life.firebase.data.model.HomeFilterType
+import merail.life.firebase.data.model.HomeModel
 
 interface IFirebaseRepository {
 
@@ -12,5 +12,5 @@ interface IFirebaseRepository {
 
     suspend fun getContentItem(
         id: String,
-    ): ContentItem
+    ): ContentModel
 }

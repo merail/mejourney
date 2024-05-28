@@ -11,9 +11,9 @@ import kotlinx.coroutines.tasks.await
 import merail.life.firebase.data.dto.ContentFirestoreDto
 import merail.life.firebase.data.dto.CoversFirestoreDto
 import merail.life.firebase.data.dto.toDto
-import merail.life.firebase.data.model.ContentItem
-import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.ContentModel
 import merail.life.firebase.data.model.HomeFilterType
+import merail.life.firebase.data.model.HomeModel
 import javax.inject.Inject
 
 class FirebaseRepository @Inject constructor(
@@ -70,14 +70,14 @@ class FirebaseRepository @Inject constructor(
 
     override suspend fun getContentItem(
         id: String,
-    ): ContentItem {
+    ): ContentModel {
         val firestoreData = ContentFirestoreDto(getFirestoreData("$CONTENT_PATH$id"))
         val storageData = getStorageData("$CONTENT_PATH$id")
         val contentDto = firestoreData.toDto()
         val imagesUrls = storageData.map { file ->
             file.getUrl()
         }
-        return ContentItem(
+        return ContentModel(
             title = contentDto.title,
             text = contentDto.text,
             imagesUrls = imagesUrls.toImmutableList(),

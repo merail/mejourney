@@ -7,7 +7,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -18,18 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.Cover
-import merail.life.design.components.ItemsParameterProvider
-import merail.life.firebase.data.model.HomeModel
+import merail.life.home.model.HomeItem
 
 @Composable
 fun ColumnScope.CommonList(
-    items: ImmutableList<HomeModel>,
+    items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
@@ -51,7 +47,8 @@ fun ColumnScope.CommonList(
                     }
 
                     Cover(
-                        item = it,
+                        id = it.id,
+                        url = it.url,
                         navigateToContent = navigateToContent,
                         onLongClick = {
                             isImageLongClicked.value = isImageLongClicked.value.not()
@@ -71,7 +68,7 @@ fun ColumnScope.CommonList(
 @Composable
 private fun AnimatedImageText(
     isVisible: Boolean,
-    item: HomeModel,
+    item: HomeItem,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -92,22 +89,5 @@ private fun AnimatedImageText(
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun CommonListPreview(
-    @PreviewParameter(ItemsParameterProvider::class) items: ImmutableList<HomeModel>,
-) {
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        CommonList(
-            items = items,
-            navigateToContent = {},
-        )
     }
 }
