@@ -9,7 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.core.extensions.activity
-import merail.life.design.components.Error
+import merail.life.design.components.ErrorMessage
 
 object SplashDestination : NavigationDestination {
     override val route = "splash"
@@ -32,7 +32,7 @@ fun SplashScreen(
 
     when (uiState) {
         is SplashUiState.Loading -> Unit
-        is SplashUiState.Error -> Error(uiState.exception.message.orEmpty())
+        is SplashUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
         is SplashUiState.Success -> {
             navigateToHome.invoke()
         }

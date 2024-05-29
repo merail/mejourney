@@ -23,7 +23,7 @@ import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.Cover
-import merail.life.design.components.Error
+import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.HomeItem
 
@@ -42,7 +42,7 @@ fun SelectorScreen(
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is SelectorUiState.Loading -> Loading()
-        is SelectorUiState.Error -> Error(uiState.exception.message.orEmpty())
+        is SelectorUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
         is SelectorUiState.Success -> Content(
             items = uiState.items,
             navigateToContent = navigateToContent,

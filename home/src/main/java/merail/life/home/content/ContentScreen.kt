@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import merail.life.core.NavigationDestination
-import merail.life.design.components.Error
+import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.ContentItem
 import merail.life.home.model.splitText
@@ -34,7 +34,7 @@ fun ContentScreen(
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is ContentUiState.Loading -> Loading()
-        is ContentUiState.Error -> Error(uiState.exception.message.orEmpty())
+        is ContentUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
         is ContentUiState.Success -> Content(uiState.item)
     }
 }

@@ -12,7 +12,7 @@ import merail.life.design.MejourneyTheme
 
 @Preview
 @Composable
-fun Error(
+fun ErrorMessage(
     errorMessage: String = "NullPointerException",
 ) {
     MejourneyTheme {

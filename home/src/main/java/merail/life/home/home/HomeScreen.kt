@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
-import merail.life.design.components.Error
+import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
@@ -56,7 +56,7 @@ fun HomeScreen(
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is HomeUiState.Loading -> Loading()
-        is HomeUiState.Error -> Error(uiState.exception.message.orEmpty())
+        is HomeUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
         is HomeUiState.Success -> Content(
             items = uiState.items,
             navigateToSelector = {
