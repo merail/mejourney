@@ -64,8 +64,8 @@ captures/
 .idea/androidTestResultsUserPreferences.xml
 
 # Keystore files
-# *.jks
-# *.keystore
+*.jks
+*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
