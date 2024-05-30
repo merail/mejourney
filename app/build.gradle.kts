@@ -96,4 +96,5 @@ dependencies {
     implementation(project(":firebase"))
     implementation(project(":splash"))
     implementation(project(":home"))
+    implementation(project(":auth"))
 }

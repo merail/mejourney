@@ -34,20 +34,8 @@ interface FirebaseModule {
         firebaseRepository: FirebaseRepository,
     ): IFirebaseRepository
 
-//    @Provides
-//    @Singleton
-//    fun provideFirebaseAuthRepository(): IFirebaseAuthRepository = FirebaseAuthRepository(
-//        firebaseAuth = Firebase.auth,
-//    )
-//
-//    @Provides
-//    @Singleton
-//    fun provideFirebaseRepository(): IFirebaseRepository = FirebaseRepository(
-//        firebaseStorage = Firebase.storage,
-//        firebaseFirestore = Firebase.firestore,
-//    )
-
     companion object {
+
         @Provides
         @Singleton
         fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth

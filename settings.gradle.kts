@@ -32,3 +32,5 @@ include(":splash")
 include(":core")
 
 include(":home")
+
+include(":auth")

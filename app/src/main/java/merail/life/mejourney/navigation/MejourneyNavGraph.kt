@@ -7,6 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import merail.life.auth.AuthDestination
+import merail.life.auth.AuthScreen
 import merail.life.firebase.data.model.HomeFilterType
 import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
@@ -31,6 +33,15 @@ fun MejourneyNavHost(
             route = SplashDestination.route,
         ) {
             SplashScreen(
+                navigateToAuth = {
+                    navController.navigate(HomeDestination.route)
+                },
+            )
+        }
+        composable(
+            route = AuthDestination.route,
+        ) {
+            AuthScreen(
                 navigateToHome = {
                     navController.navigate(HomeDestination.route)
                 },

@@ -17,7 +17,7 @@ object SplashDestination : NavigationDestination {
 
 @Composable
 fun SplashScreen(
-    navigateToHome: () -> Unit,
+    navigateToAuth: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
@@ -34,7 +34,7 @@ fun SplashScreen(
         is SplashUiState.Loading -> Unit
         is SplashUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
         is SplashUiState.Success -> {
-            navigateToHome.invoke()
+            navigateToAuth.invoke()
         }
     }
 }
