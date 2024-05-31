@@ -8,6 +8,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import merail.life.firebase.auth.model.PhoneAuthCallbackType
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -58,6 +59,19 @@ class FirebaseAuthRepository @Inject constructor(
         )
     }
 
+    override suspend fun authAnonymously() = firebaseAuth
+        .signInAnonymously()
+        .addOnFailureListener {
+            Log.w(TAG, "Firebase anonymous auth. Failure", it)
+        }
+        .addOnSuccessListener {
+            Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
+        }
+        .await()
+        .run {
+            Unit
+        }
+
     override suspend fun sendCode(
         phoneAuthCallbacksChannel: Channel<PhoneAuthCallbackType>,
         activity: Activity,
@@ -75,7 +89,7 @@ class FirebaseAuthRepository @Inject constructor(
             }
     }
 
-    override suspend fun auth(
+    override suspend fun authByPhone(
         activity: Activity,
         smsCode: String,
     ) {

@@ -6,14 +6,15 @@ import merail.life.firebase.auth.model.PhoneAuthCallbackType
 
 interface IFirebaseAuthRepository {
 
+    suspend fun authAnonymously()
+
     suspend fun sendCode(
         phoneAuthCallbacksChannel: Channel<PhoneAuthCallbackType>,
         activity: Activity,
         phoneNumber: String,
     )
 
-    suspend fun auth(
-
+    suspend fun authByPhone(
         activity: Activity,
         smsCode: String,
     )

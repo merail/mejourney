@@ -1,6 +1,7 @@
 package merail.life.home.model
 
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.core.extensions.splitWithDelimiter
 import merail.life.firebase.data.model.ContentModel
 
 class ContentItem(
@@ -15,4 +16,6 @@ fun ContentModel.toItem() = ContentItem(
     imagesUrls = imagesUrls,
 )
 
-fun ContentItem.splitText() = text.split("[image]")
+const val IMAGE_DELIMITER = "<image>"
+
+fun ContentItem.splitWithImages() = text.splitWithDelimiter(IMAGE_DELIMITER)

@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
@@ -18,7 +21,8 @@ import merail.life.core.NavigationDestination
 import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.ContentItem
-import merail.life.home.model.splitText
+import merail.life.home.model.IMAGE_DELIMITER
+import merail.life.home.model.splitWithImages
 
 object ContentDestination : NavigationDestination {
     override val route = "content"
@@ -57,36 +61,50 @@ private fun Content(
                 .padding(12.dp),
         )
 
-        item.splitText().forEachIndexed { index, text ->
-            Text(
-                text = text,
-            )
-
-            if (index < item.imagesUrls.size) {
-                SubcomposeAsyncImage(
-                    model = item.imagesUrls[index],
-                    contentDescription = null,
-//                loading = {
-//                    if (LocalInspectionMode.current) {
-//                        PreviewPlaceholder()
-//                    } else {
-//                        ImageLoading()
-//                    }
-//                },
-//                onSuccess = {
-//                    onLoadingSuccess.invoke()
-//                },
-//                modifier = modifier
-//                    .combinedClickable(
-//                        onLongClick = {
-//                            onLongClick.invoke()
-//                        },
-//                        onClick = {
-//                            navigateToContent.invoke(item.id)
-//                        },
-//                    ),
+        var index = 0
+        item.splitWithImages().forEach { text ->
+            if (text == IMAGE_DELIMITER) {
+                if (index < item.imagesUrls.size) {
+                    ContentImage(
+                        index = index,
+                        item = item,
+                    )
+                }
+                index++
+            } else {
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .padding(
+                            vertical = 12.dp,
+                        ),
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ContentImage(
+    index: Int,
+    item: ContentItem,
+) {
+    Card(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = Color.Black,
+        ),
+        modifier = Modifier
+            .padding(
+                vertical = 12.dp,
+            ),
+    ) {
+        SubcomposeAsyncImage(
+            model = item.imagesUrls[index],
+            contentDescription = null,
+            loading = {
+                Loading()
+            },
+        )
     }
 }

@@ -30,7 +30,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun auth() = runCatching {
-        getItems()//firebaseAuthRepository.auth()
+        firebaseAuthRepository.authAnonymously()
     }.onFailure {
         _uiState.value = SplashUiState.Error(it)
     }

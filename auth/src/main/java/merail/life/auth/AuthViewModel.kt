@@ -72,7 +72,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 _uiState.value = AuthUiState.Loading
-                firebaseAuthRepository.auth(
+                firebaseAuthRepository.authByPhone(
                     activity = activity,
                     smsCode = FirebaseAuthRepository.TEST_SMS_CODE,
                 )
