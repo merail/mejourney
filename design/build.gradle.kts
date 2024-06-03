@@ -38,4 +38,6 @@ dependencies {
     implementation(libs.kotlinx.immutable.collections)
 
     implementation(libs.coil.compose)
+
+    implementation(project(":core"))
 }

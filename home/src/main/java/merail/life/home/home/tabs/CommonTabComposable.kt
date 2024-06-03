@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
-import merail.life.design.components.Cover
+import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -46,10 +46,10 @@ fun ColumnScope.CommonList(
                         mutableStateOf(false)
                     }
 
-                    Cover(
+                    CoverImage(
                         id = it.id,
                         url = it.url,
-                        navigateToContent = navigateToContent,
+                        navigateTo = navigateToContent,
                         onLongClick = {
                             isImageLongClicked.value = isImageLongClicked.value.not()
                         },

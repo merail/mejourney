@@ -3,6 +3,7 @@ package merail.life.home.content
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -14,10 +15,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.SubcomposeAsyncImage
 import merail.life.core.NavigationDestination
+import merail.life.design.components.ContentImage
 import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.ContentItem
@@ -95,16 +97,16 @@ private fun ContentImage(
             containerColor = Color.Black,
         ),
         modifier = Modifier
+            .wrapContentSize()
             .padding(
                 vertical = 12.dp,
             ),
     ) {
-        SubcomposeAsyncImage(
-            model = item.imagesUrls[index],
-            contentDescription = null,
-            loading = {
-                Loading()
-            },
+        ContentImage(
+            url = item.imagesUrls[index],
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxSize(),
         )
     }
 }

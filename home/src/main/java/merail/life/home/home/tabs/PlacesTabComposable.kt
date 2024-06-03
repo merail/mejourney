@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
-import merail.life.design.components.Cover
+import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -72,13 +72,13 @@ private fun PlaceItem(
                     top = 12.dp,
                 ),
         ) {
-            Cover(
+            CoverImage(
                 id = item.id,
                 url = item.url,
                 onLoadingSuccess = {
                     isImageLoaded.value = true
                 },
-                navigateToContent = navigateToContent,
+                navigateTo = navigateToContent,
             )
         }
 

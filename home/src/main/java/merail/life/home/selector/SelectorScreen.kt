@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
-import merail.life.design.components.Cover
+import merail.life.design.components.CoverImage
 import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.HomeItem
@@ -92,10 +92,10 @@ private fun SelectorItem(
                 containerColor = Color.Black,
             ),
         ) {
-            Cover(
+            CoverImage(
                 id = item.id,
                 url = item.url,
-                navigateToContent = {
+                navigateTo = {
                     navigateToContent.invoke(item.id)
                 },
             )
