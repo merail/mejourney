@@ -16,7 +16,7 @@ gen/
 out/
 
 # Release files
-# release/
+release/
 
 # Gradle files
 .gradle/

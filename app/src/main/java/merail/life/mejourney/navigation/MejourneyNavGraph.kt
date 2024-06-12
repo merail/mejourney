@@ -51,8 +51,8 @@ fun MejourneyNavHost(
             route = HomeDestination.route,
         ) {
             HomeScreen(
-                navigateToSelector = {
-                     navController.navigate("${SelectorDestination.route}/$it")
+                navigateToSelector = { tabFilter, selectorFilter ->
+                     navController.navigate("${SelectorDestination.route}/$tabFilter")
                 },
                 navigateToContent = {
                     navController.navigate("${ContentDestination.route}/$it")

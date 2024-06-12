@@ -3,7 +3,6 @@ package merail.life.home.home.tabs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -77,13 +75,11 @@ private fun CountryItem(
             CoverImage(
                 id = item.id,
                 url = item.url,
-                contentScale = ContentScale.FillWidth,
                 onLoadingSuccess = {
                     isImageLoaded.value = true
                 },
                 navigateTo = navigateToContent,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .height(256.dp),
             )
 

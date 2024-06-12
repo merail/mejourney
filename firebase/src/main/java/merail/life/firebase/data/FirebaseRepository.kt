@@ -8,12 +8,14 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.tasks.await
+import merail.life.firebase.BuildConfig
 import merail.life.firebase.data.dto.ContentFirestoreDto
 import merail.life.firebase.data.dto.CoversFirestoreDto
 import merail.life.firebase.data.dto.toDto
 import merail.life.firebase.data.model.ContentModel
 import merail.life.firebase.data.model.HomeFilterType
 import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.SelectorFilterModel
 import javax.inject.Inject
 
 class FirebaseRepository @Inject constructor(
@@ -24,13 +26,13 @@ class FirebaseRepository @Inject constructor(
     companion object {
         private const val TAG = "FirebaseRepository"
 
-        private const val MAIN_PATH = "dev"
+        private const val MAIN_PATH = BuildConfig.FIREBASE_REPOSITORY_PATH
 
         private const val HOME_COVERS_PATH = "$MAIN_PATH/home_covers"
 
         private const val CONTENT_PATH = "$MAIN_PATH/"
 
-        private const val BUCKET_REFERENCE = "gs://mejourney-c86ca.appspot.com"
+        private const val BUCKET_REFERENCE = BuildConfig.FIREBASE_STORAGE_BUCKET
     }
 
     private val mutex = Mutex()
@@ -66,6 +68,21 @@ class FirebaseRepository @Inject constructor(
             mutex.unlock()
         }
         return items.filter(filter)
+    }
+
+    override suspend fun getHomeItems(
+        tabFilter: HomeFilterType,
+        selectorFilter: SelectorFilterModel
+    ) = when (selectorFilter) {
+        is SelectorFilterModel.Year -> items.filter {
+            it.year == selectorFilter.year
+        }
+        is SelectorFilterModel.Country ->  items.filter {
+            it.country == selectorFilter.country
+        }
+        is SelectorFilterModel.Place -> items.filter {
+            it.place == selectorFilter.place
+        }
     }
 
     override suspend fun getContentItem(

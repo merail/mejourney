@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,7 +35,12 @@ fun ColumnScope.PlacesList(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
                 .weight(1f)
-                .padding(4.dp),
+                .padding(
+                    start = 4.dp,
+                    top = 24.dp,
+                    end = 4.dp,
+                    bottom = 4.dp,
+                ),
         ) {
             items(items) {
                 PlaceItem(
@@ -79,6 +85,8 @@ private fun PlaceItem(
                     isImageLoaded.value = true
                 },
                 navigateTo = navigateToContent,
+                modifier = Modifier
+                    .height(512.dp),
             )
         }
 

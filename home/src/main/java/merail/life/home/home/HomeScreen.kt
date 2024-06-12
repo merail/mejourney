@@ -35,12 +35,14 @@ import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabTextColor
 import merail.life.firebase.data.model.HomeFilterType
+import merail.life.firebase.data.model.SelectorFilterModel
 import merail.life.home.R
 import merail.life.home.home.tabs.CommonList
 import merail.life.home.home.tabs.CountriesList
 import merail.life.home.home.tabs.PlacesList
 import merail.life.home.home.tabs.YearsList
 import merail.life.home.model.HomeItem
+import merail.life.home.model.SelectorFilter
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 
@@ -50,7 +52,7 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
-    navigateToSelector: (HomeFilterType) -> Unit,
+    navigateToSelector: (HomeFilterType, SelectorFilterModel) -> Unit,
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
@@ -59,8 +61,8 @@ fun HomeScreen(
         is HomeUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
         is HomeUiState.Success -> Content(
             items = uiState.items,
-            navigateToSelector = {
-                navigateToSelector.invoke(it.toModel())
+            navigateToSelector = { tabFilter, selectorFilter ->
+                navigateToSelector.invoke(tabFilter.toModel(), selectorFilter.toModel())
             },
             navigateToContent = navigateToContent,
             onTabClick = {
@@ -73,7 +75,7 @@ fun HomeScreen(
 @Composable
 private fun Content(
     items: ImmutableList<HomeItem>,
-    navigateToSelector: (TabFilter) -> Unit = {},
+    navigateToSelector: (TabFilter, SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
@@ -93,7 +95,11 @@ private fun Content(
                     if (items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        navigateToSelector.invoke(TabFilter.YEAR)
+                        items.find { item ->
+                            item.id == it
+                        }?.run {
+                            navigateToSelector.invoke(TabFilter.YEAR, SelectorFilter.Year(year))
+                        }
                     }
                 },
             )
@@ -103,7 +109,11 @@ private fun Content(
                     if (items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        navigateToSelector.invoke(TabFilter.COUNTRY)
+                        items.find { item ->
+                            item.id == it
+                        }?.run {
+                            navigateToSelector.invoke(TabFilter.COUNTRY, SelectorFilter.Country(country))
+                        }
                     }
                 },
             )
@@ -113,7 +123,11 @@ private fun Content(
                     if (items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        navigateToSelector.invoke(TabFilter.COUNTRY)
+                        items.find { item ->
+                            item.id == it
+                        }?.run {
+                            navigateToSelector.invoke(TabFilter.PLACE, SelectorFilter.Place(place))
+                        }
                     }
                 },
             )

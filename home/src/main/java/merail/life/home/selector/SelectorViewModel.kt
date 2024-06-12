@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.firebase.data.IFirebaseRepository
 import merail.life.firebase.data.model.HomeFilterType
+import merail.life.firebase.data.model.SelectorFilterModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toItems
 import javax.inject.Inject
@@ -24,19 +25,28 @@ class SelectorViewModel @Inject constructor(
 
     private val tabFilter: HomeFilterType = checkNotNull(savedStateHandle[SelectorDestination.TAB_FILTER_ARG])
 
+    private val selectorFilter: SelectorFilterModel = SelectorFilterModel.Country("Турция")//checkNotNull(savedStateHandle[SelectorDestination.SELECTOR_FILTER_ARG])
+
     private val _uiState: MutableStateFlow<SelectorUiState> = MutableStateFlow(SelectorUiState.Loading)
 
     val uiState: StateFlow<SelectorUiState> = _uiState
 
     init {
-        getItems(tabFilter)
+        getItems(
+            tabFilter = tabFilter,
+            selectorFilter = selectorFilter,
+        )
     }
 
     private fun getItems(
-        filter: HomeFilterType,
+        tabFilter: HomeFilterType,
+        selectorFilter: SelectorFilterModel,
     ) = viewModelScope.launch {
         runCatching {
-            firebaseRepository.getHomeItems(filter)
+            firebaseRepository.getHomeItems(
+                tabFilter = tabFilter,
+                selectorFilter = selectorFilter,
+            )
         }.onFailure {
             _uiState.value = SelectorUiState.Error(it)
         }.onSuccess {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -14,9 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -31,6 +32,8 @@ object SelectorDestination : NavigationDestination {
     override val route = "selector"
 
     const val TAB_FILTER_ARG = "tabFilter"
+
+    const val SELECTOR_FILTER_ARG = "selectorFilter"
 
     val routeWithArgs = "$route/{$TAB_FILTER_ARG}"
 }
@@ -81,8 +84,12 @@ private fun SelectorItem(
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxSize()
-            .padding(36.dp)
+            .padding(
+                start = 4.dp,
+                top = 32.dp,
+                end = 4.dp,
+                bottom = 20.dp,
+            )
             .clickable {
                 navigateToContent.invoke(item.id)
             },
@@ -91,6 +98,10 @@ private fun SelectorItem(
             colors = CardDefaults.cardColors().copy(
                 containerColor = Color.Black,
             ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                //.fillMaxHeight(0.75f),
         ) {
             CoverImage(
                 id = item.id,
@@ -98,6 +109,9 @@ private fun SelectorItem(
                 navigateTo = {
                     navigateToContent.invoke(item.id)
                 },
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier
+                    .fillMaxSize(),
             )
         }
 
@@ -105,7 +119,7 @@ private fun SelectorItem(
             text = item.title,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth()
                 .padding(
                     vertical = 12.dp,
                 ),
@@ -115,7 +129,7 @@ private fun SelectorItem(
             text = item.description,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .align(Alignment.CenterHorizontally),
+                .fillMaxWidth(),
         )
     }
 }

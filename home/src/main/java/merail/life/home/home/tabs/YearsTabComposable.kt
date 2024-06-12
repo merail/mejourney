@@ -2,6 +2,7 @@ package merail.life.home.home.tabs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -100,6 +101,8 @@ private fun YearItem(
                     isImageLoaded.value = true
                 },
                 navigateTo = navigateToContent,
+                modifier = Modifier
+                    .height(224.dp),
             )
         }
     }

@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
@@ -104,7 +103,6 @@ private fun ContentImage(
     ) {
         ContentImage(
             url = item.imagesUrls[index],
-            contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxSize(),
         )

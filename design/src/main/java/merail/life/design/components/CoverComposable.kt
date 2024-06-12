@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -22,7 +23,7 @@ fun CoverImage(
     id: String,
     url: String,
     modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Fit,
+    contentScale: ContentScale = ContentScale.FillWidth,
     onLoadingSuccess: () -> Unit = {},
     navigateTo: (String) -> Unit = {},
     onLongClick: () -> Unit = {},
@@ -39,6 +40,7 @@ fun CoverImage(
                 onLoadingSuccess.invoke()
             },
             modifier = modifier
+                .fillMaxWidth()
                 .combinedClickable(
                     onLongClick = {
                         onLongClick.invoke()
