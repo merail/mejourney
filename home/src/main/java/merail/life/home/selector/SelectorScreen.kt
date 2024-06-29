@@ -44,8 +44,9 @@ fun SelectorScreen(
     viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
+        is SelectorUiState.None -> Unit
         is SelectorUiState.Loading -> Loading()
-        is SelectorUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
+        is SelectorUiState.Error -> ErrorMessage(uiState.exception?.message.orEmpty())
         is SelectorUiState.Success -> Content(
             items = uiState.items,
             navigateToContent = navigateToContent,
@@ -100,8 +101,7 @@ private fun SelectorItem(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-                //.fillMaxHeight(0.75f),
+                .weight(1f),
         ) {
             CoverImage(
                 id = item.id,

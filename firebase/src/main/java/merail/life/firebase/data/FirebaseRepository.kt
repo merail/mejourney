@@ -1,26 +1,32 @@
 package merail.life.firebase.data
 
 import android.util.Log
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.tasks.await
 import merail.life.firebase.BuildConfig
+import merail.life.firebase.data.database.HomeDatabase
 import merail.life.firebase.data.dto.ContentFirestoreDto
 import merail.life.firebase.data.dto.CoversFirestoreDto
 import merail.life.firebase.data.dto.toDto
 import merail.life.firebase.data.model.ContentModel
+import merail.life.firebase.data.model.HomeElementModel
 import merail.life.firebase.data.model.HomeFilterType
-import merail.life.firebase.data.model.HomeModel
 import merail.life.firebase.data.model.SelectorFilterModel
 import javax.inject.Inject
 
 class FirebaseRepository @Inject constructor(
-    private val firebaseStorage: FirebaseStorage,
-    private val firebaseFirestore: FirebaseFirestore,
+    private val homeDatabase: HomeDatabase,
+    private val internalFirebaseRepository: IInternalFirebaseRepository,
 ) : IFirebaseRepository {
 
     companion object {
@@ -31,53 +37,89 @@ class FirebaseRepository @Inject constructor(
         private const val HOME_COVERS_PATH = "$MAIN_PATH/home_covers"
 
         private const val CONTENT_PATH = "$MAIN_PATH/"
-
-        private const val BUCKET_REFERENCE = BuildConfig.FIREBASE_STORAGE_BUCKET
     }
 
-    private val mutex = Mutex()
+    private val items = mutableListOf<HomeElementModel>()
 
-    private val items = mutableListOf<HomeModel>()
+    override fun getHomeElements(): Flow<RequestResult<List<HomeElementModel>>> {
+        val mergeStrategy: MergeStrategy<RequestResult<List<HomeElementModel>>> = RequestResponseMergeStrategy()
+        val cachedAllArticles: Flow<RequestResult<List<HomeElementModel>>> = getHomeElementsFromDatabase()
+        val remoteArticles: Flow<RequestResult<List<HomeElementModel>>> = getHomeElementsFromServer()
+        return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
+    }
 
-    override suspend fun getHomeItems(
-        filter: HomeFilterType,
-    ): List<HomeModel> {
-        if (items.isNotEmpty()) {
-            return items.filter(filter)
+    private fun getHomeElementsFromServer(): Flow<RequestResult<List<HomeElementModel>>> {
+        val result = flow {
+            val result = runCatching {
+                val firestoreData = CoversFirestoreDto(internalFirebaseRepository.getFirestoreData(HOME_COVERS_PATH))
+                val storageData = internalFirebaseRepository.getStorageData(HOME_COVERS_PATH)
+                firestoreData.toDto().zip(storageData).map { (info, file) ->
+                    HomeElementModel(
+                        id = info.id,
+                        year = info.year,
+                        country = info.country,
+                        place = info.place,
+                        title = info.title,
+                        description = info.description,
+                        url = file.getUrl(),
+                    )
+                }
+            }
+            emit(result)
+        }.onEach { result ->
+            if (result.isSuccess) {
+                Log.d("TAG", "Getting home elements from server. Success")
+                saveHomeElementsToDatabase(result.getOrThrow())
+            }
+        }.onEach { result ->
+            if (result.isFailure) {
+                Log.w(TAG, "Getting home elements from server. Failure", result.exceptionOrNull())
+            }
+        }.map {
+            it.toRequestResult()
         }
-        if (mutex.isLocked.not()) {
-            mutex.lock()
-            val firestoreData = CoversFirestoreDto(getFirestoreData(HOME_COVERS_PATH))
-            val storageData = getStorageData(HOME_COVERS_PATH)
-            val newItems = firestoreData.toDto().zip(storageData).map { (info, file) ->
-                HomeModel(
-                    id = info.id,
-                    year = info.year,
-                    country = info.country,
-                    place = info.place,
-                    title = info.title,
-                    description = info.description,
-                    url = file.getUrl(),
+        val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
+        return merge(result, start)
+    }
+
+    override fun getHomeElementsFromDatabase(
+        tabFilter: HomeFilterType?,
+        selectorFilter: SelectorFilterModel?
+    ): Flow<RequestResult<List<HomeElementModel>>> {
+        val request = homeDatabase
+            .homeElementDao()::getAll
+            .asFlow()
+            .map<List<HomeElementModel>, RequestResult<List<HomeElementModel>>> {
+                Log.d("TAG", "Getting home elements from database. Success")
+                when {
+                    tabFilter != null -> RequestResult.Success(it.filterByHomeTab(tabFilter))
+                    selectorFilter != null -> RequestResult.Success(it.filterBySelector(selectorFilter))
+                    else -> RequestResult.Success(it)
+                }
+            }
+            .catch {
+                Log.w(TAG, "Getting home elements from database. Failure", it)
+                emit(
+                    value = RequestResult.Error(
+                        error = it,
+                    ),
                 )
             }
-            items.clear()
-            items.addAll(newItems)
-            mutex.unlock()
-        } else {
-            mutex.lock()
-            mutex.unlock()
-        }
-        return items.filter(filter)
+        val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
+        return merge(start, request)
     }
 
-    override suspend fun getHomeItems(
-        tabFilter: HomeFilterType,
+    private suspend fun saveHomeElementsToDatabase(
+        data: List<HomeElementModel>,
+    ) = homeDatabase.homeElementDao().insertAll(data)
+
+    override suspend fun getHomeElements(
         selectorFilter: SelectorFilterModel
     ) = when (selectorFilter) {
         is SelectorFilterModel.Year -> items.filter {
             it.year == selectorFilter.year
         }
-        is SelectorFilterModel.Country ->  items.filter {
+        is SelectorFilterModel.Country -> items.filter {
             it.country == selectorFilter.country
         }
         is SelectorFilterModel.Place -> items.filter {
@@ -88,8 +130,8 @@ class FirebaseRepository @Inject constructor(
     override suspend fun getContentItem(
         id: String,
     ): ContentModel {
-        val firestoreData = ContentFirestoreDto(getFirestoreData("$CONTENT_PATH$id"))
-        val storageData = getStorageData("$CONTENT_PATH$id")
+        val firestoreData = ContentFirestoreDto(internalFirebaseRepository.getFirestoreData("$CONTENT_PATH$id"))
+        val storageData = internalFirebaseRepository.getStorageData("$CONTENT_PATH$id")
         val contentDto = firestoreData.toDto()
         val imagesUrls = storageData.map { file ->
             file.getUrl()
@@ -101,7 +143,7 @@ class FirebaseRepository @Inject constructor(
         )
     }
 
-    private fun MutableList<HomeModel>.filter(
+    private fun List<HomeElementModel>.filterByHomeTab(
         filter: HomeFilterType,
     ) = when (filter) {
         HomeFilterType.YEAR -> groupBy {
@@ -122,46 +164,18 @@ class FirebaseRepository @Inject constructor(
         HomeFilterType.COMMON -> this
     }
 
-    private suspend fun getFirestoreData(
-        folderName: String,
-    ) = firebaseFirestore
-        .getCollectionFromPath(folderName)
-        .get()
-        .addOnFailureListener {
-            Log.w(TAG, "Getting $folderName folder from Firebase Firestore. Failure")
+    private fun List<HomeElementModel>.filterBySelector(
+        filter: SelectorFilterModel,
+    ) = when (filter) {
+        is SelectorFilterModel.Year -> filter {
+            it.year == filter.year
         }
-        .addOnSuccessListener {
-            Log.d(TAG, "Getting $folderName folder from Firebase Firestore. Success")
+        is SelectorFilterModel.Country -> filter {
+            it.country == filter.country
         }
-        .await()
-
-    private suspend fun getStorageData(
-        folderName: String,
-    ) = firebaseStorage
-        .getReferenceFromUrl(BUCKET_REFERENCE)
-        .child(folderName)
-        .listAll()
-        .addOnFailureListener {
-            Log.w(TAG, "Getting $folderName folder from Firebase Storage. Failure")
+        is SelectorFilterModel.Place -> filter {
+            it.place == filter.place
         }
-        .addOnSuccessListener {
-            Log.d(TAG, "Getting $folderName folder from Firebase Storage. Success")
-        }
-        .await()
-        .items
-
-    private fun FirebaseFirestore.getCollectionFromPath(
-        path: String,
-    ): CollectionReference {
-        val pathList = path.split("/")
-        if (pathList.isNotEmpty()) {
-            var collection = collection(pathList[0]).document("${pathList[0]}Document")
-            for (i in 1 until pathList.size - 1) {
-                collection = collection(pathList[i]).document("${pathList[i]}Document")
-            }
-            return collection.collection(pathList.last())
-        }
-        throw IllegalStateException("Empty path in Firestore database!")
     }
 
     private suspend fun StorageReference.getUrl() = downloadUrl

@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.firebase.data.model.HomeModel
+import merail.life.firebase.data.model.HomeElementModel
 
 class HomeItem(
     val id: String,
@@ -12,7 +12,7 @@ class HomeItem(
     val url: String,
 )
 
-fun HomeModel.toItem() = HomeItem(
+fun HomeElementModel.toItem() = HomeItem(
     id = id,
     year = year,
     country = country,
@@ -22,4 +22,4 @@ fun HomeModel.toItem() = HomeItem(
     url = url,
 )
 
-fun List<HomeModel>.toItems() = map(HomeModel::toItem)
+fun List<HomeElementModel>.toItems() = map(HomeElementModel::toItem)

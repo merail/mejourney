@@ -1,20 +1,23 @@
 package merail.life.firebase.data
 
+import kotlinx.coroutines.flow.Flow
 import merail.life.firebase.data.model.ContentModel
+import merail.life.firebase.data.model.HomeElementModel
 import merail.life.firebase.data.model.HomeFilterType
-import merail.life.firebase.data.model.HomeModel
 import merail.life.firebase.data.model.SelectorFilterModel
 
 interface IFirebaseRepository {
 
-    suspend fun getHomeItems(
-        filter: HomeFilterType = HomeFilterType.COMMON,
-    ): List<HomeModel>
+    fun getHomeElements(): Flow<RequestResult<List<HomeElementModel>>>
 
-    suspend fun getHomeItems(
-        tabFilter: HomeFilterType,
+    fun getHomeElementsFromDatabase(
+        tabFilter: HomeFilterType? = null,
+        selectorFilter: SelectorFilterModel? = null,
+    ): Flow<RequestResult<List<HomeElementModel>>>
+
+    suspend fun getHomeElements(
         selectorFilter: SelectorFilterModel,
-    ): List<HomeModel>
+    ): List<HomeElementModel>
 
     suspend fun getContentItem(
         id: String,

@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -21,16 +23,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
-import merail.life.design.components.ErrorMessage
-import merail.life.design.components.Loading
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabTextColor
@@ -41,7 +41,6 @@ import merail.life.home.home.tabs.CommonList
 import merail.life.home.home.tabs.CountriesList
 import merail.life.home.home.tabs.PlacesList
 import merail.life.home.home.tabs.YearsList
-import merail.life.home.model.HomeItem
 import merail.life.home.model.SelectorFilter
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
@@ -56,25 +55,21 @@ fun HomeScreen(
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
-    when (val uiState = viewModel.uiState.collectAsState().value) {
-        is HomeUiState.Loading -> Loading()
-        is HomeUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
-        is HomeUiState.Success -> Content(
-            items = uiState.items,
-            navigateToSelector = { tabFilter, selectorFilter ->
-                navigateToSelector.invoke(tabFilter.toModel(), selectorFilter.toModel())
-            },
-            navigateToContent = navigateToContent,
-            onTabClick = {
-                viewModel.getItems(it)
-            },
-        )
-    }
+    Content(
+        state = viewModel.uiState.collectAsState().value,
+        navigateToSelector = { tabFilter, selectorFilter ->
+            navigateToSelector.invoke(tabFilter.toModel(), selectorFilter.toModel())
+        },
+        navigateToContent = navigateToContent,
+        onTabClick = {
+            viewModel.getHomeItems(it)
+        },
+    )
 }
 
 @Composable
 private fun Content(
-    items: ImmutableList<HomeItem>,
+    state: HomeUiState,
     navigateToSelector: (TabFilter, SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
@@ -84,18 +79,44 @@ private fun Content(
         modifier = Modifier
             .fillMaxSize(),
     ) {
+        when (state) {
+            is HomeUiState.Loading -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 64.dp,
+                        ),
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            is HomeUiState.Error -> Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                Text(
+                    text = state.exception?.message.orEmpty(),
+                    color = Color.Red,
+                )
+            }
+            else -> Unit
+        }
+
         var tabFilter by rememberSaveable {
             mutableStateOf(TabFilter.COMMON)
         }
 
         when (tabFilter) {
             TabFilter.YEAR -> YearsList(
-                items = items,
+                items = state.items,
                 navigateToContent = {
-                    if (items.size == 1) {
+                    if (state.items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        items.find { item ->
+                        state.items.find { item ->
                             item.id == it
                         }?.run {
                             navigateToSelector.invoke(TabFilter.YEAR, SelectorFilter.Year(year))
@@ -104,12 +125,12 @@ private fun Content(
                 },
             )
             TabFilter.COUNTRY -> CountriesList(
-                items = items,
+                items = state.items,
                 navigateToContent = {
-                    if (items.size == 1) {
+                    if (state.items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        items.find { item ->
+                        state.items.find { item ->
                             item.id == it
                         }?.run {
                             navigateToSelector.invoke(TabFilter.COUNTRY, SelectorFilter.Country(country))
@@ -118,12 +139,12 @@ private fun Content(
                 },
             )
             TabFilter.PLACE -> PlacesList(
-                items = items,
+                items = state.items,
                 navigateToContent = {
-                    if (items.size == 1) {
+                    if (state.items.size == 1) {
                         navigateToContent.invoke(it)
                     } else {
-                        items.find { item ->
+                        state.items.find { item ->
                             item.id == it
                         }?.run {
                             navigateToSelector.invoke(TabFilter.PLACE, SelectorFilter.Place(place))
@@ -132,7 +153,7 @@ private fun Content(
                 },
             )
             TabFilter.COMMON -> CommonList(
-                items = items,
+                items = state.items,
                 navigateToContent = navigateToContent,
             )
         }

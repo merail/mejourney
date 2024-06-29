@@ -7,13 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.firebase.auth.IFirebaseAuthRepository
-import merail.life.firebase.data.IFirebaseRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val firebaseAuthRepository: IFirebaseAuthRepository,
-    private val firebaseRepository: IFirebaseRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<SplashUiState> = MutableStateFlow(SplashUiState.Loading)
@@ -22,21 +20,12 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val authResult = auth()
-            if (authResult.isSuccess) {
-                getItems()
-            }
+            auth()
         }
     }
 
     private suspend fun auth() = runCatching {
         firebaseAuthRepository.authAnonymously()
-    }.onFailure {
-        _uiState.value = SplashUiState.Error(it)
-    }
-
-    private suspend fun getItems() = runCatching {
-        firebaseRepository.getHomeItems()
     }.onFailure {
         _uiState.value = SplashUiState.Error(it)
     }.onSuccess {
