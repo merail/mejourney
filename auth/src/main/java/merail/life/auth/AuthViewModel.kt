@@ -12,9 +12,9 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.firebase.auth.FirebaseAuthRepository
-import merail.life.firebase.auth.IFirebaseAuthRepository
-import merail.life.firebase.auth.model.PhoneAuthCallbackType
+import merail.life.api.auth.FirebaseAuthRepository
+import merail.life.api.auth.IFirebaseAuthRepository
+import merail.life.api.auth.model.PhoneAuthCallbackType
 import javax.inject.Inject
 
 @HiltViewModel

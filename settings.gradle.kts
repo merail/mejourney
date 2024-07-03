@@ -25,7 +25,7 @@ include(":app")
 
 include(":design")
 
-include(":firebase")
+include(":api")
 
 include(":splash")
 
@@ -34,3 +34,6 @@ include(":core")
 include(":home")
 
 include(":auth")
+include(":api:auth")
+include(":api:database")
+include(":api:data")

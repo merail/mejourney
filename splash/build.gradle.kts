@@ -42,5 +42,5 @@ dependencies {
 
     implementation(project(":design"))
     implementation(project(":core"))
-    implementation(project(":firebase"))
+    implementation(project(":api:auth"))
 }

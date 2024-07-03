@@ -32,7 +32,7 @@ class ContentViewModel @Inject constructor(
         id: String,
     ) = viewModelScope.launch {
         runCatching {
-            firebaseRepository.getContentItem(id)
+            firebaseRepository.getContent(id)
         }.onFailure {
             _uiState.value = ContentUiState.Error(it)
         }.onSuccess {

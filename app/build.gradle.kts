@@ -75,7 +75,7 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":design"))
-    implementation(project(":firebase"))
+    implementation(project(":api"))
     implementation(project(":splash"))
     implementation(project(":home"))
     implementation(project(":auth"))
