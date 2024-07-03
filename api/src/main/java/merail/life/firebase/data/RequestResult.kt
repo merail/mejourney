@@ -26,7 +26,9 @@ fun <I : Any, O : Any> RequestResult<I>.map(mapper: (I) -> O): RequestResult<O> 
 internal fun <T : Any> Result<T>.toRequestResult(): RequestResult<T> {
     return when {
         isSuccess -> RequestResult.Success(getOrThrow())
-        isFailure -> RequestResult.Error()
+        isFailure -> RequestResult.Error(
+            error = exceptionOrNull(),
+        )
         else -> error("Impossible branch")
     }
 }

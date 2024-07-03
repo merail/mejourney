@@ -26,70 +26,56 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
             right is InProgress && left is Error -> merge(right, left)
             right is Error && left is InProgress -> merge(right, left)
             right is Error && left is Success -> merge(right, left)
-
             else -> error("Unimplemented branch right=$right & left=$left")
         }
     }
 
     private fun merge(
         cache: InProgress<T>,
-        server: InProgress<T>
-    ): RequestResult<T> {
-        return when {
-            server.data != null -> InProgress(server.data)
-            else -> InProgress(cache.data)
-        }
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun merge(
-        cache: Success<T>,
-        server: InProgress<T>
-    ): RequestResult<T> {
-        return InProgress(cache.data)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun merge(
-        cache: InProgress<T>,
-        server: Success<T>
-    ): RequestResult<T> {
-        return InProgress(server.data)
+        server: InProgress<T>,
+    ) = when {
+        server.data != null -> InProgress(server.data)
+        else -> InProgress(cache.data)
     }
 
     private fun merge(
         cache: Success<T>,
-        server: Error<T>
-    ): RequestResult<T> {
-        return Error(data = cache.data, error = server.error)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun merge(
-        cache: Success<T>,
-        server: Success<T>
-    ): RequestResult<T> {
-        return Success(data = server.data)
-    }
+        server: InProgress<T>,
+    ) = InProgress(cache.data)
 
     private fun merge(
         cache: InProgress<T>,
-        server: Error<T>
-    ): RequestResult<T> {
-        return Error(data = server.data ?: cache.data, error = server.error)
-    }
+        server: Success<T>,
+    ) = InProgress(server.data)
+
+    private fun merge(
+        cache: Success<T>,
+        server: Error<T>,
+    ) = Error(
+        data = cache.data,
+        error = server.error,
+    )
+
+    private fun merge(
+        cache: Success<T>,
+        server: Success<T>,
+    ) = Success(server.data)
+
+    private fun merge(
+        cache: InProgress<T>,
+        server: Error<T>,
+    ) = Error(
+        data = server.data ?: cache.data,
+        error = server.error,
+    )
 
     private fun merge(
         cache: Error<T>,
-        server: InProgress<T>
-    ): RequestResult<T> {
-        return server
-    }
+        server: InProgress<T>,
+    ) = server
 
     private fun merge(
         cache: Error<T>,
-        server: Success<T>
-    ): RequestResult<T> {
-        return server
-    }
+        server: Success<T>,
+    ) = server
 }

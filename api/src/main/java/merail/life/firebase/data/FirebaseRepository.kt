@@ -68,7 +68,7 @@ class FirebaseRepository @Inject constructor(
             emit(result)
         }.onEach { result ->
             if (result.isSuccess) {
-                Log.d("TAG", "Getting home elements from server. Success")
+                Log.d(TAG, "Getting home elements from server. Success")
                 saveHomeElementsToDatabase(result.getOrThrow())
             }
         }.onEach { result ->
@@ -90,7 +90,7 @@ class FirebaseRepository @Inject constructor(
             .homeElementDao()::getAll
             .asFlow()
             .map<List<HomeElementEntity>, RequestResult<List<HomeElementModel>>> {
-                Log.d("TAG", "Getting home elements from database. Success")
+                Log.d(TAG, "Getting home elements from database. Success")
                 val databaseList = it.map(HomeElementEntity::toModel)
                 when {
                     tabFilter != null -> RequestResult.Success(databaseList.filterByHomeTab(tabFilter))

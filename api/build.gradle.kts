@@ -65,5 +65,5 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":api:auth"))
     implementation(project(":api:database"))
-    implementation(project(":api:data"))
+    implementation(project(":api:server"))
 }

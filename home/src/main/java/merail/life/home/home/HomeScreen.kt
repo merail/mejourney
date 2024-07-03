@@ -95,7 +95,10 @@ private fun Content(
             is HomeUiState.Error -> Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = 64.dp,
+                    ),
             ) {
                 Text(
                     text = state.exception?.message.orEmpty(),
