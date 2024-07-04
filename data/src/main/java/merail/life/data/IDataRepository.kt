@@ -1,6 +1,7 @@
 package merail.life.data
 
 import kotlinx.coroutines.flow.Flow
+import merail.life.core.RequestResult
 import merail.life.data.data.model.ContentModel
 import merail.life.data.data.model.HomeElementModel
 import merail.life.data.data.model.HomeFilterType
@@ -15,7 +16,7 @@ interface IDataRepository {
         selectorFilter: SelectorFilterModel? = null,
     ): Flow<RequestResult<List<HomeElementModel>>>
 
-    suspend fun getContent(
+    fun getContent(
         id: String,
-    ): ContentModel
+    ): Flow<RequestResult<ContentModel>>
 }

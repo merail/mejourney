@@ -32,9 +32,7 @@ fun SplashScreen(
 
     when (uiState) {
         is SplashUiState.Loading -> Unit
-        is SplashUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
-        is SplashUiState.Success -> {
-            navigateToAuth.invoke()
-        }
+        is SplashUiState.Error -> ErrorMessage(uiState.exception?.message.orEmpty())
+        is SplashUiState.Success -> navigateToAuth()
     }
 }

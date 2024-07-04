@@ -1,4 +1,4 @@
-package merail.life.home.home
+package merail.life.home.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,16 +31,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
+import merail.life.data.data.model.HomeFilterType
+import merail.life.data.data.model.SelectorFilterModel
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabTextColor
-import merail.life.data.data.model.HomeFilterType
-import merail.life.data.data.model.SelectorFilterModel
 import merail.life.home.R
-import merail.life.home.home.tabs.CommonList
-import merail.life.home.home.tabs.CountriesList
-import merail.life.home.home.tabs.PlacesList
-import merail.life.home.home.tabs.YearsList
+import merail.life.home.main.tabs.CommonList
+import merail.life.home.main.tabs.CountriesList
+import merail.life.home.main.tabs.PlacesList
+import merail.life.home.main.tabs.YearsList
 import merail.life.home.model.SelectorFilter
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel

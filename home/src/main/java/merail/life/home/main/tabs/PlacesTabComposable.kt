@@ -1,5 +1,7 @@
-package merail.life.home.home.tabs
+package merail.life.home.main.tabs
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
@@ -13,24 +15,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.CoverImage
-import merail.life.home.R
 import merail.life.home.model.HomeItem
 
 @Composable
-fun ColumnScope.YearsList(
+fun ColumnScope.PlacesList(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
         LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
                 .weight(1f)
                 .padding(
@@ -41,7 +43,7 @@ fun ColumnScope.YearsList(
                 ),
         ) {
             items(items) {
-                YearItem(
+                PlaceItem(
                     item = it,
                     navigateToContent = navigateToContent,
                 )
@@ -51,16 +53,11 @@ fun ColumnScope.YearsList(
 }
 
 @Composable
-private fun YearItem(
+private fun PlaceItem(
     item: HomeItem,
     navigateToContent: (String) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(
-                vertical = 12.dp
-            ),
-    ) {
+    Column {
         val isImageLoaded = if (LocalInspectionMode.current) {
             remember {
                 mutableStateOf(true)
@@ -71,24 +68,11 @@ private fun YearItem(
             }
         }
 
-        if (isImageLoaded.value) {
-            Text(
-                text = stringResource(
-                    id = R.string.years_tab_element_title,
-                    item.year,
-                ),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                    ),
-            )
-        }
-
         Card(
             colors = CardDefaults.cardColors().copy(
                 containerColor = Color.Black,
             ),
+            border = BorderStroke(1.dp, Color.White),
             modifier = Modifier
                 .padding(
                     top = 12.dp,
@@ -102,7 +86,19 @@ private fun YearItem(
                 },
                 navigateTo = navigateToContent,
                 modifier = Modifier
-                    .height(224.dp),
+                    .height(512.dp),
+            )
+        }
+
+        if (isImageLoaded.value) {
+            Text(
+                text = item.place,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(
+                        vertical = 12.dp,
+                    ),
             )
         }
     }

@@ -6,10 +6,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import merail.life.auth.api.model.PhoneAuthCallbackType
+import merail.life.core.RequestResult
+import merail.life.core.extensions.toUnit
+import merail.life.core.toRequestResult
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -59,18 +70,21 @@ class FirebaseAuthRepository @Inject constructor(
         )
     }
 
-    override suspend fun authAnonymously() = firebaseAuth
-        .signInAnonymously()
-        .addOnFailureListener {
-            Log.w(TAG, "Firebase anonymous auth. Failure", it)
-        }
-        .addOnSuccessListener {
+    override fun authAnonymously(): Flow<RequestResult<Unit>> {
+        val result = flow {
+            emit(runCatching { firebaseAuth.signInAnonymously().await().toUnit() })
+        }.flowOn(
+            context = Dispatchers.IO,
+        ).map {
             Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
+            it.toRequestResult()
+        }.catch {
+            Log.w(TAG, "Firebase anonymous auth. Failure", it)
+            emit(RequestResult.Error(error = it))
         }
-        .await()
-        .run {
-            Unit
-        }
+        val start = flowOf<RequestResult<Unit>>(RequestResult.InProgress())
+        return merge(result, start)
+    }
 
     override suspend fun sendCode(
         phoneAuthCallbacksChannel: Channel<PhoneAuthCallbackType>,

@@ -3,7 +3,7 @@ package merail.life.home.selector
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import merail.life.data.RequestResult
+import merail.life.core.RequestResult
 import merail.life.data.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toItems

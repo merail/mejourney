@@ -1,4 +1,4 @@
-package merail.life.data
+package merail.life.core
 
 sealed class RequestResult<out E : Any>(open val data: E? = null) {
     class InProgress<E : Any>(
@@ -23,7 +23,7 @@ fun <I : Any, O : Any> RequestResult<I>.map(mapper: (I) -> O): RequestResult<O> 
     }
 }
 
-internal fun <T : Any> Result<T>.toRequestResult(): RequestResult<T> {
+fun <T : Any> Result<T>.toRequestResult(): RequestResult<T> {
     return when {
         isSuccess -> RequestResult.Success(getOrThrow())
         isFailure -> RequestResult.Error(

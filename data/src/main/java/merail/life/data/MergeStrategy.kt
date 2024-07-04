@@ -1,8 +1,9 @@
 package merail.life.data
 
-import merail.life.data.RequestResult.InProgress
-import merail.life.data.RequestResult.Success
-import merail.life.data.RequestResult.Error
+import merail.life.core.RequestResult
+import merail.life.core.RequestResult.InProgress
+import merail.life.core.RequestResult.Success
+import merail.life.core.RequestResult.Error
 
 interface MergeStrategy<E> {
     fun merge(

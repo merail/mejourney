@@ -1,4 +1,4 @@
-package merail.life.home.home
+package merail.life.home.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
-import merail.life.data.RequestResult
 import merail.life.data.data.model.HomeElementModel
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel

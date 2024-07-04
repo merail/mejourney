@@ -1,8 +1,7 @@
-package merail.life.home.home.tabs
+package merail.life.home.main.tabs
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -26,24 +24,23 @@ import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
 
 @Composable
-fun ColumnScope.PlacesList(
+fun ColumnScope.CountriesList(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {
     MejourneyTheme {
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
             modifier = Modifier
                 .weight(1f)
                 .padding(
                     start = 4.dp,
-                    top = 24.dp,
+                    top = 32.dp,
                     end = 4.dp,
-                    bottom = 4.dp,
                 ),
         ) {
             items(items) {
-                PlaceItem(
+                CountryItem(
                     item = it,
                     navigateToContent = navigateToContent,
                 )
@@ -53,31 +50,28 @@ fun ColumnScope.PlacesList(
 }
 
 @Composable
-private fun PlaceItem(
+private fun CountryItem(
     item: HomeItem,
     navigateToContent: (String) -> Unit,
 ) {
-    Column {
-        val isImageLoaded = if (LocalInspectionMode.current) {
-            remember {
-                mutableStateOf(true)
+    Card(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = Color.Black,
+            contentColor = Color.White,
+        ),
+    ) {
+        Box {
+            val isImageLoaded = if (LocalInspectionMode.current) {
+                remember {
+                    mutableStateOf(true)
+                }
+            } else {
+                remember {
+                    mutableStateOf(false)
+                }
             }
-        } else {
-            remember {
-                mutableStateOf(false)
-            }
-        }
 
-        Card(
-            colors = CardDefaults.cardColors().copy(
-                containerColor = Color.Black,
-            ),
-            border = BorderStroke(1.dp, Color.White),
-            modifier = Modifier
-                .padding(
-                    top = 12.dp,
-                ),
-        ) {
+
             CoverImage(
                 id = item.id,
                 url = item.url,
@@ -86,20 +80,17 @@ private fun PlaceItem(
                 },
                 navigateTo = navigateToContent,
                 modifier = Modifier
-                    .height(512.dp),
+                    .height(256.dp),
             )
-        }
 
-        if (isImageLoaded.value) {
-            Text(
-                text = item.place,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(
-                        vertical = 12.dp,
-                    ),
-            )
+            if (isImageLoaded.value) {
+                Text(
+                    text = item.country,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .padding(16.dp),
+                )
+            }
         }
     }
 }

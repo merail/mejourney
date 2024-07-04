@@ -1,9 +1,9 @@
-package merail.life.home.home
+package merail.life.home.main
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import merail.life.data.RequestResult
+import merail.life.core.RequestResult
 import merail.life.data.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toItems
@@ -32,11 +32,9 @@ fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
         exception = error,
         items = data?.toItems().orEmpty().toImmutableList(),
     )
-
     is RequestResult.InProgress -> HomeUiState.Loading(
         items = data?.toItems().orEmpty().toImmutableList(),
     )
-
     is RequestResult.Success -> HomeUiState.Success(
         items = data.toItems().toImmutableList(),
     )

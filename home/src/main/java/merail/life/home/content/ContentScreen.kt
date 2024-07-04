@@ -39,7 +39,7 @@ fun ContentScreen(
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is ContentUiState.Loading -> Loading()
-        is ContentUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
+        is ContentUiState.Error -> ErrorMessage(uiState.exception?.message.orEmpty())
         is ContentUiState.Success -> Content(uiState.item)
     }
 }

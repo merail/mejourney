@@ -12,8 +12,8 @@ import merail.life.auth.ui.AuthScreen
 import merail.life.data.data.model.HomeFilterType
 import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
-import merail.life.home.home.HomeDestination
-import merail.life.home.home.HomeScreen
+import merail.life.home.main.HomeDestination
+import merail.life.home.main.HomeScreen
 import merail.life.home.selector.SelectorDestination
 import merail.life.home.selector.SelectorScreen
 import merail.life.splash.SplashDestination

@@ -1,4 +1,4 @@
-package merail.life.home.home.tabs
+package merail.life.home.main.tabs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
