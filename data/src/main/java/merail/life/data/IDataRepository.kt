@@ -5,7 +5,7 @@ import merail.life.core.RequestResult
 import merail.life.data.model.ContentModel
 import merail.life.data.model.HomeElementModel
 import merail.life.data.model.HomeFilterType
-import merail.life.data.model.SelectorFilterModel
+import merail.life.data.model.SelectorFilterType
 
 interface IDataRepository {
 
@@ -13,7 +13,7 @@ interface IDataRepository {
 
     fun getHomeElementsFromDatabase(
         tabFilter: HomeFilterType? = null,
-        selectorFilter: SelectorFilterModel? = null,
+        selectorFilter: SelectorFilterType? = null,
     ): Flow<RequestResult<List<HomeElementModel>>>
 
     fun getContent(

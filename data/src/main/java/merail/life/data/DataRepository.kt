@@ -24,7 +24,7 @@ import merail.life.data.dto.toImageDto
 import merail.life.data.model.ContentModel
 import merail.life.data.model.HomeElementModel
 import merail.life.data.model.HomeFilterType
-import merail.life.data.model.SelectorFilterModel
+import merail.life.data.model.SelectorFilterType
 import merail.life.data.model.toEntity
 import merail.life.data.model.toModel
 import javax.inject.Inject
@@ -91,7 +91,7 @@ class DataRepository @Inject constructor(
 
     override fun getHomeElementsFromDatabase(
         tabFilter: HomeFilterType?,
-        selectorFilter: SelectorFilterModel?
+        selectorFilter: SelectorFilterType?,
     ): Flow<RequestResult<List<HomeElementModel>>> {
         val request = homeDatabase
             .homeElementDao()::getAll
@@ -169,16 +169,16 @@ class DataRepository @Inject constructor(
     }
 
     private fun List<HomeElementModel>.filterBySelector(
-        filter: SelectorFilterModel,
+        filter: SelectorFilterType,
     ) = when (filter) {
-        is SelectorFilterModel.Year -> filter {
-            it.year == filter.year
+        SelectorFilterType.YEAR -> filter {
+            it.year == filter.value.toLong()
         }
-        is SelectorFilterModel.Country -> filter {
-            it.country == filter.country
+        SelectorFilterType.COUNTRY -> filter {
+            it.country == filter.value
         }
-        is SelectorFilterModel.Place -> filter {
-            it.place == filter.place
+        SelectorFilterType.PLACE -> filter {
+            it.place == filter.value
         }
     }
 }

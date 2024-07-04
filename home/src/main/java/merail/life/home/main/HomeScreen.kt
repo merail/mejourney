@@ -31,8 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
-import merail.life.data.model.HomeFilterType
-import merail.life.data.model.SelectorFilterModel
+import merail.life.data.model.SelectorFilterType
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabTextColor
@@ -51,14 +50,14 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
-    navigateToSelector: (HomeFilterType, SelectorFilterModel) -> Unit,
+    navigateToSelector: (SelectorFilterType) -> Unit,
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
     Content(
         state = viewModel.uiState.collectAsState().value,
-        navigateToSelector = { tabFilter, selectorFilter ->
-            navigateToSelector.invoke(tabFilter.toModel(), selectorFilter.toModel())
+        navigateToSelector = { selectorFilter ->
+            navigateToSelector.invoke(selectorFilter.toModel())
         },
         navigateToContent = navigateToContent,
         onTabClick = {
@@ -70,7 +69,7 @@ fun HomeScreen(
 @Composable
 private fun Content(
     state: HomeUiState,
-    navigateToSelector: (TabFilter, SelectorFilter) -> Unit,
+    navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
@@ -122,7 +121,7 @@ private fun Content(
                         state.items.find { item ->
                             item.id == it
                         }?.run {
-                            navigateToSelector.invoke(TabFilter.YEAR, SelectorFilter.Year(year))
+                            navigateToSelector.invoke(SelectorFilter.Year(year))
                         }
                     }
                 },
@@ -136,7 +135,7 @@ private fun Content(
                         state.items.find { item ->
                             item.id == it
                         }?.run {
-                            navigateToSelector.invoke(TabFilter.COUNTRY, SelectorFilter.Country(country))
+                            navigateToSelector.invoke(SelectorFilter.Country(country))
                         }
                     }
                 },
@@ -150,7 +149,7 @@ private fun Content(
                         state.items.find { item ->
                             item.id == it
                         }?.run {
-                            navigateToSelector.invoke(TabFilter.PLACE, SelectorFilter.Place(place))
+                            navigateToSelector.invoke(SelectorFilter.Place(place))
                         }
                     }
                 },

@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import merail.life.auth.ui.AuthDestination
 import merail.life.auth.ui.AuthScreen
-import merail.life.data.model.HomeFilterType
+import merail.life.data.model.SelectorFilterType
 import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
 import merail.life.home.main.HomeDestination
@@ -51,8 +51,8 @@ internal fun MejourneyNavHost(
             route = HomeDestination.route,
         ) {
             HomeScreen(
-                navigateToSelector = { tabFilter, selectorFilter ->
-                     navController.navigate("${SelectorDestination.route}/$tabFilter")
+                navigateToSelector = { selectorFilter ->
+                     navController.navigate("${SelectorDestination.route}/$selectorFilter")
                 },
                 navigateToContent = {
                     navController.navigate("${ContentDestination.route}/$it")
@@ -61,8 +61,8 @@ internal fun MejourneyNavHost(
         }
         composable(
             route = SelectorDestination.routeWithArgs,
-            arguments = listOf(navArgument(SelectorDestination.TAB_FILTER_ARG) {
-                type = NavType.EnumType(HomeFilterType::class.java)
+            arguments = listOf(navArgument(SelectorDestination.SELECTOR_FILTER_ARG) {
+                type = NavType.EnumType(SelectorFilterType::class.java)
             }),
         ) {
             SelectorScreen(

@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.data.model.SelectorFilterModel
+import merail.life.data.model.SelectorFilterType
 
 internal sealed class SelectorFilter {
 
@@ -12,7 +12,7 @@ internal sealed class SelectorFilter {
 }
 
 internal fun SelectorFilter.toModel() = when (this) {
-    is SelectorFilter.Year -> SelectorFilterModel.Year(year)
-    is SelectorFilter.Country -> SelectorFilterModel.Country(country)
-    is SelectorFilter.Place -> SelectorFilterModel.Place(place)
+    is SelectorFilter.Year -> SelectorFilterType.YEAR.apply { value = year.toString() }
+    is SelectorFilter.Country -> SelectorFilterType.COUNTRY.apply { value = country }
+    is SelectorFilter.Place -> SelectorFilterType.PLACE.apply { value = place }
 }

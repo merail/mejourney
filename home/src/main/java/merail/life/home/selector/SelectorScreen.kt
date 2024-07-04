@@ -31,11 +31,9 @@ import merail.life.home.model.HomeItem
 object SelectorDestination : NavigationDestination {
     override val route = "selector"
 
-    const val TAB_FILTER_ARG = "tabFilter"
-
     const val SELECTOR_FILTER_ARG = "selectorFilter"
 
-    val routeWithArgs = "$route/{$TAB_FILTER_ARG}"
+    val routeWithArgs = "$route/{$SELECTOR_FILTER_ARG}"
 }
 
 @Composable

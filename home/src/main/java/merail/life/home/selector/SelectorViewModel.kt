@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
 import merail.life.data.model.HomeElementModel
-import merail.life.data.model.HomeFilterType
-import merail.life.data.model.SelectorFilterModel
+import merail.life.data.model.SelectorFilterType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,11 +20,9 @@ class SelectorViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val tabFilter: HomeFilterType =
-        checkNotNull(savedStateHandle[SelectorDestination.TAB_FILTER_ARG])
-
-    private val selectorFilter: SelectorFilterModel =
-        SelectorFilterModel.Country("Турция")//checkNotNull(savedStateHandle[SelectorDestination.SELECTOR_FILTER_ARG])
+    private val selectorFilter: SelectorFilterType = checkNotNull(
+        value = savedStateHandle[SelectorDestination.SELECTOR_FILTER_ARG],
+    )
 
     val uiState: StateFlow<SelectorUiState> = dataRepository
         .getHomeElementsFromDatabase(
