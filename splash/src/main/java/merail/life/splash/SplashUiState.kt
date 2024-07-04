@@ -11,7 +11,7 @@ sealed class SplashUiState {
     data object Success : SplashUiState()
 }
 
-fun RequestResult<Unit>.toState() = when (this) {
+internal fun RequestResult<Unit>.toState() = when (this) {
     is RequestResult.InProgress -> SplashUiState.Loading
     is RequestResult.Error -> SplashUiState.Error(
         exception = error,

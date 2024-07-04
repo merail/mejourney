@@ -4,9 +4,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import merail.life.core.RequestResult
-import merail.life.data.data.model.HomeElementModel
+import merail.life.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
-import merail.life.home.model.toItems
+import merail.life.home.model.toHomeItems
 
 sealed class SelectorUiState(
     open val items: ImmutableList<HomeItem>,
@@ -28,17 +28,15 @@ sealed class SelectorUiState(
     ): SelectorUiState(items)
 }
 
-fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
+internal fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
     is RequestResult.Error -> SelectorUiState.Error(
         exception = error,
-        items = data?.toItems().orEmpty().toImmutableList(),
+        items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
-
     is RequestResult.InProgress -> SelectorUiState.Loading(
-        items = data?.toItems().orEmpty().toImmutableList(),
+        items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
-
     is RequestResult.Success -> SelectorUiState.Success(
-        items = data.toItems().toImmutableList(),
+        items = data.toHomeItems().toImmutableList(),
     )
 }

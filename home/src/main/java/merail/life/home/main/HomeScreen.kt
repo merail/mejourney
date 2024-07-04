@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
-import merail.life.data.data.model.HomeFilterType
-import merail.life.data.data.model.SelectorFilterModel
+import merail.life.data.model.HomeFilterType
+import merail.life.data.model.SelectorFilterModel
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabTextColor

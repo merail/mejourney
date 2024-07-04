@@ -25,7 +25,7 @@ import merail.life.home.R
 import merail.life.home.model.HomeItem
 
 @Composable
-fun ColumnScope.YearsList(
+internal fun ColumnScope.YearsList(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {

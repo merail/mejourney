@@ -5,7 +5,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 
-class PhoneAuthCallbacks(
+internal class PhoneAuthCallbacks(
     private val onComplete: (PhoneAuthCredential) -> Unit,
     private val onFail: (FirebaseException) -> Unit,
     private val onCodeSent: (String) -> Unit,

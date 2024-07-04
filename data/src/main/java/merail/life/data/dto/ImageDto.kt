@@ -1,9 +1,9 @@
-package merail.life.data.data.dto
+package merail.life.data.dto
 
 import merail.life.api.data.model.StorageDto
 
-class ImageDto(
+internal class ImageDto(
     val reference: String,
 )
 
-fun StorageDto.toImageDto() = ImageDto(reference.toString())
+internal fun StorageDto.toImageDto() = ImageDto(reference.toString())

@@ -2,7 +2,7 @@ package merail.life.home.model
 
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.extensions.splitWithDelimiter
-import merail.life.data.data.model.ContentModel
+import merail.life.data.model.ContentModel
 
 class ContentItem(
     val title: String,
@@ -10,12 +10,12 @@ class ContentItem(
     val imagesUrls: ImmutableList<String>,
 )
 
-fun ContentModel.toItem() = ContentItem(
+internal fun ContentModel.toContentItem() = ContentItem(
     title = title,
     text = text,
     imagesUrls = imagesUrls,
 )
 
-const val IMAGE_DELIMITER = "<image>"
+internal const val IMAGE_DELIMITER = "<image>"
 
-fun ContentItem.splitWithImages() = text.splitWithDelimiter(IMAGE_DELIMITER)
+internal fun ContentItem.splitWithImages() = text.splitWithDelimiter(IMAGE_DELIMITER)

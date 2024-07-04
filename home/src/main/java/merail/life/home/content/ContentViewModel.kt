@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
-import merail.life.data.data.model.ContentModel
+import merail.life.data.model.ContentModel
 import javax.inject.Inject
 
 @HiltViewModel

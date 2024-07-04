@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.data.data.model.HomeElementModel
+import merail.life.data.model.HomeElementModel
 
 class HomeItem(
     val id: String,
@@ -12,7 +12,7 @@ class HomeItem(
     val url: String,
 )
 
-fun HomeElementModel.toItem() = HomeItem(
+internal fun HomeElementModel.toHomeItem() = HomeItem(
     id = id,
     year = year,
     country = country,
@@ -22,4 +22,4 @@ fun HomeElementModel.toItem() = HomeItem(
     url = url,
 )
 
-fun List<HomeElementModel>.toItems() = map(HomeElementModel::toItem)
+internal fun List<HomeElementModel>.toHomeItems() = map(HomeElementModel::toHomeItem)

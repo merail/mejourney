@@ -6,7 +6,7 @@ import androidx.navigation.compose.rememberNavController
 import merail.life.mejourney.navigation.MejourneyNavHost
 
 @Composable
-fun MejourneyApp(
+internal fun MejourneyApp(
     navController: NavHostController = rememberNavController(),
 ) {
     MejourneyNavHost(

@@ -1,13 +1,13 @@
-package merail.life.data.data.dto
+package merail.life.data.dto
 
 import merail.life.api.data.model.FirestoreDto
 
-class ContentDto(
+internal class ContentDto(
     val title: String,
     val text: String,
 )
 
-fun FirestoreDto.toContentDto() = snapshot
+internal fun FirestoreDto.toContentDto() = snapshot
     .toList()
     .first()
     .run {

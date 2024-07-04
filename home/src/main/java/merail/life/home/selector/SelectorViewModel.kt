@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
-import merail.life.data.data.model.HomeElementModel
-import merail.life.data.data.model.HomeFilterType
-import merail.life.data.data.model.SelectorFilterModel
+import merail.life.data.model.HomeElementModel
+import merail.life.data.model.HomeFilterType
+import merail.life.data.model.SelectorFilterModel
 import javax.inject.Inject
 
 @HiltViewModel

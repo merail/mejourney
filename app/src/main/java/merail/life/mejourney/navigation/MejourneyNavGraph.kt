@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import merail.life.auth.ui.AuthDestination
 import merail.life.auth.ui.AuthScreen
-import merail.life.data.data.model.HomeFilterType
+import merail.life.data.model.HomeFilterType
 import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
 import merail.life.home.main.HomeDestination
@@ -20,7 +20,7 @@ import merail.life.splash.SplashDestination
 import merail.life.splash.SplashScreen
 
 @Composable
-fun MejourneyNavHost(
+internal fun MejourneyNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {

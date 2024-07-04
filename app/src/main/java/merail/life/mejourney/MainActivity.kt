@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import merail.life.design.MejourneyTheme
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         enableEdgeToEdge()

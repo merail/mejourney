@@ -1,8 +1,8 @@
-package merail.life.data.data.dto
+package merail.life.data.dto
 
 import merail.life.api.data.model.FirestoreDto
 
-class CoverDto(
+internal class CoverDto(
     val id: String,
     val year: Long,
     val country: String,
@@ -11,7 +11,7 @@ class CoverDto(
     val description: String,
 )
 
-fun FirestoreDto.toCoverDto() = snapshot
+internal fun FirestoreDto.toCoverDto() = snapshot
     .map {
         with(it) {
             CoverDto(

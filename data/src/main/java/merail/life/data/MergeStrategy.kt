@@ -1,11 +1,11 @@
 package merail.life.data
 
 import merail.life.core.RequestResult
+import merail.life.core.RequestResult.Error
 import merail.life.core.RequestResult.InProgress
 import merail.life.core.RequestResult.Success
-import merail.life.core.RequestResult.Error
 
-interface MergeStrategy<E> {
+internal interface MergeStrategy<E> {
     fun merge(
         right: E,
         left: E,

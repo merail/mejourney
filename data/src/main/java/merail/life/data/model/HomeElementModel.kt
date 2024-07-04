@@ -1,4 +1,4 @@
-package merail.life.data.data.model
+package merail.life.data.model
 
 import merail.life.api.database.model.HomeElementEntity
 

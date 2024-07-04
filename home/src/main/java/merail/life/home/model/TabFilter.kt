@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.data.data.model.HomeFilterType
+import merail.life.data.model.HomeFilterType
 
 enum class TabFilter {
     YEAR,
@@ -10,7 +10,7 @@ enum class TabFilter {
     ;
 }
 
-fun TabFilter.toModel() = when (this) {
+internal fun TabFilter.toModel() = when (this) {
     TabFilter.YEAR -> HomeFilterType.YEAR
     TabFilter.COUNTRY -> HomeFilterType.COUNTRY
     TabFilter.PLACE -> HomeFilterType.PLACE

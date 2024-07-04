@@ -26,7 +26,7 @@ import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
 
 @Composable
-fun ColumnScope.PlacesList(
+internal fun ColumnScope.PlacesList(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {

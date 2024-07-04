@@ -2,10 +2,10 @@ package merail.life.data
 
 import kotlinx.coroutines.flow.Flow
 import merail.life.core.RequestResult
-import merail.life.data.data.model.ContentModel
-import merail.life.data.data.model.HomeElementModel
-import merail.life.data.data.model.HomeFilterType
-import merail.life.data.data.model.SelectorFilterModel
+import merail.life.data.model.ContentModel
+import merail.life.data.model.HomeElementModel
+import merail.life.data.model.HomeFilterType
+import merail.life.data.model.SelectorFilterModel
 
 interface IDataRepository {
 

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
-import merail.life.data.data.model.HomeElementModel
+import merail.life.data.model.HomeElementModel
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 import javax.inject.Inject

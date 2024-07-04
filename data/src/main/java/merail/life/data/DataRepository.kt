@@ -17,16 +17,16 @@ import merail.life.api.database.HomeDatabase
 import merail.life.api.database.model.HomeElementEntity
 import merail.life.core.RequestResult
 import merail.life.core.toRequestResult
-import merail.life.data.data.dto.ImageDto
-import merail.life.data.data.dto.toContentDto
-import merail.life.data.data.dto.toCoverDto
-import merail.life.data.data.dto.toImageDto
-import merail.life.data.data.model.ContentModel
-import merail.life.data.data.model.HomeElementModel
-import merail.life.data.data.model.HomeFilterType
-import merail.life.data.data.model.SelectorFilterModel
-import merail.life.data.data.model.toEntity
-import merail.life.data.data.model.toModel
+import merail.life.data.dto.ImageDto
+import merail.life.data.dto.toContentDto
+import merail.life.data.dto.toCoverDto
+import merail.life.data.dto.toImageDto
+import merail.life.data.model.ContentModel
+import merail.life.data.model.HomeElementModel
+import merail.life.data.model.HomeFilterType
+import merail.life.data.model.SelectorFilterModel
+import merail.life.data.model.toEntity
+import merail.life.data.model.toModel
 import javax.inject.Inject
 
 class DataRepository @Inject constructor(

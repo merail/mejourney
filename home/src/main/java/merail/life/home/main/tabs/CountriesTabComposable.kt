@@ -24,7 +24,7 @@ import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
 
 @Composable
-fun ColumnScope.CountriesList(
+internal fun ColumnScope.CountriesList(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {

@@ -1,4 +1,4 @@
-package merail.life.data.data.model
+package merail.life.data.model
 
 enum class HomeFilterType {
     YEAR,
