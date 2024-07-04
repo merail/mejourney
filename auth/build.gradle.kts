@@ -46,5 +46,4 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":design"))
-    implementation(project(":api:auth"))
 }

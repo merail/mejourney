@@ -8,17 +8,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import merail.life.firebase.data.IFirebaseRepository
-import merail.life.firebase.data.RequestResult
-import merail.life.firebase.data.model.HomeElementModel
-import merail.life.firebase.data.model.HomeFilterType
-import merail.life.firebase.data.model.SelectorFilterModel
+import merail.life.data.IDataRepository
+import merail.life.data.data.model.HomeElementModel
+import merail.life.data.data.model.HomeFilterType
+import merail.life.data.data.model.SelectorFilterModel
 import javax.inject.Inject
+import merail.life.data.RequestResult
 
 @HiltViewModel
 class SelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val firebaseRepository: IFirebaseRepository,
+    private val dataRepository: IDataRepository,
 ) : ViewModel() {
 
     private val tabFilter: HomeFilterType =
@@ -41,7 +41,7 @@ class SelectorViewModel @Inject constructor(
     private fun getItems(
         selectorFilter: SelectorFilterModel,
     ) = viewModelScope.launch {
-        firebaseRepository
+        dataRepository
             .getHomeElementsFromDatabase(
                 selectorFilter = selectorFilter,
             )

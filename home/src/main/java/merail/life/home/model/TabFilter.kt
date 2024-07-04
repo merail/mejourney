@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.firebase.data.model.HomeFilterType
+import merail.life.data.data.model.HomeFilterType
 
 enum class TabFilter {
     YEAR,

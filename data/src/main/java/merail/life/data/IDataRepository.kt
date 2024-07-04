@@ -1,0 +1,21 @@
+package merail.life.data
+
+import kotlinx.coroutines.flow.Flow
+import merail.life.data.data.model.ContentModel
+import merail.life.data.data.model.HomeElementModel
+import merail.life.data.data.model.HomeFilterType
+import merail.life.data.data.model.SelectorFilterModel
+
+interface IDataRepository {
+
+    fun getHomeElements(): Flow<RequestResult<List<HomeElementModel>>>
+
+    fun getHomeElementsFromDatabase(
+        tabFilter: HomeFilterType? = null,
+        selectorFilter: SelectorFilterModel? = null,
+    ): Flow<RequestResult<List<HomeElementModel>>>
+
+    suspend fun getContent(
+        id: String,
+    ): ContentModel
+}

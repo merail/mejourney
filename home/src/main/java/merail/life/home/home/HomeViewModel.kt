@@ -7,16 +7,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import merail.life.firebase.data.IFirebaseRepository
-import merail.life.firebase.data.RequestResult
-import merail.life.firebase.data.model.HomeElementModel
+import merail.life.data.IDataRepository
+import merail.life.data.RequestResult
+import merail.life.data.data.model.HomeElementModel
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val firebaseRepository: IFirebaseRepository,
+    private val dataRepository: IDataRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.None)
@@ -25,7 +25,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            firebaseRepository
+            dataRepository
                 .getHomeElements()
                 .map(RequestResult<List<HomeElementModel>>::toState)
                 .collect {
@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
     fun getHomeItems(
         filter: TabFilter,
     ) = viewModelScope.launch {
-        firebaseRepository
+        dataRepository
             .getHomeElementsFromDatabase(
                 tabFilter = filter.toModel(),
             )

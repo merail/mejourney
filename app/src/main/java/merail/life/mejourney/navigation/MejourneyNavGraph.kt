@@ -7,9 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import merail.life.auth.AuthDestination
-import merail.life.auth.AuthScreen
-import merail.life.firebase.data.model.HomeFilterType
+import merail.life.auth.ui.AuthDestination
+import merail.life.auth.ui.AuthScreen
+import merail.life.data.data.model.HomeFilterType
 import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
 import merail.life.home.home.HomeDestination

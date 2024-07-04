@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.firebase.data.model.HomeElementModel
+import merail.life.data.data.model.HomeElementModel
 
 class HomeItem(
     val id: String,

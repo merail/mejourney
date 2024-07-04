@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import merail.life.firebase.data.IFirebaseRepository
+import merail.life.data.IDataRepository
 import merail.life.home.model.ContentItem
 import merail.life.home.model.toItem
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val firebaseRepository: IFirebaseRepository,
+    private val dataRepository: IDataRepository,
 ) : ViewModel() {
 
     private val contentId: String = checkNotNull(savedStateHandle[ContentDestination.CONTENT_ID_ARG])
@@ -32,7 +32,7 @@ class ContentViewModel @Inject constructor(
         id: String,
     ) = viewModelScope.launch {
         runCatching {
-            firebaseRepository.getContent(id)
+            dataRepository.getContent(id)
         }.onFailure {
             _uiState.value = ContentUiState.Error(it)
         }.onSuccess {

@@ -48,5 +48,5 @@ dependencies {
 
     implementation(project(":design"))
     implementation(project(":core"))
-    implementation(project(":api"))
+    implementation(project(":data"))
 }

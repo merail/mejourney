@@ -3,8 +3,8 @@ package merail.life.home.selector
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import merail.life.firebase.data.RequestResult
-import merail.life.firebase.data.model.HomeElementModel
+import merail.life.data.RequestResult
+import merail.life.data.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toItems
 

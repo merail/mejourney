@@ -25,7 +25,9 @@ include(":app")
 
 include(":design")
 
-include(":api")
+include(":data")
+include(":data:database")
+include(":data:server")
 
 include(":splash")
 
@@ -34,6 +36,3 @@ include(":core")
 include(":home")
 
 include(":auth")
-include(":api:auth")
-include(":api:database")
-include(":api:server")

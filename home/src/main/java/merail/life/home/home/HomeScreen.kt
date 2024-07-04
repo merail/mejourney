@@ -34,8 +34,8 @@ import merail.life.core.NavigationDestination
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabTextColor
-import merail.life.firebase.data.model.HomeFilterType
-import merail.life.firebase.data.model.SelectorFilterModel
+import merail.life.data.data.model.HomeFilterType
+import merail.life.data.data.model.SelectorFilterModel
 import merail.life.home.R
 import merail.life.home.home.tabs.CommonList
 import merail.life.home.home.tabs.CountriesList

@@ -75,7 +75,7 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":design"))
-    implementation(project(":api"))
+    implementation(project(":data"))
     implementation(project(":splash"))
     implementation(project(":home"))
     implementation(project(":auth"))

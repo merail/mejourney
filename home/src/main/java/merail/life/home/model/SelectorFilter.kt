@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.firebase.data.model.SelectorFilterModel
+import merail.life.data.data.model.SelectorFilterModel
 
 sealed class SelectorFilter {
 
