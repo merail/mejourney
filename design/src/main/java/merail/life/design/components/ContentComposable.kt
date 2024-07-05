@@ -6,7 +6,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.SubcomposeAsyncImage
 import merail.life.core.extensions.createMediaRequest
-import merail.life.design.MejourneyTheme
 
 @Composable
 fun ContentImage(
@@ -14,15 +13,13 @@ fun ContentImage(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
 ) {
-    MejourneyTheme {
-        SubcomposeAsyncImage(
-            model = LocalContext.current.createMediaRequest(url),
-            contentDescription = null,
-            loading = {
-                Loading()
-            },
-            contentScale = contentScale,
-            modifier = modifier,
-        )
-    }
+    SubcomposeAsyncImage(
+        model = LocalContext.current.createMediaRequest(url),
+        contentDescription = null,
+        loading = {
+            Loading()
+        },
+        contentScale = contentScale,
+        modifier = modifier,
+    )
 }

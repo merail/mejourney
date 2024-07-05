@@ -7,17 +7,16 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
+import merail.life.design.MejourneyTheme
+import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
 import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
@@ -56,7 +55,7 @@ private fun Content(
     ) {
         Text(
             text = item.title,
-            style = MaterialTheme.typography.titleLarge,
+            style = MejourneyTheme.typography.titleLarge,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(12.dp),
@@ -75,7 +74,7 @@ private fun Content(
             } else {
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MejourneyTheme.typography.bodyLarge,
                     modifier = Modifier
                         .padding(
                             vertical = 12.dp,
@@ -92,9 +91,7 @@ private fun ContentImage(
     item: ContentItem,
 ) {
     Card(
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.Black,
-        ),
+        colors = MejourneyTheme.colors.cardColors,
         modifier = Modifier
             .wrapContentSize()
             .padding(

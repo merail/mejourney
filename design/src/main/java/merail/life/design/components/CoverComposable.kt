@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import merail.life.core.extensions.createMediaRequest
-import merail.life.design.MejourneyTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -28,29 +27,27 @@ fun CoverImage(
     navigateTo: (String) -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
-    MejourneyTheme {
-        SubcomposeAsyncImage(
-            model = LocalContext.current.createMediaRequest(url),
-            contentDescription = null,
-            contentScale = contentScale,
-            loading = {
-                ImageLoading()
-            },
-            onSuccess = {
-                onLoadingSuccess.invoke()
-            },
-            modifier = modifier
-                .fillMaxWidth()
-                .combinedClickable(
-                    onLongClick = {
-                        onLongClick.invoke()
-                    },
-                    onClick = {
-                        navigateTo.invoke(id)
-                    },
-                ),
-        )
-    }
+    SubcomposeAsyncImage(
+        model = LocalContext.current.createMediaRequest(url),
+        contentDescription = null,
+        contentScale = contentScale,
+        loading = {
+            ImageLoading()
+        },
+        onSuccess = {
+            onLoadingSuccess.invoke()
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onLongClick = {
+                    onLongClick.invoke()
+                },
+                onClick = {
+                    navigateTo.invoke(id)
+                },
+            ),
+    )
 }
 
 @Composable

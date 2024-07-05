@@ -9,19 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
+import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
 
@@ -30,24 +28,22 @@ internal fun ColumnScope.PlacesList(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit,
 ) {
-    MejourneyTheme {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier
-                .weight(1f)
-                .padding(
-                    start = 4.dp,
-                    top = 24.dp,
-                    end = 4.dp,
-                    bottom = 4.dp,
-                ),
-        ) {
-            items(items) {
-                PlaceItem(
-                    item = it,
-                    navigateToContent = navigateToContent,
-                )
-            }
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .weight(1f)
+            .padding(
+                start = 4.dp,
+                top = 24.dp,
+                end = 4.dp,
+                bottom = 4.dp,
+            ),
+    ) {
+        items(items) {
+            PlaceItem(
+                item = it,
+                navigateToContent = navigateToContent,
+            )
         }
     }
 }
@@ -69,10 +65,8 @@ private fun PlaceItem(
         }
 
         Card(
-            colors = CardDefaults.cardColors().copy(
-                containerColor = Color.Black,
-            ),
-            border = BorderStroke(1.dp, Color.White),
+            colors = MejourneyTheme.colors.cardColors,
+            border = BorderStroke(1.dp, MejourneyTheme.colors.borderPrimary),
             modifier = Modifier
                 .padding(
                     top = 12.dp,
@@ -93,7 +87,7 @@ private fun PlaceItem(
         if (isImageLoaded.value) {
             Text(
                 text = item.place,
-                style = MaterialTheme.typography.titleLarge,
+                style = MejourneyTheme.typography.titleLarge,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(

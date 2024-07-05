@@ -1,28 +1,58 @@
 package merail.life.design
 
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-val tabsContainerColor = Color(
-    red = 45,
-    green = 45,
-    blue = 45,
+val LocalMejourneyColors = staticCompositionLocalOf { Colors() }
+
+val Colors.tabsContainerColor: Color
+    get() = ColorConstants.thunder
+val Colors.selectedTabColor: Color
+    get() = ColorConstants.riverBed
+val Colors.unselectedTabColor: Color
+    get() = ColorConstants.thunder
+val Colors.unselectedTabTextColor: Color
+    get() = ColorConstants.smokeyGrey
+
+val Colors.cardColors: CardColors
+    get() = CardColors(
+        containerColor = elementBackground,
+        contentColor = elementPrimary,
+        disabledContainerColor = elementBackground,
+        disabledContentColor = elementPrimary,
+    )
+
+val Colors.materialThemeColors: ColorScheme
+    get() = lightColorScheme(
+        primary = screenPrimary,
+        background = screenBackground,
+        onBackground = screenPrimary,
+        surface = screenBackground,
+    )
+
+@Immutable
+data class Colors(
+    val screenPrimary: Color = ColorConstants.white,
+    val screenBackground: Color = ColorConstants.black,
+
+    val elementPrimary: Color = ColorConstants.white,
+    val elementBackground: Color = ColorConstants.black,
+
+    val textPrimary: Color = ColorConstants.white,
+    val textNegative: Color = ColorConstants.red,
+
+    val borderPrimary: Color = ColorConstants.white,
 )
 
-val selectedTabColor = Color(
-    red = 73,
-    green = 82,
-    blue = 82,
-)
-
-val unselectedTabTextColor = Color(
-    red = 107,
-    green = 113,
-    blue = 113,
-)
-
-val ColorScheme = lightColorScheme(
-    primary = Color.White,
-    background = Color.Black,
-    onBackground = Color.White,
-)
+internal object ColorConstants {
+    val white = Color(0xFFFFFFFF)
+    val black = Color(0xFF000000)
+    val thunder = Color(0xFF2D2D2D)
+    val riverBed = Color(0xFF495253)
+    val smokeyGrey = Color(0xFF6B7171)
+    val red = Color(0xFFFF0000)
+}

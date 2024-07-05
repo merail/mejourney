@@ -10,19 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
+import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
@@ -58,20 +56,18 @@ private fun Content(
     items: ImmutableList<HomeItem>,
     navigateToContent: (String) -> Unit = {},
 ) {
-    MejourneyTheme {
-        val pagerState = rememberPagerState(
-            pageCount = {
-                items.size
-            },
+    val pagerState = rememberPagerState(
+        pageCount = {
+            items.size
+        },
+    )
+    HorizontalPager(
+        state = pagerState,
+    ) { page ->
+        SelectorItem(
+            item = items[page],
+            navigateToContent = navigateToContent,
         )
-        HorizontalPager(
-            state = pagerState,
-        ) { page ->
-            SelectorItem(
-                item = items[page],
-                navigateToContent = navigateToContent,
-            )
-        }
     }
 }
 
@@ -94,9 +90,7 @@ private fun SelectorItem(
             },
     ) {
         Card(
-            colors = CardDefaults.cardColors().copy(
-                containerColor = Color.Black,
-            ),
+            colors = MejourneyTheme.colors.cardColors,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
@@ -115,7 +109,7 @@ private fun SelectorItem(
 
         Text(
             text = item.title,
-            style = MaterialTheme.typography.titleLarge,
+            style = MejourneyTheme.typography.titleLarge,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -125,7 +119,7 @@ private fun SelectorItem(
 
         Text(
             text = item.description,
-            style = MaterialTheme.typography.titleLarge,
+            style = MejourneyTheme.typography.titleLarge,
             modifier = Modifier
                 .fillMaxWidth(),
         )

@@ -7,18 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import merail.life.design.MejourneyTheme
 
-@Preview
 @Composable
 fun Loading() {
-    MejourneyTheme {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize(),
-        ) {
-            CircularProgressIndicator()
-        }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        CircularProgressIndicator()
     }
 }

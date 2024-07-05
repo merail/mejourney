@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -26,14 +25,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.data.model.SelectorFilterType
+import merail.life.design.MejourneyTheme
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
+import merail.life.design.unselectedTabColor
 import merail.life.design.unselectedTabTextColor
 import merail.life.home.R
 import merail.life.home.main.tabs.CommonList
@@ -101,7 +101,7 @@ private fun Content(
             ) {
                 Text(
                     text = state.exception?.message.orEmpty(),
-                    color = Color.Red,
+                    color = MejourneyTheme.colors.textNegative,
                 )
             }
             else -> Unit
@@ -184,7 +184,7 @@ private fun HomeTabs(
     }
     TabRow(
         selectedTabIndex = selectedIndex.intValue,
-        containerColor = tabsContainerColor,
+        containerColor = MejourneyTheme.colors.tabsContainerColor,
         indicator = {},
         divider = {},
         modifier = Modifier
@@ -230,11 +230,11 @@ private fun Pair<TabFilter, String>.HomeTab(
                 Text(
                     text = second,
                     color = if (selectedIndex.value == index) {
-                        Color.White
+                        MejourneyTheme.colors.textPrimary
                     } else {
-                        unselectedTabTextColor
+                        MejourneyTheme.colors.unselectedTabTextColor
                     },
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MejourneyTheme.typography.labelLarge,
                     modifier = Modifier
                         .wrapContentWidth(
                             unbounded = true,
@@ -245,9 +245,9 @@ private fun Pair<TabFilter, String>.HomeTab(
                 .clip(RoundedCornerShape(64))
                 .background(
                     color = if (selectedIndex.value == index) {
-                        selectedTabColor
+                        MejourneyTheme.colors.selectedTabColor
                     } else {
-                        tabsContainerColor
+                        MejourneyTheme.colors.unselectedTabColor
                     },
                 ),
         )
