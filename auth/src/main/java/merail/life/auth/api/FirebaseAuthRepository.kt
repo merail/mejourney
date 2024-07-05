@@ -9,8 +9,6 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -19,6 +17,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import merail.life.auth.api.model.PhoneAuthCallbackType
 import merail.life.core.RequestResult
+import merail.life.core.extensions.catchWithResult
+import merail.life.core.extensions.flowWithResult
 import merail.life.core.extensions.toUnit
 import merail.life.core.toRequestResult
 import java.util.concurrent.TimeUnit
@@ -71,16 +71,16 @@ class FirebaseAuthRepository @Inject constructor(
     }
 
     override fun authAnonymously(): Flow<RequestResult<Unit>> {
-        val result = flow {
-            emit(runCatching { firebaseAuth.signInAnonymously().await().toUnit() })
+        val result = flowWithResult {
+            firebaseAuth.signInAnonymously().await().toUnit()
         }.flowOn(
             context = Dispatchers.IO,
         ).map {
             Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
             it.toRequestResult()
-        }.catch {
+        }.catchWithResult {
             Log.w(TAG, "Firebase anonymous auth. Failure", it)
-            emit(RequestResult.Error(error = it))
+            RequestResult.Error(error = it)
         }
         val start = flowOf<RequestResult<Unit>>(RequestResult.InProgress())
         return merge(result, start)

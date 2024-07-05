@@ -4,9 +4,7 @@ import android.util.Log
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -16,6 +14,8 @@ import merail.life.api.data.model.StorageDto
 import merail.life.api.database.HomeDatabase
 import merail.life.api.database.model.HomeElementEntity
 import merail.life.core.RequestResult
+import merail.life.core.extensions.catchWithResult
+import merail.life.core.extensions.flowWithResult
 import merail.life.core.toRequestResult
 import merail.life.data.dto.ImageDto
 import merail.life.data.dto.toContentDto
@@ -52,28 +52,24 @@ class DataRepository @Inject constructor(
     }
 
     private fun getHomeElementsFromServer(): Flow<RequestResult<List<HomeElementModel>>> {
-        val result = flow {
-            emit(
-                value = runCatching {
-                    val firestoreData = serverRepository.getFirestoreData(
-                        folderName = HOME_COVERS_PATH,
-                    ).toCoverDto()
-                    val storageData = serverRepository.getStorageData(
-                        folderName = HOME_COVERS_PATH,
-                    ).map(StorageDto::toImageDto)
-                    firestoreData.zip(storageData).map { (info, file) ->
-                        HomeElementModel(
-                            id = info.id,
-                            year = info.year,
-                            country = info.country,
-                            place = info.place,
-                            title = info.title,
-                            description = info.description,
-                            url = file.reference,
-                        )
-                    }
-                }
-            )
+        val result = flowWithResult {
+            val firestoreData = serverRepository.getFirestoreData(
+                folderName = HOME_COVERS_PATH,
+            ).toCoverDto()
+            val storageData = serverRepository.getStorageData(
+                folderName = HOME_COVERS_PATH,
+            ).map(StorageDto::toImageDto)
+            firestoreData.zip(storageData).map { (info, file) ->
+                HomeElementModel(
+                    id = info.id,
+                    year = info.year,
+                    country = info.country,
+                    place = info.place,
+                    title = info.title,
+                    description = info.description,
+                    url = file.reference,
+                )
+            }
         }.onEach {
             if (it.isSuccess) {
                 saveHomeElementsToDatabase(it.getOrThrow())
@@ -81,9 +77,9 @@ class DataRepository @Inject constructor(
         }.map {
             Log.d(TAG, "Getting home elements from server. Success")
             it.toRequestResult()
-        }.catch {
+        }.catchWithResult {
             Log.w(TAG, "Getting home elements from server. Failure", it)
-            emit(RequestResult.Error(error = it))
+            RequestResult.Error(error = it)
         }
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
         return merge(result, start)
@@ -105,9 +101,9 @@ class DataRepository @Inject constructor(
                     else -> RequestResult.Success(databaseList)
                 }
             }
-            .catch {
+            .catchWithResult {
                 Log.w(TAG, "Getting home elements from database. Failure", it)
-                emit(RequestResult.Error(error = it))
+                RequestResult.Error(error = it)
             }
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
         return merge(start, request)
@@ -120,28 +116,24 @@ class DataRepository @Inject constructor(
     override fun getContent(
         id: String,
     ): Flow<RequestResult<ContentModel>> {
-        val result = flow {
-            emit(
-                value = runCatching {
-                    val firestoreData = serverRepository.getFirestoreData(
-                        folderName = "$CONTENT_PATH$id",
-                    ).toContentDto()
-                    val storageData = serverRepository.getStorageData(
-                        folderName = "$CONTENT_PATH$id",
-                    ).map(StorageDto::toImageDto)
-                    ContentModel(
-                        title = firestoreData.title,
-                        text = firestoreData.text,
-                        imagesUrls = storageData.map(ImageDto::reference).toImmutableList(),
-                    )
-                }
+        val result = flowWithResult {
+            val firestoreData = serverRepository.getFirestoreData(
+                folderName = "$CONTENT_PATH$id",
+            ).toContentDto()
+            val storageData = serverRepository.getStorageData(
+                folderName = "$CONTENT_PATH$id",
+            ).map(StorageDto::toImageDto)
+            ContentModel(
+                title = firestoreData.title,
+                text = firestoreData.text,
+                imagesUrls = storageData.map(ImageDto::reference).toImmutableList(),
             )
         }.map {
             Log.d(TAG, "Getting content from server. Success")
             it.toRequestResult()
-        }.catch {
+        }.catchWithResult {
             Log.w(TAG, "Getting content from server. Failure", it)
-            emit(RequestResult.Error(error = it))
+            RequestResult.Error(error = it)
         }
         val start = flowOf<RequestResult<ContentModel>>(RequestResult.InProgress())
         return merge(result, start)
