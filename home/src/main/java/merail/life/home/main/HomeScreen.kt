@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
+import merail.life.design.components.ErrorNotificationDialog
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
@@ -91,19 +92,7 @@ private fun Content(
                     CircularProgressIndicator()
                 }
             }
-            is HomeUiState.Error -> Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = 64.dp,
-                    ),
-            ) {
-                Text(
-                    text = state.exception?.message.orEmpty(),
-                    color = MejourneyTheme.colors.textNegative,
-                )
-            }
+            is HomeUiState.Error -> ErrorNotificationDialog()
             else -> Unit
         }
 
