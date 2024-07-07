@@ -1,6 +1,7 @@
 package merail.life.splash
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -9,7 +10,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.core.extensions.activity
-import merail.life.design.components.ErrorMessage
 
 object SplashDestination : NavigationDestination {
     override val route = "splash"
@@ -17,7 +17,7 @@ object SplashDestination : NavigationDestination {
 
 @Composable
 fun SplashScreen(
-    navigateToAuth: () -> Unit,
+    navigateToAuth: (Throwable?) -> Unit,
     viewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
@@ -32,7 +32,11 @@ fun SplashScreen(
 
     when (uiState) {
         is SplashUiState.Loading -> Unit
-        is SplashUiState.Error -> ErrorMessage(uiState.exception?.message.orEmpty())
-        is SplashUiState.Success -> navigateToAuth()
+        is SplashUiState.Error -> LaunchedEffect(null) {
+            navigateToAuth(uiState.exception)
+        }
+        is SplashUiState.Success -> LaunchedEffect(null) {
+            navigateToAuth(null)
+        }
     }
 }

@@ -31,7 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
-import merail.life.design.components.ErrorNotificationDialog
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
@@ -51,12 +50,14 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
+    onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilterType) -> Unit,
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
     Content(
         state = viewModel.uiState.collectAsState().value,
+        onError = onError,
         navigateToSelector = { selectorFilter ->
             navigateToSelector.invoke(selectorFilter.toModel())
         },
@@ -70,6 +71,7 @@ fun HomeScreen(
 @Composable
 private fun Content(
     state: HomeUiState,
+    onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
@@ -92,7 +94,7 @@ private fun Content(
                     CircularProgressIndicator()
                 }
             }
-            is HomeUiState.Error -> ErrorNotificationDialog()
+            is HomeUiState.Error -> onError(state.exception)
             else -> Unit
         }
 

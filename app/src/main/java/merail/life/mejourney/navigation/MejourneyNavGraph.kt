@@ -2,10 +2,13 @@ package merail.life.mejourney.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import merail.life.auth.ui.AuthDestination
 import merail.life.auth.ui.AuthScreen
@@ -35,6 +38,9 @@ internal fun MejourneyNavHost(
             SplashScreen(
                 navigateToAuth = {
                     navController.navigate(HomeDestination.route)
+                    it?.let {
+                        navController.navigateToError(it)
+                    }
                 },
             )
         }
@@ -42,6 +48,9 @@ internal fun MejourneyNavHost(
             route = AuthDestination.route,
         ) {
             AuthScreen(
+                onError = {
+                    navController.navigateToError(it)
+                },
                 navigateToHome = {
                     navController.navigate(HomeDestination.route)
                 },
@@ -51,8 +60,11 @@ internal fun MejourneyNavHost(
             route = HomeDestination.route,
         ) {
             HomeScreen(
-                navigateToSelector = { selectorFilter ->
-                     navController.navigate("${SelectorDestination.route}/$selectorFilter")
+                onError = {
+                    navController.navigateToError(it)
+                },
+                navigateToSelector = {
+                    navController.navigate("${SelectorDestination.route}/$it")
                 },
                 navigateToContent = {
                     navController.navigate("${ContentDestination.route}/$it")
@@ -61,11 +73,17 @@ internal fun MejourneyNavHost(
         }
         composable(
             route = SelectorDestination.routeWithArgs,
-            arguments = listOf(navArgument(SelectorDestination.SELECTOR_FILTER_ARG) {
-                type = NavType.EnumType(SelectorFilterType::class.java)
-            }),
+            arguments = listOf(
+                element = navArgument(SelectorDestination.SELECTOR_FILTER_ARG) {
+                    type = NavType.EnumType(SelectorFilterType::class.java)
+                },
+            ),
         ) {
             SelectorScreen(
+                onError = {
+                    navController.popBackStack()
+                    navController.navigateToError(it)
+                },
                 navigateToContent = {
                     navController.navigate("${ContentDestination.route}/$it")
                 },
@@ -73,11 +91,43 @@ internal fun MejourneyNavHost(
         }
         composable(
             route = ContentDestination.routeWithArgs,
-            arguments = listOf(navArgument(ContentDestination.CONTENT_ID_ARG) {
-                type = NavType.StringType
-            }),
+            arguments = listOf(
+                element = navArgument(ContentDestination.CONTENT_ID_ARG) {
+                    type = NavType.StringType
+                },
+            ),
         ) {
-            ContentScreen()
+            ContentScreen(
+                onError = {
+                    navController.popBackStack()
+                    navController.navigateToError(it)
+                },
+            )
+        }
+        dialog(
+            route = ErrorDestination.routeWithArgs,
+            dialogProperties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
+            ),
+            arguments = listOf(
+                element = navArgument(ErrorDestination.ERROR_MESSAGE_ARG) {
+                    type = NavType.StringType
+                },
+            ),
+        ) {
+            ErrorDialog(
+                onDismiss = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
+}
+
+private fun NavController.navigateToError(error: Throwable?) = navigate(
+    route = "${ErrorDestination.route}/${error?.message.orEmpty()}",
+) {
+    launchSingleTop = true
 }

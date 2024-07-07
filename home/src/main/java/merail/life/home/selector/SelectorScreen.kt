@@ -22,7 +22,6 @@ import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
-import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.HomeItem
 
@@ -36,13 +35,14 @@ object SelectorDestination : NavigationDestination {
 
 @Composable
 fun SelectorScreen(
+    onError: (Throwable?) -> Unit,
     navigateToContent: (String) -> Unit,
     viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is SelectorUiState.None -> Unit
         is SelectorUiState.Loading -> Loading()
-        is SelectorUiState.Error -> ErrorMessage(uiState.exception?.message.orEmpty())
+        is SelectorUiState.Error -> onError(uiState.exception)
         is SelectorUiState.Success -> Content(
             items = uiState.items,
             navigateToContent = navigateToContent,

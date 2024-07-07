@@ -16,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.core.extensions.activity
 import merail.life.design.MejourneyTheme
-import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 
 object AuthDestination : NavigationDestination {
@@ -25,6 +24,7 @@ object AuthDestination : NavigationDestination {
 
 @Composable
 fun AuthScreen(
+    onError: (Throwable?) -> Unit,
     navigateToHome: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel<AuthViewModel>(),
 ) {
@@ -38,7 +38,7 @@ fun AuthScreen(
                 },
             )
             is AuthUiState.Loading -> Loading()
-            is AuthUiState.Error -> ErrorMessage(uiState.exception.message.orEmpty())
+            is AuthUiState.Error -> onError(uiState.exception)
             is AuthUiState.SmsEnter -> SmsCodeEnter(
                 smsCode = viewModel.smsCode,
                 onSmsCodeChange = viewModel::updateSmsCode,

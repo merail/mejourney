@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +19,6 @@ import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
-import merail.life.design.components.ErrorMessage
 import merail.life.design.components.Loading
 import merail.life.home.model.ContentItem
 import merail.life.home.model.IMAGE_DELIMITER
@@ -34,11 +34,14 @@ object ContentDestination : NavigationDestination {
 
 @Composable
 fun ContentScreen(
+    onError: (Throwable?) -> Unit,
     viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is ContentUiState.Loading -> Loading()
-        is ContentUiState.Error -> ErrorMessage(uiState.exception?.message.orEmpty())
+        is ContentUiState.Error -> LaunchedEffect(null) {
+            onError(uiState.exception)
+        }
         is ContentUiState.Success -> Content(uiState.item)
     }
 }
