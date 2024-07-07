@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.SubcomposeAsyncImage
-import merail.life.core.extensions.createMediaRequest
+import merail.life.design.extensions.createMediaRequest
 
 @Composable
 fun ContentImage(

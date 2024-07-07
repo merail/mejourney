@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+    implementation(libs.coil.compose)
+
     implementation(project(":core"))
     implementation(project(":design"))
     implementation(project(":data"))

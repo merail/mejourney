@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import merail.life.core.extensions.createMediaRequest
+import merail.life.design.extensions.createMediaRequest
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
