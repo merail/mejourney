@@ -1,5 +1,8 @@
 package merail.life.home.main
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -55,9 +59,12 @@ fun HomeScreen(
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
 ) {
+    val state = viewModel.uiState.collectAsState().value
+    if (state is HomeUiState.Error) {
+        onError(state.exception)
+    }
     Content(
-        state = viewModel.uiState.collectAsState().value,
-        onError = onError,
+        state = state,
         navigateToSelector = { selectorFilter ->
             navigateToSelector.invoke(selectorFilter.toModel())
         },
@@ -71,7 +78,6 @@ fun HomeScreen(
 @Composable
 private fun Content(
     state: HomeUiState,
-    onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
@@ -81,22 +87,7 @@ private fun Content(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        when (state) {
-            is HomeUiState.Loading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = 64.dp,
-                        ),
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-            is HomeUiState.Error -> onError(state.exception)
-            else -> Unit
-        }
+        HomeLoader(state)
 
         var tabFilter by rememberSaveable {
             mutableStateOf(TabFilter.COMMON)
@@ -157,6 +148,42 @@ private fun Content(
                 onTabClick.invoke(it)
             },
         )
+    }
+}
+
+@Composable
+private fun HomeLoader(
+    state: HomeUiState,
+) {
+    if (state.items.isEmpty()) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        AnimatedVisibility(
+            visible = state is HomeUiState.Loading,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 32.dp,
+                        bottom = 16.dp,
+                    ),
+            ) {
+                CircularProgressIndicator(
+                    strokeWidth = 3.dp,
+                    modifier = Modifier
+                        .size(24.dp),
+                )
+            }
+        }
     }
 }
 
