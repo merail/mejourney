@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -63,6 +65,7 @@ private fun Content(
     )
     HorizontalPager(
         state = pagerState,
+        contentPadding = PaddingValues(10.dp),
     ) { page ->
         SelectorItem(
             item = items[page],
@@ -107,21 +110,27 @@ private fun SelectorItem(
             )
         }
 
-        Text(
-            text = item.title,
-            style = MejourneyTheme.typography.titleLarge,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 12.dp,
-                ),
-        )
+                .fillMaxHeight(0.18f),
+        ) {
+            Text(
+                text = item.title,
+                style = MejourneyTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            )
 
-        Text(
-            text = item.description,
-            style = MejourneyTheme.typography.titleLarge,
-            modifier = Modifier
-                .fillMaxWidth(),
-        )
+            Text(
+                text = item.description,
+                style = MejourneyTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 12.dp,
+                    ),
+            )
+        }
     }
 }

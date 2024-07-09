@@ -39,7 +39,15 @@ internal fun ColumnScope.PlacesList(
                 bottom = 4.dp,
             ),
     ) {
-        items(items) {
+        items(
+            items = items,
+            key = {
+                it.id
+            },
+            contentType = {
+                it
+            },
+        ) {
             PlaceItem(
                 item = it,
                 navigateToContent = navigateToContent,

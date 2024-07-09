@@ -36,7 +36,15 @@ internal fun ColumnScope.CountriesList(
                 end = 4.dp,
             ),
     ) {
-        items(items) {
+        items(
+            items = items,
+            key = {
+                it.id
+            },
+            contentType = {
+                it
+            },
+        ) {
             CountryItem(
                 item = it,
                 navigateToContent = navigateToContent,

@@ -42,7 +42,15 @@ internal fun ColumnScope.CommonList(
             .weight(1f)
             .padding(4.dp),
     ) {
-        items(items) {
+        items(
+            items = items,
+            key = {
+                it.id
+            },
+            contentType = {
+                it
+            },
+        ) {
             Column(
                 modifier = Modifier
                     .animateContentSize(),

@@ -241,8 +241,10 @@ private fun Pair<TabFilter, String>.HomeTab(
         Tab(
             selected = isSelected,
             onClick = {
-                selectedIndex.value = index
-                onTabClick.invoke(first)
+                if (selectedIndex.value != index) {
+                    selectedIndex.value = index
+                    onTabClick.invoke(first)
+                }
             },
             text = {
                 Text(

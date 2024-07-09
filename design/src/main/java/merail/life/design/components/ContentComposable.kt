@@ -11,7 +11,7 @@ import merail.life.design.extensions.createMediaRequest
 fun ContentImage(
     url: String,
     modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Fit,
+    contentScale: ContentScale = ContentScale.FillWidth,
 ) {
     SubcomposeAsyncImage(
         model = LocalContext.current.createMediaRequest(url),

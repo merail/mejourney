@@ -37,7 +37,15 @@ internal fun ColumnScope.YearsList(
                 bottom = 4.dp,
             ),
     ) {
-        items(items) {
+        items(
+            items = items,
+            key = {
+                it.id
+            },
+            contentType = {
+                it
+            },
+        ) {
             YearItem(
                 item = it,
                 navigateToContent = navigateToContent,
