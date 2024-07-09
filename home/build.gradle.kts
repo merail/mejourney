@@ -43,6 +43,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation(libs.compose.shimmer)
+
     implementation(project(":design"))
     implementation(project(":core"))
     implementation(project(":data"))

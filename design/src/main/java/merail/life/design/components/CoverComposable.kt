@@ -1,20 +1,21 @@
 package merail.life.design.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.valentinilk.shimmer.shimmer
+import merail.life.design.MejourneyTheme
 import merail.life.design.extensions.createMediaRequest
+import merail.life.design.shimmerColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -23,6 +24,7 @@ fun CoverImage(
     url: String,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.FillWidth,
+    loading: (@Composable () -> Unit)? = null,
     onLoadingSuccess: () -> Unit = {},
     navigateTo: (String) -> Unit = {},
     onLongClick: () -> Unit = {},
@@ -32,7 +34,11 @@ fun CoverImage(
         contentDescription = null,
         contentScale = contentScale,
         loading = {
-            ImageLoading()
+            if (loading == null) {
+                ImageLoading()
+            } else {
+                loading()
+            }
         },
         onSuccess = {
             onLoadingSuccess.invoke()
@@ -56,8 +62,12 @@ private fun ImageLoading() {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(64.dp),
+            .shimmer(),
     ) {
-        CircularProgressIndicator()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MejourneyTheme.colors.shimmerColor)
+        )
     }
 }

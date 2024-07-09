@@ -9,6 +9,9 @@ import androidx.compose.ui.graphics.Color
 
 val LocalMejourneyColors = staticCompositionLocalOf { Colors() }
 
+val Colors.shimmerColor: Color
+    get() = ColorConstants.thunder
+
 val Colors.tabsContainerColor: Color
     get() = ColorConstants.thunder
 val Colors.selectedTabColor: Color

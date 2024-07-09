@@ -40,5 +40,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
 
+    implementation(libs.compose.shimmer)
+
     implementation(project(":core"))
 }

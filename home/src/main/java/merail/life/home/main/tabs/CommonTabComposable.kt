@@ -4,10 +4,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -15,11 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.shimmer
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.CoverImage
+import merail.life.design.shimmerColor
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -48,6 +55,20 @@ internal fun ColumnScope.CommonList(
                     id = it.id,
                     url = it.url,
                     navigateTo = navigateToContent,
+                    loading = {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmer(),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .background(MejourneyTheme.colors.shimmerColor),
+                            )
+                        }
+                    },
                     onLongClick = {
                         isImageLongClicked.value = isImageLongClicked.value.not()
                     },
