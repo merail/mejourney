@@ -14,7 +14,7 @@ internal fun NavController.navigateToError(error: Throwable?) = navigate(
 }
 
 internal val NavBackStackEntry.errorType: ErrorType
-    get() = if (destination.route == ErrorDestination.route) {
+    get() = if (destination.route == ErrorDestination.routeWithArgs) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getSerializable(ErrorDestination.ERROR_TYPE_ARG, ErrorType::class.java) as ErrorType
         } else {

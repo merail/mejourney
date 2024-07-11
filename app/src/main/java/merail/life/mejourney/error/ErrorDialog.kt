@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +35,7 @@ object ErrorDestination : NavigationDestination {
     val routeWithArgs = "$route/{$ERROR_TYPE_ARG}"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ErrorDialog(
     errorType: ErrorType,
@@ -43,43 +47,48 @@ internal fun ErrorDialog(
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
     }
 
-    Card(
-        colors = MejourneyTheme.colors.cardColors.copy(
-            containerColor = MejourneyTheme.colors.elementNegative,
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = 12.dp,
-            ),
+    SwipeToDismissBox(
+        state = rememberSwipeToDismissBoxState(),
+        backgroundContent = {},
     ) {
-        Row(
+        Card(
+            colors = MejourneyTheme.colors.cardColors.copy(
+                containerColor = MejourneyTheme.colors.elementNegative,
+            ),
             modifier = Modifier
-                .padding(12.dp),
+                .fillMaxWidth()
+                .padding(
+                    horizontal = 12.dp,
+                ),
         ) {
-            Column(
+            Row(
                 modifier = Modifier
-                    .weight(1f),
+                    .padding(12.dp),
             ) {
-                Text(
-                    text = stringResource(merail.life.mejourney.R.string.error_title),
-                    style = MejourneyTheme.typography.titleMedium,
-                )
-                Text(
-                    text = stringResource(errorType.message),
-                    style = MejourneyTheme.typography.bodyMedium,
+                Column(
+                    modifier = Modifier
+                        .weight(1f),
+                ) {
+                    Text(
+                        text = stringResource(merail.life.mejourney.R.string.error_title),
+                        style = MejourneyTheme.typography.titleMedium,
+                    )
+                    Text(
+                        text = stringResource(errorType.message),
+                        style = MejourneyTheme.typography.bodyMedium,
+                    )
+                }
+
+                Image(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Top)
+                        .clickable {
+                            onDismiss()
+                        },
                 )
             }
-
-            Image(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.Top)
-                    .clickable {
-                        onDismiss()
-                    },
-            )
         }
     }
 }
