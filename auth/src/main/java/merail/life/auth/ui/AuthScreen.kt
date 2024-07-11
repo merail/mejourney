@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +39,9 @@ fun AuthScreen(
                 },
             )
             is AuthUiState.Loading -> Loading()
-            is AuthUiState.Error -> onError(uiState.exception)
+            is AuthUiState.Error -> LaunchedEffect(null) {
+                onError(uiState.exception)
+            }
             is AuthUiState.SmsEnter -> SmsCodeEnter(
                 smsCode = viewModel.smsCode,
                 onSmsCodeChange = viewModel::updateSmsCode,

@@ -19,6 +19,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -61,7 +62,9 @@ fun HomeScreen(
 ) {
     val state = viewModel.uiState.collectAsState().value
     if (state is HomeUiState.Error) {
-        onError(state.exception)
+        LaunchedEffect(null) {
+            onError(state.exception)
+        }
     }
     Content(
         state = state,
