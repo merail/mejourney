@@ -1,10 +1,8 @@
 package merail.life.mejourney.navigation
 
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,6 +18,9 @@ import merail.life.home.main.HomeDestination
 import merail.life.home.main.HomeScreen
 import merail.life.home.selector.SelectorDestination
 import merail.life.home.selector.SelectorScreen
+import merail.life.mejourney.error.ErrorDestination
+import merail.life.mejourney.error.ErrorDialog
+import merail.life.mejourney.error.ErrorType
 import merail.life.splash.SplashDestination
 import merail.life.splash.SplashScreen
 
@@ -118,23 +119,12 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            val errorType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                it.arguments?.getSerializable(ErrorDestination.ERROR_TYPE_ARG, ErrorType::class.java) as ErrorType
-            } else {
-                it.arguments?.getSerializable(ErrorDestination.ERROR_TYPE_ARG) as ErrorType
-            }
             ErrorDialog(
-                errorType = errorType,
+                errorType = it.errorType,
                 onDismiss = {
                     navController.popBackStack()
                 }
             )
         }
     }
-}
-
-private fun NavController.navigateToError(error: Throwable?) = navigate(
-    route = "${ErrorDestination.route}/${error.toType()}",
-) {
-    launchSingleTop = true
 }

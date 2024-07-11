@@ -1,4 +1,4 @@
-package merail.life.mejourney.navigation
+package merail.life.mejourney.error
 
 import android.view.Gravity
 import android.view.WindowManager
@@ -20,21 +20,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
 import merail.life.core.NavigationDestination
-import merail.life.core.NoInternetConnectionException
 import merail.life.design.MejourneyTheme
 import merail.life.design.R
 import merail.life.design.cardColors
-
-enum class ErrorType {
-    INTERNET_CONNECTION,
-    OTHER,
-    ;
-}
-
-fun Throwable?.toType() = when (this) {
-    is NoInternetConnectionException -> ErrorType.INTERNET_CONNECTION
-    else -> ErrorType.OTHER
-}
 
 object ErrorDestination : NavigationDestination {
     override val route = "error"
@@ -45,7 +33,7 @@ object ErrorDestination : NavigationDestination {
 }
 
 @Composable
-fun ErrorDialog(
+internal fun ErrorDialog(
     errorType: ErrorType,
     onDismiss: () -> Unit,
 ) {
