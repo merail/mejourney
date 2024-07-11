@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import merail.life.auth.api.model.PhoneAuthCallbackType
 import merail.life.core.RequestResult
-import merail.life.core.extensions.catchWithResult
 import merail.life.core.extensions.flowWithResult
 import merail.life.core.extensions.toUnit
 import merail.life.core.toRequestResult
@@ -75,13 +75,13 @@ class FirebaseAuthRepository @Inject constructor(
             firebaseAuth.signInAnonymously().await().toUnit()
         }.flowOn(
             context = Dispatchers.IO,
-        ).map {
-            Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
-            it.toRequestResult()
-        }.catchWithResult {
-            Log.w(TAG, "Firebase anonymous auth. Failure", it)
-            RequestResult.Error(error = it)
-        }
+        ).onEach {
+            if (it.isSuccess) {
+                Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
+            } else {
+                Log.w(TAG, "Firebase anonymous auth. Failure", it.exceptionOrNull())
+            }
+        }.map(Result<Unit>::toRequestResult)
         val start = flowOf<RequestResult<Unit>>(RequestResult.InProgress())
         return merge(result, start)
     }

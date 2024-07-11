@@ -11,14 +11,16 @@ value class StorageDto(
     val reference: Uri,
 )
 
-suspend fun StorageReference.toDto() = downloadUrl
-    .addOnFailureListener {
-        Log.w(ServerRepository.TAG, "Getting $name url from Firebase Storage. Failure")
-    }
-    .addOnSuccessListener {
-        Log.d(ServerRepository.TAG, "Getting $name url from Firebase Storage. Success: $it")
-    }
-    .await()
-    .run {
-        StorageDto(this)
-    }
+suspend fun List<StorageReference>.toDto() = map { reference ->
+    reference.downloadUrl
+        .addOnFailureListener {
+            Log.w(ServerRepository.TAG, "Getting ${reference.name} url from Firebase Storage. Failure")
+        }
+        .addOnSuccessListener {
+            Log.d(ServerRepository.TAG, "Getting ${reference.name} url from Firebase Storage. Success: $it")
+        }
+        .await()
+        .run {
+            StorageDto(this)
+        }
+}

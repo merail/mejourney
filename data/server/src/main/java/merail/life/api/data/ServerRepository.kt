@@ -3,11 +3,13 @@ package merail.life.api.data
 import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import merail.life.api.data.model.FirestoreDto
 import merail.life.api.data.model.StorageDto
 import merail.life.api.data.model.toDto
+import merail.life.core.NoInternetConnectionException
 import javax.inject.Inject
 
 class ServerRepository @Inject constructor(
@@ -22,35 +24,35 @@ class ServerRepository @Inject constructor(
 
     override suspend fun getFirestoreData(
         folderName: String,
-    ): FirestoreDto = firebaseFirestore
-        .getCollectionFromPath(folderName)
-        .get()
-        .addOnFailureListener {
-            Log.w(TAG, "Getting $folderName folder from Firebase Firestore. Failure")
-        }
-        .addOnSuccessListener {
+    ): Result<FirestoreDto> = runCatching {
+        firebaseFirestore.getCollectionFromPath(folderName).get().await()
+    }.onFailure {
+        Log.w(TAG, "Getting $folderName folder from Firebase Firestore. Failure")
+    }.onSuccess {
+        if (it.metadata.isFromCache) {
+            throw NoInternetConnectionException()
+        } else {
             Log.d(TAG, "Getting $folderName folder from Firebase Firestore. Success")
         }
-        .await()
-        .toDto()
+    }.map(QuerySnapshot::toDto)
 
     override suspend fun getStorageData(
         folderName: String,
-    ): List<StorageDto> = firebaseStorage
-        .getReferenceFromUrl(BUCKET_REFERENCE)
-        .child(folderName)
-        .listAll()
-        .addOnFailureListener {
-            Log.w(TAG, "Getting $folderName folder from Firebase Storage. Failure")
-        }
-        .addOnSuccessListener {
-            Log.d(TAG, "Getting $folderName folder from Firebase Storage. Success")
-        }
-        .await()
-        .items
-        .map {
-            it.toDto()
-        }
+    ): Result<List<StorageDto>> = runCatching {
+        firebaseStorage
+            .getReferenceFromUrl(BUCKET_REFERENCE)
+            .child(folderName)
+            .listAll()
+            .await()
+            .items
+    }.onFailure {
+        Log.w(TAG, "Getting $folderName folder from Firebase Storage. Failure")
+
+    }.onSuccess {
+        Log.d(TAG, "Getting $folderName folder from Firebase Storage. Success")
+    }.map {
+        it.toDto()
+    }
 
     private fun FirebaseFirestore.getCollectionFromPath(
         path: String,

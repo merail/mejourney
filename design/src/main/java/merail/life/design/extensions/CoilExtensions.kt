@@ -17,7 +17,7 @@ fun Context.createImageLoader() = ImageLoader.Builder(this)
     .diskCache {
         DiskCache.Builder()
             .directory(cacheDir.resolve("image_cache"))
-            .maxSizeBytes(20 * 1024 * 1024)
+            .maxSizeBytes(1024 * 1024 * 1024)
             .build()
     }
     .respectCacheHeaders(false)

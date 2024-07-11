@@ -15,24 +15,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
 import merail.life.core.NavigationDestination
+import merail.life.core.NoInternetConnectionException
 import merail.life.design.MejourneyTheme
 import merail.life.design.R
 import merail.life.design.cardColors
 
+enum class ErrorType {
+    INTERNET_CONNECTION,
+    OTHER,
+    ;
+}
+
+fun Throwable?.toType() = when (this) {
+    is NoInternetConnectionException -> ErrorType.INTERNET_CONNECTION
+    else -> ErrorType.OTHER
+}
+
 object ErrorDestination : NavigationDestination {
     override val route = "error"
 
-    const val ERROR_MESSAGE_ARG = "errorMessage"
+    const val ERROR_TYPE_ARG = "errorType"
 
-    val routeWithArgs = "$route/{$ERROR_MESSAGE_ARG}"
+    val routeWithArgs = "$route/{$ERROR_TYPE_ARG}"
 }
 
 @Composable
 fun ErrorDialog(
+    errorType: ErrorType,
     onDismiss: () -> Unit,
 ) {
     (LocalView.current.parent as? DialogWindowProvider)?.run {
@@ -60,11 +74,11 @@ fun ErrorDialog(
                     .weight(1f),
             ) {
                 Text(
-                    text = "Ошибка",
+                    text = stringResource(merail.life.mejourney.R.string.error_title),
                     style = MejourneyTheme.typography.titleMedium,
                 )
                 Text(
-                    text = "Что-то пошло не так",
+                    text = stringResource(errorType.message),
                     style = MejourneyTheme.typography.bodyMedium,
                 )
             }
@@ -81,3 +95,9 @@ fun ErrorDialog(
         }
     }
 }
+
+private val ErrorType.message: Int
+    get() = when (this) {
+        ErrorType.INTERNET_CONNECTION -> merail.life.mejourney.R.string.error_internet_connection_subtitle
+        ErrorType.OTHER -> merail.life.mejourney.R.string.error_common_subtitle
+    }

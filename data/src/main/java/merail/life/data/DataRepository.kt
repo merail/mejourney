@@ -55,10 +55,10 @@ class DataRepository @Inject constructor(
         val result = flowWithResult {
             val firestoreData = serverRepository.getFirestoreData(
                 folderName = HOME_COVERS_PATH,
-            ).toCoverDto()
+            ).getOrThrow().toCoverDto()
             val storageData = serverRepository.getStorageData(
                 folderName = HOME_COVERS_PATH,
-            ).map(StorageDto::toImageDto)
+            ).getOrThrow().map(StorageDto::toImageDto)
             firestoreData.zip(storageData).map { (info, file) ->
                 HomeElementModel(
                     id = info.id,
@@ -72,15 +72,12 @@ class DataRepository @Inject constructor(
             }
         }.onEach {
             if (it.isSuccess) {
+                Log.d(TAG, "Getting home elements from server. Success")
                 saveHomeElementsToDatabase(it.getOrThrow())
+            } else {
+                Log.w(TAG, "Getting home elements from server. Failure", it.exceptionOrNull())
             }
-        }.map {
-            Log.d(TAG, "Getting home elements from server. Success")
-            it.toRequestResult()
-        }.catchWithResult {
-            Log.w(TAG, "Getting home elements from server. Failure", it)
-            RequestResult.Error(error = it)
-        }
+        }.map(Result<List<HomeElementModel>>::toRequestResult)
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
         return merge(result, start)
     }
@@ -93,12 +90,15 @@ class DataRepository @Inject constructor(
             .homeElementDao()::getAll
             .asFlow()
             .map<List<HomeElementEntity>, RequestResult<List<HomeElementModel>>> {
-                Log.d(TAG, "Getting home elements from database. Success")
                 val databaseList = it.map(HomeElementEntity::toModel)
                 when {
                     tabFilter != null -> RequestResult.Success(databaseList.filterByHomeTab(tabFilter))
                     selectorFilter != null -> RequestResult.Success(databaseList.filterBySelector(selectorFilter))
                     else -> RequestResult.Success(databaseList)
+                }
+            }.onEach {
+                if (it is RequestResult.Success) {
+                    Log.d(TAG, "Getting home elements from database. Success")
                 }
             }
             .catchWithResult {
@@ -119,22 +119,22 @@ class DataRepository @Inject constructor(
         val result = flowWithResult {
             val firestoreData = serverRepository.getFirestoreData(
                 folderName = "$CONTENT_PATH$id",
-            ).toContentDto()
+            ).getOrThrow().toContentDto()
             val storageData = serverRepository.getStorageData(
                 folderName = "$CONTENT_PATH$id",
-            ).map(StorageDto::toImageDto)
+            ).getOrThrow().map(StorageDto::toImageDto)
             ContentModel(
                 title = firestoreData.title,
                 text = firestoreData.text,
                 imagesUrls = storageData.map(ImageDto::reference).toImmutableList(),
             )
-        }.map {
-            Log.d(TAG, "Getting content from server. Success")
-            it.toRequestResult()
-        }.catchWithResult {
-            Log.w(TAG, "Getting content from server. Failure", it)
-            RequestResult.Error(error = it)
-        }
+        }.onEach {
+            if (it.isSuccess) {
+                Log.d(TAG, "Getting content from server. Success")
+            } else {
+                Log.w(TAG, "Getting content from server. Failure", it.exceptionOrNull())
+            }
+        }.map(Result<ContentModel>::toRequestResult)
         val start = flowOf<RequestResult<ContentModel>>(RequestResult.InProgress())
         return merge(result, start)
     }
