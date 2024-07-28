@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -65,13 +64,13 @@ private fun YearItem(
                 vertical = 12.dp
             ),
     ) {
-        val isImageLoaded = if (LocalInspectionMode.current) {
-            remember {
-                mutableStateOf(true)
-            }
-        } else {
-            remember {
-                mutableStateOf(false)
+        val isImageLoaded = remember {
+            mutableStateOf(false)
+        }
+
+        val onLoadingSuccess = remember {
+            {
+                isImageLoaded.value = true
             }
         }
 
@@ -99,9 +98,7 @@ private fun YearItem(
             CoverImage(
                 id = item.id,
                 url = item.url,
-                onLoadingSuccess = {
-                    isImageLoaded.value = true
-                },
+                onLoadingSuccess = onLoadingSuccess,
                 navigateTo = navigateToContent,
                 modifier = Modifier
                     .height(224.dp),

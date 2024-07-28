@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import com.valentinilk.shimmer.shimmer
 import merail.life.design.MejourneyTheme
@@ -29,6 +31,16 @@ fun CoverImage(
     navigateTo: (String) -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
+    val onSuccess = remember {
+        { _: AsyncImagePainter.State.Success ->
+            onLoadingSuccess()
+        }
+    }
+    val onClick = remember {
+        {
+            navigateTo(id)
+        }
+    }
     SubcomposeAsyncImage(
         model = LocalContext.current.createMediaRequest(url),
         contentDescription = null,
@@ -40,18 +52,12 @@ fun CoverImage(
                 loading()
             }
         },
-        onSuccess = {
-            onLoadingSuccess.invoke()
-        },
+        onSuccess = onSuccess,
         modifier = modifier
             .fillMaxWidth()
             .combinedClickable(
-                onLongClick = {
-                    onLongClick.invoke()
-                },
-                onClick = {
-                    navigateTo.invoke(id)
-                },
+                onLongClick = onLongClick,
+                onClick = onClick,
             ),
     )
 }
@@ -67,7 +73,7 @@ private fun ImageLoading() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MejourneyTheme.colors.shimmerColor)
+                .background(MejourneyTheme.colors.shimmerColor),
         )
     }
 }
