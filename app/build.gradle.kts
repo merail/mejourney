@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.hilt.gradle)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -61,6 +62,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.profileinstaller)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 
@@ -81,4 +83,5 @@ dependencies {
     implementation(project(":splash"))
     implementation(project(":home"))
     implementation(project(":auth"))
+    "baselineProfile"(project(":profiling"))
 }

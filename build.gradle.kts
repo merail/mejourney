@@ -7,4 +7,6 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.hilt.gradle) apply false
     alias(libs.plugins.kotlin.kapt) apply false
+    alias(libs.plugins.androidTest) apply false
+    alias(libs.plugins.baselineprofile) apply false
 }
