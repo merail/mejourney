@@ -17,3 +17,6 @@ fun <T, R> Iterable<T>.mapWithResult(
 }.map {
     it.getOrThrow()
 }
+
+inline val <T> Iterable<T>.isSingle
+    get() = count() == 1

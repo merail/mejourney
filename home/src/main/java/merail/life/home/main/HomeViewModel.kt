@@ -23,13 +23,17 @@ class HomeViewModel @Inject constructor(
 
     val uiState: StateFlow<HomeUiState> = _uiState
 
+    private var _isInit: Boolean = true
+
     init {
         viewModelScope.launch {
             dataRepository
                 .getHomeElements()
                 .map(RequestResult<List<HomeElementModel>>::toState)
                 .collect {
-                    _uiState.value = it
+                    if (_isInit) {
+                        _uiState.value = it
+                    }
                 }
         }
     }
@@ -37,6 +41,7 @@ class HomeViewModel @Inject constructor(
     fun getHomeItems(
         filter: TabFilter,
     ) = viewModelScope.launch {
+        _isInit = false
         dataRepository
             .getHomeElementsFromDatabase(
                 tabFilter = filter.toModel(),

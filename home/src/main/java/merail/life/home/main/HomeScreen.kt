@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.NavigationDestination
+import merail.life.core.extensions.toUnit
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
 import merail.life.design.selectedTabColor
@@ -177,38 +178,28 @@ private fun ColumnScope.TabsContent(
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit,
 ) {
-    val navigateToContentInternal = remember {
-        { id: String ->
-            if (items.size == 1) {
-                navigateToContent(id)
-            } else {
-                items.find { item ->
-                    item.id == id
-                }?.run {
-                    navigateToSelector(
-                        when (tabFilter) {
-                            TabFilter.YEAR -> SelectorFilter.Year(year)
-                            TabFilter.COUNTRY -> SelectorFilter.Country(country)
-                            else -> SelectorFilter.Place(place)
-                        }
-                    )
-                } ?: Unit
+    val navigateToSelectorInternal = items.navigateToContentInternal {
+        navigateToSelector(
+            when (tabFilter) {
+                TabFilter.YEAR -> SelectorFilter.Year(year)
+                TabFilter.COUNTRY -> SelectorFilter.Country(country)
+                else -> SelectorFilter.Place(place)
             }
-        }
+        )
     }
 
     when (tabFilter) {
         TabFilter.YEAR -> YearsList(
             items = items,
-            navigateToContent = navigateToContentInternal,
+            navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.COUNTRY -> CountriesList(
             items = items,
-            navigateToContent = navigateToContentInternal,
+            navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.PLACE -> PlacesList(
             items = items,
-            navigateToContent = navigateToContentInternal,
+            navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.COMMON -> CommonList(
             items = items,
@@ -217,7 +208,17 @@ private fun ColumnScope.TabsContent(
     }
 }
 
-val list = persistentListOf(
+private fun List<HomeItem>.navigateToContentInternal(
+    block: HomeItem.() -> Unit,
+) = { id: String -> find { item ->
+        item.id == id
+    }?.let {
+        block(it)
+    }.toUnit()
+}
+
+
+private val list = persistentListOf(
     Pair(TabFilter.YEAR, R.string.main_tab_years_name),
     Pair(TabFilter.COUNTRY, R.string.main_tab_countries_name),
     Pair(TabFilter.PLACE, R.string.main_tab_places_name),

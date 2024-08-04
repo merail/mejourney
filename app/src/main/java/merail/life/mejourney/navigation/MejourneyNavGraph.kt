@@ -89,6 +89,10 @@ internal fun MejourneyNavHost(
                 navigateToContent = {
                     navController.navigate("${ContentDestination.route}/$it")
                 },
+                navigateToContentImmediately = {
+                    navController.popBackStack()
+                    navController.navigate("${ContentDestination.route}/$it")
+                }
             )
         }
         composable(

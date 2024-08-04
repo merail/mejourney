@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
+import merail.life.core.extensions.isSingle
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
@@ -41,6 +42,7 @@ object SelectorDestination : NavigationDestination {
 fun SelectorScreen(
     onError: (Throwable?) -> Unit,
     navigateToContent: (String) -> Unit,
+    navigateToContentImmediately: (String) -> Unit,
     viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
@@ -49,10 +51,14 @@ fun SelectorScreen(
         is SelectorUiState.Error -> LaunchedEffect(null) {
             onError(uiState.exception)
         }
-        is SelectorUiState.Success -> Content(
-            items = uiState.items,
-            navigateToContent = navigateToContent,
-        )
+        is SelectorUiState.Success -> if (uiState.items.isSingle) {
+            navigateToContentImmediately(uiState.items.first().id)
+        } else {
+            Content(
+                items = uiState.items,
+                navigateToContent = navigateToContent,
+            )
+        }
     }
 }
 
