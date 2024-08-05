@@ -2,6 +2,7 @@ package merail.life.home.main.tabs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +19,7 @@ import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
+import merail.life.design.components.ImageLoading
 import merail.life.home.R
 import merail.life.home.model.HomeItem
 
@@ -98,6 +100,9 @@ private fun YearItem(
             CoverImage(
                 id = item.id,
                 url = item.url,
+                loading = {
+                    ImageLoading(Modifier.height(224.dp))
+                },
                 onLoadingSuccess = onLoadingSuccess,
                 navigateTo = navigateToContent,
                 modifier = Modifier

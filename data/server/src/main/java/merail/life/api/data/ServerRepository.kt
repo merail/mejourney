@@ -47,7 +47,6 @@ class ServerRepository @Inject constructor(
             .items
     }.onFailure {
         Log.w(TAG, "Getting $folderName folder from Firebase Storage. Failure")
-
     }.onSuccess {
         Log.d(TAG, "Getting $folderName folder from Firebase Storage. Success")
     }.map {
