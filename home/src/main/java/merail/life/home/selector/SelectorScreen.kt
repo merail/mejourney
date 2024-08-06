@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -27,6 +28,7 @@ import merail.life.core.extensions.isSingle
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
+import merail.life.design.components.ImageLoading
 import merail.life.design.components.Loading
 import merail.life.home.model.HomeItem
 
@@ -118,6 +120,9 @@ private fun SelectorItem(
                 url = item.url,
                 navigateTo = onClick,
                 contentScale = ContentScale.FillHeight,
+                loading = {
+                    ImageLoading(Modifier.height(640.dp))
+                },
                 modifier = Modifier
                     .fillMaxSize(),
             )
