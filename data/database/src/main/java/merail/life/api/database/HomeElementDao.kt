@@ -11,6 +11,6 @@ interface HomeElementDao {
     @Query("SELECT * FROM homeElementEntity")
     suspend fun getAll(): List<HomeElementEntity>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(homeElements: List<HomeElementEntity>)
 }

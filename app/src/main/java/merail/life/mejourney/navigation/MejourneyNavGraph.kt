@@ -1,7 +1,9 @@
 package merail.life.mejourney.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,6 +13,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import merail.life.auth.ui.AuthDestination
 import merail.life.auth.ui.AuthScreen
+import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
 import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
@@ -61,6 +64,10 @@ internal fun MejourneyNavHost(
         composable(
             route = HomeDestination.route,
         ) {
+            val context = LocalContext.current
+            BackHandler {
+                context.activity?.finish()
+            }
             HomeScreen(
                 onError = {
                     navController.navigateToError(it)
