@@ -19,7 +19,6 @@ import kotlinx.coroutines.tasks.await
 import merail.life.auth.api.model.PhoneAuthCallbackType
 import merail.life.core.RequestResult
 import merail.life.core.extensions.flowWithResult
-import merail.life.core.extensions.toUnit
 import merail.life.core.toRequestResult
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -72,8 +71,8 @@ class FirebaseAuthRepository @Inject constructor(
 
     override fun authAnonymously(): Flow<RequestResult<Unit>> {
         if (firebaseAuth.currentUser == null) {
-            val result = flowWithResult {
-                firebaseAuth.signInAnonymously().await().toUnit()
+            val result = flowWithResult<Unit> {
+                firebaseAuth.signInAnonymously().await()
             }.flowOn(
                 context = Dispatchers.IO,
             ).onEach {

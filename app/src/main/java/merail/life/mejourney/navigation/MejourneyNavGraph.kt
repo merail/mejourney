@@ -2,6 +2,7 @@ package merail.life.mejourney.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
@@ -40,13 +41,17 @@ internal fun MejourneyNavHost(
         composable(
             route = SplashDestination.route,
         ) {
-            SplashScreen(
-                navigateToAuth = {
+            val navigateToAuth: (Throwable?) -> Unit = remember {
+                { throwable: Throwable? ->
                     navController.navigate(HomeDestination.route)
-                    it?.let {
+                    throwable?.let {
                         navController.navigateToError(it)
                     }
-                },
+                }
+            }
+
+            SplashScreen(
+                navigateToAuth = navigateToAuth,
             )
         }
         composable(
@@ -68,16 +73,29 @@ internal fun MejourneyNavHost(
             BackHandler {
                 context.activity?.finish()
             }
+
+            val navigateToError = remember {
+                { throwable: Throwable? ->
+                    navController.navigateToError(throwable)
+                }
+            }
+
+            val navigateToSelector = remember {
+                { selectorFilterType: SelectorFilterType ->
+                    navController.navigate("${SelectorDestination.route}/$selectorFilterType")
+                }
+            }
+
+            val navigateToContent = remember {
+                { id: String ->
+                    navController.navigate("${ContentDestination.route}/$id")
+                }
+            }
+
             HomeScreen(
-                onError = {
-                    navController.navigateToError(it)
-                },
-                navigateToSelector = {
-                    navController.navigate("${SelectorDestination.route}/$it")
-                },
-                navigateToContent = {
-                    navController.navigate("${ContentDestination.route}/$it")
-                },
+                onError = navigateToError,
+                navigateToSelector = navigateToSelector,
+                navigateToContent = navigateToContent,
             )
         }
         composable(
@@ -88,18 +106,30 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            SelectorScreen(
-                onError = {
+            val navigateToError = remember {
+                { throwable: Throwable? ->
                     navController.popBackStack()
-                    navController.navigateToError(it)
-                },
-                navigateToContent = {
-                    navController.navigate("${ContentDestination.route}/$it")
-                },
-                navigateToContentImmediately = {
-                    navController.popBackStack()
-                    navController.navigate("${ContentDestination.route}/$it")
+                    navController.navigateToError(throwable)
                 }
+            }
+
+            val navigateToContent = remember {
+                { id: String ->
+                    navController.navigate("${ContentDestination.route}/$id")
+                }
+            }
+
+            val navigateToContentImmediately = remember {
+                { id: String ->
+                    navController.popBackStack()
+                    navController.navigate("${ContentDestination.route}/$id")
+                }
+            }
+
+            SelectorScreen(
+                onError = navigateToError,
+                navigateToContent = navigateToContent,
+                navigateToContentImmediately = navigateToContentImmediately,
             )
         }
         composable(
@@ -110,11 +140,15 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            ContentScreen(
-                onError = {
+            val navigateToError = remember {
+                { throwable: Throwable? ->
                     navController.popBackStack()
-                    navController.navigateToError(it)
-                },
+                    navController.navigateToError(throwable)
+                }
+            }
+
+            ContentScreen(
+                navigateToError = navigateToError,
             )
         }
         dialog(
@@ -130,11 +164,15 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            ErrorDialog(
-                errorType = it.errorType,
-                onDismiss = {
+            val onDismiss: () -> Unit = remember {
+                {
                     navController.popBackStack()
                 }
+            }
+
+            ErrorDialog(
+                errorType = it.errorType,
+                onDismiss = onDismiss,
             )
         }
     }

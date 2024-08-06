@@ -34,13 +34,13 @@ object ContentDestination : NavigationDestination {
 
 @Composable
 fun ContentScreen(
-    onError: (Throwable?) -> Unit,
+    navigateToError: (Throwable?) -> Unit,
     viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
 ) {
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is ContentUiState.Loading -> Loading()
         is ContentUiState.Error -> LaunchedEffect(null) {
-            onError(uiState.exception)
+            navigateToError(uiState.exception)
         }
         is ContentUiState.Success -> Content(uiState.item)
     }

@@ -210,11 +210,11 @@ private fun ColumnScope.TabsContent(
 
 private fun List<HomeItem>.navigateToContentInternal(
     block: HomeItem.() -> Unit,
-) = { id: String -> find { item ->
+): (String) -> Unit = { id: String -> find { item ->
         item.id == id
     }?.let {
         block(it)
-    }.toUnit()
+    }
 }
 
 
