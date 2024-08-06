@@ -20,10 +20,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.NavigationDestination
+import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.core.extensions.isSingle
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
@@ -119,7 +121,7 @@ private fun SelectorItem(
                 id = item.id,
                 url = item.url,
                 navigateTo = onClick,
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.Crop,
                 loading = {
                     ImageLoading(Modifier.height(640.dp))
                 },
@@ -130,7 +132,13 @@ private fun SelectorItem(
 
         Column(
             modifier = Modifier
-                .fillMaxHeight(0.18f),
+                .fillMaxHeight(
+                    fraction = if (LocalContext.current.isNavigationBarEnabled){
+                        0.24f
+                    } else {
+                        0.18f
+                    },
+                ),
         ) {
             Text(
                 text = item.title,
