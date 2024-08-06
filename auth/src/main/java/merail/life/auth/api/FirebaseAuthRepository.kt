@@ -71,19 +71,22 @@ class FirebaseAuthRepository @Inject constructor(
     }
 
     override fun authAnonymously(): Flow<RequestResult<Unit>> {
-        val result = flowWithResult {
-            firebaseAuth.signInAnonymously().await().toUnit()
-        }.flowOn(
-            context = Dispatchers.IO,
-        ).onEach {
-            if (it.isSuccess) {
-                Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
-            } else {
-                Log.w(TAG, "Firebase anonymous auth. Failure", it.exceptionOrNull())
-            }
-        }.map(Result<Unit>::toRequestResult)
-        val start = flowOf<RequestResult<Unit>>(RequestResult.InProgress())
-        return merge(result, start)
+        if (firebaseAuth.currentUser == null) {
+            val result = flowWithResult {
+                firebaseAuth.signInAnonymously().await().toUnit()
+            }.flowOn(
+                context = Dispatchers.IO,
+            ).onEach {
+                if (it.isSuccess) {
+                    Log.d(TAG, "Firebase anonymous auth. Success ${firebaseAuth.currentUser?.uid}")
+                } else {
+                    Log.w(TAG, "Firebase anonymous auth. Failure", it.exceptionOrNull())
+                }
+            }.map(Result<Unit>::toRequestResult)
+            val start = flowOf<RequestResult<Unit>>(RequestResult.InProgress())
+            return merge(result, start)
+        }
+        return flowOf<RequestResult<Unit>>(RequestResult.Success(Unit))
     }
 
     override suspend fun sendCode(
