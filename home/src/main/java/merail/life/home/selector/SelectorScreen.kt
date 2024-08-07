@@ -112,9 +112,9 @@ private fun SelectorItem(
                 .fillMaxWidth()
                 .weight(1f),
         ) {
-            val onClick = remember {
-                { id: String ->
-                    navigateToContent(id)
+            val onClick: (String) -> Unit = remember {
+                {
+                    navigateToContent(it)
                 }
             }
             CoverImage(

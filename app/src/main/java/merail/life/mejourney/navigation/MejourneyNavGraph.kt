@@ -42,9 +42,9 @@ internal fun MejourneyNavHost(
             route = SplashDestination.route,
         ) {
             val navigateToAuth: (Throwable?) -> Unit = remember {
-                { throwable: Throwable? ->
+                {
                     navController.navigate(HomeDestination.route)
-                    throwable?.let {
+                    it?.let {
                         navController.navigateToError(it)
                     }
                 }
@@ -74,21 +74,21 @@ internal fun MejourneyNavHost(
                 context.activity?.finish()
             }
 
-            val navigateToError = remember {
-                { throwable: Throwable? ->
-                    navController.navigateToError(throwable)
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
+                    navController.navigateToError(it)
                 }
             }
 
-            val navigateToSelector = remember {
-                { selectorFilterType: SelectorFilterType ->
-                    navController.navigate("${SelectorDestination.route}/$selectorFilterType")
+            val navigateToSelector: (SelectorFilterType?) -> Unit = remember {
+                {
+                    navController.navigate("${SelectorDestination.route}/$it")
                 }
             }
 
-            val navigateToContent = remember {
-                { id: String ->
-                    navController.navigate("${ContentDestination.route}/$id")
+            val navigateToContent: (String?) -> Unit = remember {
+                {
+                    navController.navigate("${ContentDestination.route}/$it")
                 }
             }
 
@@ -106,23 +106,23 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            val navigateToError = remember {
-                { throwable: Throwable? ->
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
                     navController.popBackStack()
-                    navController.navigateToError(throwable)
+                    navController.navigateToError(it)
                 }
             }
 
-            val navigateToContent = remember {
-                { id: String ->
-                    navController.navigate("${ContentDestination.route}/$id")
+            val navigateToContent: (String?) -> Unit = remember {
+                {
+                    navController.navigate("${ContentDestination.route}/$it")
                 }
             }
 
-            val navigateToContentImmediately = remember {
-                { id: String ->
+            val navigateToContentImmediately: (String?) -> Unit = remember {
+                {
                     navController.popBackStack()
-                    navController.navigate("${ContentDestination.route}/$id")
+                    navController.navigate("${ContentDestination.route}/$it")
                 }
             }
 
@@ -140,10 +140,10 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            val navigateToError = remember {
-                { throwable: Throwable? ->
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
                     navController.popBackStack()
-                    navController.navigateToError(throwable)
+                    navController.navigateToError(it)
                 }
             }
 

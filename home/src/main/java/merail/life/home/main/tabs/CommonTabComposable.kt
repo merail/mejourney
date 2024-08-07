@@ -13,8 +13,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -48,13 +50,13 @@ internal fun ColumnScope.CommonList(
                 modifier = Modifier
                     .animateContentSize(),
             ) {
-                val isImageLongClicked = remember {
+                var isImageLongClicked by remember {
                     mutableStateOf(false)
                 }
 
                 val onLongClick = remember {
                     {
-                        isImageLongClicked.value = isImageLongClicked.value.not()
+                        isImageLongClicked = isImageLongClicked.not()
                     }
                 }
 
@@ -66,7 +68,7 @@ internal fun ColumnScope.CommonList(
                 )
 
                 AnimatedImageText(
-                    isVisible = isImageLongClicked.value,
+                    isVisible = isImageLongClicked,
                     item = it,
                 )
             }

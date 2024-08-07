@@ -26,8 +26,8 @@ fun CoverImage(
     navigateTo: (String) -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
-    val onSuccess = remember {
-        { _: AsyncImagePainter.State.Success ->
+    val onSuccess: (AsyncImagePainter.State.Success) -> Unit = remember {
+        {
             onLoadingSuccess()
         }
     }

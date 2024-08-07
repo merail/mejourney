@@ -67,14 +67,13 @@ fun HomeScreen(
     onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilterType) -> Unit,
     navigateToContent: (String) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = viewModel.uiState.collectAsState().value
 
-    val onTabClick = remember {
+    val onTabClick: (TabFilter) -> Unit = remember {
         { tabFilter: TabFilter ->
             viewModel.getHomeItems(tabFilter)
-            Unit
         }
     }
 

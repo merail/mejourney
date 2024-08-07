@@ -10,8 +10,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -61,13 +63,13 @@ private fun CountryItem(
         colors = MejourneyTheme.colors.cardColors,
     ) {
         Box {
-            val isImageLoaded = remember {
+            var isImageLoaded by remember {
                 mutableStateOf(false)
             }
 
             val onLoadingSuccess = remember {
                 {
-                    isImageLoaded.value = true
+                    isImageLoaded = true
                 }
             }
 
@@ -80,7 +82,7 @@ private fun CountryItem(
                     .height(256.dp),
             )
 
-            if (isImageLoaded.value) {
+            if (isImageLoaded) {
                 Text(
                     text = item.country,
                     style = MejourneyTheme.typography.titleLarge,

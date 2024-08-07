@@ -3,6 +3,7 @@ package merail.life.splash
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -23,10 +24,10 @@ fun SplashScreen(
     val uiState = viewModel.uiState.collectAsState().value
 
     val activity = LocalContext.current.activity
-    val splashScreen = remember {
+    val splashScreen by remember {
         mutableStateOf(activity?.installSplashScreen())
     }
-    splashScreen.value?.setKeepOnScreenCondition {
+    splashScreen?.setKeepOnScreenCondition {
         uiState is SplashUiState.Loading
     }
 

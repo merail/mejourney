@@ -11,8 +11,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -63,13 +65,13 @@ private fun PlaceItem(
     navigateToContent: (String) -> Unit,
 ) {
     Column {
-        val isImageLoaded = remember {
+        var isImageLoaded by remember {
             mutableStateOf(false)
         }
 
         val onLoadingSuccess = remember {
             {
-                isImageLoaded.value = true
+                isImageLoaded = true
             }
         }
 
@@ -95,7 +97,7 @@ private fun PlaceItem(
             )
         }
 
-        if (isImageLoaded.value) {
+        if (isImageLoaded) {
             Text(
                 text = item.place,
                 style = MejourneyTheme.typography.titleLarge,
