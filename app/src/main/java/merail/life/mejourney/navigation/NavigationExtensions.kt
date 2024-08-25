@@ -1,6 +1,7 @@
 package merail.life.mejourney.navigation
 
 import android.os.Build
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import merail.life.home.content.ContentDestination
@@ -28,31 +29,27 @@ internal val NavBackStackEntry.errorType: ErrorType
     }
 
 internal fun NavController.addOnPushNotificationListener(
-    intentRouteValue: String?,
-    onIntentRouteHandle: () -> Unit,
+    intentRoute: MutableState<String?>,
 ) = addOnDestinationChangedListener { localController, _, _ ->
     val currentContentId = localController
         .currentBackStackEntry
         ?.arguments
         ?.getString(ContentDestination.CONTENT_ID_ARG).toString()
+    val intentRouteValue = intentRoute.value
     intentRouteValue?.let {
-        onIntentRouteHandle()
-        if (intentRouteValue.isNotEmpty()) {
+        if (it.isNotEmpty()) {
             when (localController.currentBackStackEntry?.destination?.route) {
                 HomeDestination.route,
                 SelectorDestination.routeWithArgs,
-                -> navigate(it)
+                -> {
+                    navigate(it)
+                    intentRoute.value = null
+                }
                 ContentDestination.routeWithArgs -> if (currentContentId !in it) {
                     navigate(it)
+                    intentRoute.value = null
                 }
             }
         }
     }
-//    if (localController.currentBackStackEntry?.destination?.route == HomeDestination.route
-//        || localController.currentBackStackEntry?.destination?.route == SelectorDestination.routeWithArgs) {
-//        if (intentRoute.value.isNotEmpty()) {
-//            navigate(intentRoute.value)
-//            intentRoute.value = ""
-//        }
-//    }
 }
