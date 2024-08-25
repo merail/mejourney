@@ -2,6 +2,7 @@ package merail.life.mejourney.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,8 +32,16 @@ import merail.life.splash.SplashScreen
 @Composable
 internal fun MejourneyNavHost(
     navController: NavHostController,
+    intentRoute: MutableState<String?>,
     modifier: Modifier = Modifier,
 ) {
+    val intentRouteValue = intentRoute.value
+    navController.addOnPushNotificationListener(
+        intentRouteValue = intentRouteValue,
+    ) {
+        intentRoute.value = null
+    }
+
     NavHost(
         navController = navController,
         startDestination = SplashDestination.route,
