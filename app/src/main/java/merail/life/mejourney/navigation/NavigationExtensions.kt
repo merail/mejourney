@@ -45,8 +45,10 @@ internal fun NavController.addOnPushNotificationListener(
                     navigate(it)
                     intentRoute.value = null
                 }
-                ContentDestination.routeWithArgs -> if (currentContentId !in it) {
-                    navigate(it)
+                ContentDestination.routeWithArgs -> {
+                    if (currentContentId !in it) {
+                        navigate(it)
+                    }
                     intentRoute.value = null
                 }
             }
