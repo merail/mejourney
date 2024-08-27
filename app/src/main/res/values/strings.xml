@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="default_notification_channel_id">1d911dec</string>
     <string name="error_title">Ошибка</string>
     <string name="error_internet_connection_subtitle">Нет интернета</string>
     <string name="error_common_subtitle">Что-то пошло не\u00A0так</string>

@@ -69,6 +69,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
 
     implementation(libs.androidx.navigation.compose)
 
@@ -76,6 +77,8 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     implementation(libs.coil.compose)
+
+    implementation(libs.request.permissions.tool)
 
     implementation(project(":core"))
     implementation(project(":design"))

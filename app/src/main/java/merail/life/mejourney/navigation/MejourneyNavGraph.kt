@@ -1,7 +1,9 @@
 package merail.life.mejourney.navigation
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,11 +30,22 @@ import merail.life.mejourney.error.ErrorType
 import merail.life.splash.SplashDestination
 import merail.life.splash.SplashScreen
 
+private const val TAG = "MejourneyNavHost"
+
 @Composable
 internal fun MejourneyNavHost(
     navController: NavHostController,
+    intentRoute: MutableState<String?>,
     modifier: Modifier = Modifier,
 ) {
+    // TODO: Routing from push doesn't work without getting intentRouteValue here
+    intentRoute.value?.let {
+        Log.d(TAG, "Route from push: $it")
+    }
+    navController.addOnPushNotificationListener(
+        intentRoute = intentRoute,
+    )
+
     NavHost(
         navController = navController,
         startDestination = SplashDestination.route,
