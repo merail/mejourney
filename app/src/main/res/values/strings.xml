@@ -4,4 +4,8 @@
     <string name="error_title">Ошибка</string>
     <string name="error_internet_connection_subtitle">Нет интернета</string>
     <string name="error_common_subtitle">Что-то пошло не\u00A0так</string>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_app_id">FAmZ6e5AKDRyK2XdGWoV31h8LSJvN2z2KiBCRcx7</string>
+    <string name="back4app_client_key">cNOB4mRj0OkJTgSFWnLuwUntAmsZVpBi0yGm8w7H</string>
 </resources>

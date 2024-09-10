@@ -19,6 +19,7 @@ object SplashDestination : NavigationDestination {
 @Composable
 fun SplashScreen(
     navigateToAuth: (Throwable?) -> Unit,
+    navigateToHome: (Throwable?) -> Unit,
     viewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
@@ -37,7 +38,11 @@ fun SplashScreen(
             navigateToAuth(uiState.exception)
         }
         is SplashUiState.Success -> LaunchedEffect(null) {
-            navigateToAuth(null)
+            if (uiState.isRegistered) {
+                navigateToHome(null)
+            } else {
+                navigateToAuth(null)
+            }
         }
     }
 }

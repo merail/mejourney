@@ -8,8 +8,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import merail.life.auth.api.FirebaseAuthRepository
-import merail.life.auth.api.IFirebaseAuthRepository
+import merail.life.auth.api.AuthRepository
+import merail.life.auth.api.IAuthRepository
 import javax.inject.Singleton
 
 @Module
@@ -18,8 +18,8 @@ interface AuthModule {
     @Singleton
     @Binds
     fun bindFirebaseAuthRepository(
-        firebaseAuthRepository: FirebaseAuthRepository,
-    ): IFirebaseAuthRepository
+        firebaseAuthRepository: AuthRepository,
+    ): IAuthRepository
 
     companion object {
         @Provides

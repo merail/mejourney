@@ -1,18 +1,17 @@
-package merail.life.data
+package merail.life.core
 
-import merail.life.core.RequestResult
 import merail.life.core.RequestResult.Error
 import merail.life.core.RequestResult.InProgress
 import merail.life.core.RequestResult.Success
 
-internal interface MergeStrategy<E> {
+interface MergeStrategy<E> {
     fun merge(
         right: E,
         left: E,
     ): E
 }
 
-internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResult<T>> {
+class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResult<T>> {
     @Suppress("CyclomaticComplexMethod")
     override fun merge(
         right: RequestResult<T>,

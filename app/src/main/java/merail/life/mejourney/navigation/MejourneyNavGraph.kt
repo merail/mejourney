@@ -54,7 +54,17 @@ internal fun MejourneyNavHost(
         composable(
             route = SplashDestination.route,
         ) {
+
             val navigateToAuth: (Throwable?) -> Unit = remember {
+                {
+                    navController.navigate(AuthDestination.route)
+                    it?.let {
+                        navController.navigateToError(it)
+                    }
+                }
+            }
+
+            val navigateToHome: (Throwable?) -> Unit = remember {
                 {
                     navController.navigate(HomeDestination.route)
                     it?.let {
@@ -65,6 +75,7 @@ internal fun MejourneyNavHost(
 
             SplashScreen(
                 navigateToAuth = navigateToAuth,
+                navigateToHome = navigateToHome,
             )
         }
         composable(

@@ -13,6 +13,8 @@ import merail.life.api.data.IServerRepository
 import merail.life.api.data.model.StorageDto
 import merail.life.api.database.HomeDatabase
 import merail.life.api.database.model.HomeElementEntity
+import merail.life.core.MergeStrategy
+import merail.life.core.RequestResponseMergeStrategy
 import merail.life.core.RequestResult
 import merail.life.core.extensions.catchWithResult
 import merail.life.core.extensions.flowWithResult

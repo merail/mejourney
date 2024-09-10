@@ -80,6 +80,8 @@ dependencies {
 
     implementation(libs.request.permissions.tool)
 
+    implementation(libs.parser.email)
+
     implementation(project(":core"))
     implementation(project(":design"))
     implementation(project(":data"))

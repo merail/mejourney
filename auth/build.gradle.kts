@@ -44,6 +44,10 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation(libs.parser.email)
+
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
+
     implementation(project(":core"))
     implementation(project(":design"))
 }
