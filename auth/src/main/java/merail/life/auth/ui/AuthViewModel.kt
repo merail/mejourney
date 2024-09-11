@@ -27,6 +27,9 @@ class AuthViewModel @Inject constructor(
     var password by mutableStateOf("")
         private set
 
+    var repeatedPassword by mutableStateOf("")
+        private set
+
     fun updateEmail(
         email: String,
     ) {
@@ -37,6 +40,12 @@ class AuthViewModel @Inject constructor(
         password: String,
     ) {
         this.password = password
+    }
+
+    fun updateRepeatedPassword(
+        repeatedPassword: String,
+    ) {
+        this.repeatedPassword = repeatedPassword
     }
 
     fun createUser() {

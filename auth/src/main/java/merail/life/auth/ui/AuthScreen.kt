@@ -1,6 +1,5 @@
 package merail.life.auth.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +14,8 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -38,7 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
-import merail.life.design.tabsContainerColor
+import merail.life.design.styles.ButtonStyle
+import merail.life.design.styles.TextFieldStyle
 
 object AuthDestination : NavigationDestination {
     override val route = "auth"
@@ -60,11 +58,11 @@ fun AuthScreen(
         ) {
             Text(
                 text = "Регистрация",
-                style = MejourneyTheme.typography.displayLarge,
+                style = MejourneyTheme.typography.displaySmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(36.dp),
+                    .padding(40.dp),
             )
 
             LoginField(
@@ -72,10 +70,6 @@ fun AuthScreen(
                 onChange = {
                     viewModel.updateEmail(it)
                 },
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-                    .height(72.dp),
             )
 
             PasswordField(
@@ -83,41 +77,37 @@ fun AuthScreen(
                 onChange = {
                     viewModel.updatePassword(it)
                 },
-                submit = {},
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .background(
-                        shape = RoundedCornerShape(12.dp),
-                        color = MejourneyTheme.colors.tabsContainerColor,
-                    ),
+                imeAction = ImeAction.Next,
+                label = "Введи пароль",
             )
+
+            if (viewModel.password.isNotEmpty()) {
+                PasswordField(
+                    value = viewModel.repeatedPassword,
+                    onChange = {
+                        viewModel.updateRepeatedPassword(it)
+                    },
+                    imeAction = ImeAction.Done,
+                    label = "Введи пароль еще раз",
+                )
+            }
         }
 
         Button(
             onClick = {
                 viewModel.createUser()
             },
-            colors = ButtonColors(
-                containerColor = MejourneyTheme.colors.tabsContainerColor,
-                contentColor = MejourneyTheme.colors.textPrimary,
-                disabledContainerColor = MejourneyTheme.colors.tabsContainerColor,
-                disabledContentColor = MejourneyTheme.colors.textPrimary,
-            ),
+            colors = ButtonStyle.Primary.colors(),
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxWidth()
-                .height(72.dp)
-                .background(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MejourneyTheme.colors.tabsContainerColor,
-                ),
+                .height(64.dp),
         ) {
             Text(
                 text = "Создать",
                 textAlign = TextAlign.Center,
-                style = MejourneyTheme.typography.headlineSmall,
+                style = MejourneyTheme.typography.titleMedium,
             )
         }
     }
@@ -127,33 +117,43 @@ fun AuthScreen(
 private fun LoginField(
     value: String,
     onChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: String = "Login",
-    placeholder: String = "Enter your Login",
 ) {
 
     val focusManager = LocalFocusManager.current
-    val leadingIcon = @Composable {
-        Icon(
-            Icons.Default.Person,
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.primary,
-        )
-    }
 
     TextField(
         value = value,
         onValueChange = onChange,
-        modifier = modifier,
-        leadingIcon = leadingIcon,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        keyboardActions = KeyboardActions(
-            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = "",
+            )
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Email,
         ),
-        placeholder = { Text(placeholder) },
-        label = { Text(label) },
+        keyboardActions = KeyboardActions(
+            onNext = {
+                focusManager.moveFocus(FocusDirection.Down)
+            },
+        ),
+        label = {
+            Text(
+                text = "Введи email",
+            )
+        },
+        colors = TextFieldStyle.Primary.colors(),
         singleLine = true,
-        visualTransformation = VisualTransformation.None,
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .padding(
+                horizontal = 24.dp,
+                vertical = 12.dp,
+            )
+            .fillMaxWidth()
+            .height(64.dp),
     )
 }
 
@@ -161,48 +161,59 @@ private fun LoginField(
 private fun PasswordField(
     value: String,
     onChange: (String) -> Unit,
-    submit: () -> Unit,
-    modifier: Modifier = Modifier,
-    label: String = "Password",
-    placeholder: String = "Enter your Password",
+    imeAction: ImeAction,
+    label: String,
 ) {
-
     var isPasswordVisible by remember { mutableStateOf(false) }
-
-    val leadingIcon = @Composable {
-        Icon(
-            Icons.Default.Key,
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.primary
-        )
-    }
-    val trailingIcon = @Composable {
-        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-            Icon(
-                if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-    }
-
 
     TextField(
         value = value,
         onValueChange = onChange,
-        modifier = modifier,
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
+        leadingIcon = {
+            Icon(
+                Icons.Default.Key,
+                contentDescription = "",
+            )
+        },
+        trailingIcon = {
+            IconButton(
+                onClick = {
+                    isPasswordVisible = !isPasswordVisible
+                },
+            ) {
+                Icon(
+                    imageVector = if (isPasswordVisible) {
+                        Icons.Default.VisibilityOff
+                    } else {
+                        Icons.Default.Visibility
+                    },
+                    contentDescription = "",
+                )
+            }
+        },
         keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Password
+            imeAction = imeAction,
+            keyboardType = KeyboardType.Password,
         ),
-        keyboardActions = KeyboardActions(
-            onDone = { submit() }
-        ),
-        placeholder = { Text(placeholder) },
-        label = { Text(label) },
+        label = {
+            Text(
+                text = label,
+            )
+        },
+        colors = TextFieldStyle.Primary.colors(),
         singleLine = true,
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+        visualTransformation = if (isPasswordVisible) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .padding(
+                horizontal = 24.dp,
+                vertical = 12.dp,
+            )
+            .fillMaxWidth()
+            .height(64.dp),
     )
 }
