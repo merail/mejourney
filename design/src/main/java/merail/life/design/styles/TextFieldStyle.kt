@@ -35,6 +35,13 @@ sealed class TextFieldStyle {
             focusedTrailingIconColor = MejourneyTheme.colors.graphicInversePrimary,
             unfocusedLabelColor = MejourneyTheme.colors.textInversePrimary,
             disabledLabelColor = MejourneyTheme.colors.textInversePrimary,
+            errorContainerColor = MejourneyTheme.colors.graphicNegativeSecondary,
+            errorLeadingIconColor = MejourneyTheme.colors.graphicNegativePrimary,
+            errorTextColor = MejourneyTheme.colors.textNegative,
+            errorIndicatorColor = Color.Transparent,
+            errorCursorColor = MejourneyTheme.colors.graphicNegativePrimary,
+            errorLabelColor = MejourneyTheme.colors.textNegative,
+            errorTrailingIconColor = MejourneyTheme.colors.graphicNegativePrimary,
         )
     }
 }

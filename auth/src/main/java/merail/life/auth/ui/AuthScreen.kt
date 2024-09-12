@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -33,6 +34,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import merail.life.auth.R
+import merail.life.auth.ui.state.EmailState
+import merail.life.auth.ui.state.PasswordState
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.styles.ButtonStyle
@@ -57,7 +61,7 @@ fun AuthScreen(
                 .weight(1f),
         ) {
             Text(
-                text = "Регистрация",
+                text = stringResource(R.string.registration_title),
                 style = MejourneyTheme.typography.displaySmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -66,36 +70,36 @@ fun AuthScreen(
             )
 
             LoginField(
-                value = viewModel.email,
+                emailState = viewModel.emailState,
                 onChange = {
                     viewModel.updateEmail(it)
                 },
             )
 
             PasswordField(
-                value = viewModel.password,
+                passwordState = viewModel.passwordState,
                 onChange = {
                     viewModel.updatePassword(it)
                 },
                 imeAction = ImeAction.Next,
-                label = "Введи пароль",
+                label = stringResource(R.string.registration_password_input_label),
             )
 
-            if (viewModel.password.isNotEmpty()) {
+            if (viewModel.passwordState.value.isNotEmpty()) {
                 PasswordField(
-                    value = viewModel.repeatedPassword,
+                    passwordState = viewModel.repeatedPasswordState,
                     onChange = {
                         viewModel.updateRepeatedPassword(it)
                     },
                     imeAction = ImeAction.Done,
-                    label = "Введи пароль еще раз",
+                    label = stringResource(R.string.registration_repeated_password_input_label),
                 )
             }
         }
 
         Button(
             onClick = {
-                viewModel.createUser()
+                viewModel.validate()
             },
             colors = ButtonStyle.Primary.colors(),
             shape = RoundedCornerShape(12.dp),
@@ -105,7 +109,7 @@ fun AuthScreen(
                 .height(64.dp),
         ) {
             Text(
-                text = "Создать",
+                text = stringResource(R.string.registration_create_button),
                 textAlign = TextAlign.Center,
                 style = MejourneyTheme.typography.titleMedium,
             )
@@ -115,14 +119,14 @@ fun AuthScreen(
 
 @Composable
 private fun LoginField(
-    value: String,
+    emailState: EmailState,
     onChange: (String) -> Unit,
 ) {
 
     val focusManager = LocalFocusManager.current
 
     TextField(
-        value = value,
+        value = emailState.value,
         onValueChange = onChange,
         leadingIcon = {
             Icon(
@@ -141,11 +145,12 @@ private fun LoginField(
         ),
         label = {
             Text(
-                text = "Введи email",
+                text = stringResource(R.string.registration_email_input_label),
             )
         },
         colors = TextFieldStyle.Primary.colors(),
         singleLine = true,
+        isError = emailState.isValid.not(),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .padding(
@@ -159,7 +164,7 @@ private fun LoginField(
 
 @Composable
 private fun PasswordField(
-    value: String,
+    passwordState: PasswordState,
     onChange: (String) -> Unit,
     imeAction: ImeAction,
     label: String,
@@ -167,7 +172,7 @@ private fun PasswordField(
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     TextField(
-        value = value,
+        value = passwordState.value,
         onValueChange = onChange,
         leadingIcon = {
             Icon(
@@ -202,6 +207,7 @@ private fun PasswordField(
         },
         colors = TextFieldStyle.Primary.colors(),
         singleLine = true,
+        isError = passwordState.isValid.not(),
         visualTransformation = if (isPasswordVisible) {
             VisualTransformation.None
         } else {

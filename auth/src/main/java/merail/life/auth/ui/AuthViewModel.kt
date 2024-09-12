@@ -6,10 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
+import merail.life.auth.ui.state.EmailState
+import merail.life.auth.ui.state.EmailValidator
+import merail.life.auth.ui.state.PasswordState
+import merail.life.auth.ui.state.PasswordValidator
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,42 +19,65 @@ class AuthViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<AuthUiState> = MutableStateFlow(AuthUiState.None)
-
-    val uiState: StateFlow<AuthUiState> = _uiState
-
-    var email by mutableStateOf("")
+    var emailState by mutableStateOf(EmailState())
         private set
 
-    var password by mutableStateOf("")
+    var passwordState by mutableStateOf(PasswordState())
         private set
 
-    var repeatedPassword by mutableStateOf("")
+    var repeatedPasswordState by mutableStateOf(PasswordState())
         private set
+
+    private val emailValidator = EmailValidator()
+
+    private val passwordValidator = PasswordValidator()
 
     fun updateEmail(
-        email: String,
+        value: String,
     ) {
-        this.email = email
+        emailState = emailState.copy(
+            value = value,
+            isValid = true,
+        )
     }
 
     fun updatePassword(
-        password: String,
+        value: String,
     ) {
-        this.password = password
+        passwordState = passwordState.copy(
+            value = value,
+            isValid = true,
+        )
     }
 
     fun updateRepeatedPassword(
-        repeatedPassword: String,
+        value: String,
     ) {
-        this.repeatedPassword = repeatedPassword
+        repeatedPasswordState = repeatedPasswordState.copy(
+            value = value,
+            isValid = true,
+        )
     }
 
-    fun createUser() {
+    fun validate() {
+        val isEmailValid = emailValidator(emailState.value)
+        val isPasswordValid = passwordValidator(passwordState.value)
+        emailState = emailState.copy(
+            isValid = isEmailValid,
+        )
+        passwordState = passwordState.copy(
+            isValid = isPasswordValid,
+        )
+        if (isEmailValid && isPasswordValid) {
+            createUser()
+        }
+    }
+
+    private fun createUser() {
         viewModelScope.launch {
             authRepository.createUser(
-                email = email,
-                password = password,
+                email = emailState.value,
+                password = passwordState.value,
             ).collect {
 
             }
@@ -60,11 +85,3 @@ class AuthViewModel @Inject constructor(
     }
 }
 
-sealed class AuthUiState {
-
-    data object None : AuthUiState()
-
-    data class Error(val exception: Throwable): AuthUiState()
-
-    data object Success: AuthUiState()
-}
