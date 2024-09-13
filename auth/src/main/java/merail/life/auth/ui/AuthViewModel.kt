@@ -62,13 +62,17 @@ class AuthViewModel @Inject constructor(
     fun validate() {
         val isEmailValid = emailValidator(emailState.value)
         val isPasswordValid = passwordValidator(passwordState.value)
+        val isRepeatedPasswordValid = passwordState.value == repeatedPasswordState.value
         emailState = emailState.copy(
             isValid = isEmailValid,
         )
         passwordState = passwordState.copy(
             isValid = isPasswordValid,
         )
-        if (isEmailValid && isPasswordValid) {
+        repeatedPasswordState = repeatedPasswordState.copy(
+            isValid = isRepeatedPasswordValid,
+        )
+        if (isEmailValid && isPasswordValid && isRepeatedPasswordValid) {
             createUser()
         }
     }

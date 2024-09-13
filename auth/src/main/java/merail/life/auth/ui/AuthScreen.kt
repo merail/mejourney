@@ -83,6 +83,7 @@ fun AuthScreen(
                 },
                 imeAction = ImeAction.Next,
                 label = stringResource(R.string.registration_password_input_label),
+                errorText = stringResource(R.string.registration_password_validation_error),
             )
 
             if (viewModel.passwordState.value.isNotEmpty()) {
@@ -93,6 +94,7 @@ fun AuthScreen(
                     },
                     imeAction = ImeAction.Done,
                     label = stringResource(R.string.registration_repeated_password_input_label),
+                    errorText = stringResource(R.string.registration_repeated_password_validation_error),
                 )
             }
         }
@@ -125,41 +127,56 @@ private fun LoginField(
 
     val focusManager = LocalFocusManager.current
 
-    TextField(
-        value = emailState.value,
-        onValueChange = onChange,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "",
-            )
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next,
-            keyboardType = KeyboardType.Email,
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = {
-                focusManager.moveFocus(FocusDirection.Down)
-            },
-        ),
-        label = {
-            Text(
-                text = stringResource(R.string.registration_email_input_label),
-            )
-        },
-        colors = TextFieldStyle.Primary.colors(),
-        singleLine = true,
-        isError = emailState.isValid.not(),
-        shape = RoundedCornerShape(12.dp),
+    Column(
         modifier = Modifier
             .padding(
                 horizontal = 24.dp,
                 vertical = 12.dp,
+            ),
+    ) {
+        TextField(
+            value = emailState.value,
+            onValueChange = onChange,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "",
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email,
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                },
+            ),
+            label = {
+                Text(
+                    text = stringResource(R.string.registration_email_input_label),
+                )
+            },
+            colors = TextFieldStyle.Primary.colors(),
+            singleLine = true,
+            isError = emailState.isValid.not(),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+        )
+        if (emailState.isValid.not()) {
+            Text(
+                text = stringResource(R.string.registration_email_validation_error),
+                color = MejourneyTheme.colors.textNegative,
+                modifier = Modifier
+                    .padding(
+                        start = 12.dp,
+                        top = 4.dp,
+                    ),
             )
-            .fillMaxWidth()
-            .height(64.dp),
-    )
+        }
+    }
 }
 
 @Composable
@@ -168,58 +185,74 @@ private fun PasswordField(
     onChange: (String) -> Unit,
     imeAction: ImeAction,
     label: String,
+    errorText: String,
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    TextField(
-        value = passwordState.value,
-        onValueChange = onChange,
-        leadingIcon = {
-            Icon(
-                Icons.Default.Key,
-                contentDescription = "",
-            )
-        },
-        trailingIcon = {
-            IconButton(
-                onClick = {
-                    isPasswordVisible = !isPasswordVisible
-                },
-            ) {
-                Icon(
-                    imageVector = if (isPasswordVisible) {
-                        Icons.Default.VisibilityOff
-                    } else {
-                        Icons.Default.Visibility
-                    },
-                    contentDescription = "",
-                )
-            }
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = imeAction,
-            keyboardType = KeyboardType.Password,
-        ),
-        label = {
-            Text(
-                text = label,
-            )
-        },
-        colors = TextFieldStyle.Primary.colors(),
-        singleLine = true,
-        isError = passwordState.isValid.not(),
-        visualTransformation = if (isPasswordVisible) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
-        shape = RoundedCornerShape(12.dp),
+    Column(
         modifier = Modifier
             .padding(
                 horizontal = 24.dp,
                 vertical = 12.dp,
+            ),
+    ) {
+        TextField(
+            value = passwordState.value,
+            onValueChange = onChange,
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Key,
+                    contentDescription = "",
+                )
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        isPasswordVisible = !isPasswordVisible
+                    },
+                ) {
+                    Icon(
+                        imageVector = if (isPasswordVisible) {
+                            Icons.Default.VisibilityOff
+                        } else {
+                            Icons.Default.Visibility
+                        },
+                        contentDescription = "",
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = imeAction,
+                keyboardType = KeyboardType.Password,
+            ),
+            label = {
+                Text(
+                    text = label,
+                )
+            },
+            colors = TextFieldStyle.Primary.colors(),
+            singleLine = true,
+            isError = passwordState.isValid.not(),
+            visualTransformation = if (isPasswordVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+        )
+        if (passwordState.isValid.not()) {
+            Text(
+                text = errorText,
+                color = MejourneyTheme.colors.textNegative,
+                modifier = Modifier
+                    .padding(
+                        start = 12.dp,
+                        top = 4.dp,
+                    ),
             )
-            .fillMaxWidth()
-            .height(64.dp),
-    )
+        }
+    }
 }
