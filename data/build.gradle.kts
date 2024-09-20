@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -13,27 +15,34 @@ android {
         minSdk = 30
     }
 
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+
     buildTypes {
         debug {
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_REPOSITORY_PATH",
-                value = "\"dev\"")
+                value = properties.getProperty("devFirebaseRepositoryPath"),
+            )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
-                value = "\"gs://mejourney-c86ca.appspot.com\"")
+                value = properties.getProperty("devFirebaseStorageBucket"),
+            )
         }
 
         release {
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_REPOSITORY_PATH",
-                value = "\"prod\"")
+                value = properties.getProperty("prodFirebaseRepositoryPath"),
+            )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
-                value = "\"gs://me-journey.appspot.com\"")
+                value = properties.getProperty("prodFirebaseStorageBucket"),
+            )
         }
     }
 

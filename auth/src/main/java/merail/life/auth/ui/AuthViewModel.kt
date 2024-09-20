@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import merail.life.auth.api.EmailSender
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.ui.state.EmailState
 import merail.life.auth.ui.state.EmailValidator
@@ -31,6 +32,8 @@ class AuthViewModel @Inject constructor(
     private val emailValidator = EmailValidator()
 
     private val passwordValidator = PasswordValidator()
+
+    private val emailSender = EmailSender()
 
     fun updateEmail(
         value: String,
@@ -79,12 +82,13 @@ class AuthViewModel @Inject constructor(
 
     private fun createUser() {
         viewModelScope.launch {
-            authRepository.createUser(
-                email = emailState.value,
-                password = passwordState.value,
-            ).collect {
-
-            }
+            emailSender.sendEmail(emailState.value)
+//            authRepository.createUser(
+//                email = emailState.value,
+//                password = passwordState.value,
+//            ).collect {
+//
+//            }
         }
     }
 }

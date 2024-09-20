@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -11,6 +13,37 @@ android {
 
     defaultConfig {
         minSdk = 30
+    }
+
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+
+    buildTypes {
+        debug {
+            buildConfigField(
+                type = "String",
+                name = "HOST_EMAIL",
+                value = properties.getProperty("hostEmail"),
+            )
+            buildConfigField(
+                type = "String",
+                name = "HOST_PASSWORD",
+                value = properties.getProperty("hostPassword"),
+            )
+        }
+
+        release {
+            buildConfigField(
+                type = "String",
+                name = "HOST_EMAIL",
+                value = properties.getProperty("hostEmail"),
+            )
+            buildConfigField(
+                type = "String",
+                name = "HOST_PASSWORD",
+                value = properties.getProperty("hostPassword"),
+            )
+        }
     }
 
     compileOptions {
@@ -47,6 +80,10 @@ dependencies {
     implementation(libs.parser.email)
 
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
+
+    implementation(files("libs/activation.jar"))
+    implementation(files("libs/additionnal.jar"))
+    implementation(files("libs/mail.jar"))
 
     implementation(project(":core"))
     implementation(project(":design"))
