@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "merail.life.auth"
+    namespace = "merail.life.auth.impl"
     compileSdk = 34
 
     defaultConfig {
@@ -85,6 +85,7 @@ dependencies {
     implementation(files("libs/additionnal.jar"))
     implementation(files("libs/mail.jar"))
 
-    implementation(project(":core"))
     implementation(project(":design"))
+    implementation(project(":core"))
+    implementation(project(":auth:api"))
 }

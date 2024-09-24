@@ -1,6 +1,6 @@
-package merail.life.auth.api
+package merail.life.auth.impl.ui
 
-import merail.life.auth.BuildConfig
+import merail.life.auth.impl.BuildConfig
 import java.util.Properties
 import javax.mail.Authenticator
 import javax.mail.Message

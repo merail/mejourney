@@ -1,4 +1,4 @@
-package merail.life.auth.api
+package merail.life.auth.impl.repository
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.tasks.await
+import merail.life.auth.api.IAuthRepository
 import merail.life.core.MergeStrategy
 import merail.life.core.RequestResponseMergeStrategy
 import merail.life.core.RequestResult
@@ -19,7 +20,7 @@ import merail.life.core.extensions.flowWithResult
 import merail.life.core.toRequestResult
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(
+internal class AuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : IAuthRepository {
 

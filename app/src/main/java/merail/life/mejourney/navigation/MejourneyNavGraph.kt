@@ -14,8 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import merail.life.auth.ui.AuthDestination
-import merail.life.auth.ui.AuthScreen
+import merail.life.auth.impl.ui.AuthDestination
+import merail.life.auth.impl.ui.AuthScreen
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
 import merail.life.home.content.ContentDestination

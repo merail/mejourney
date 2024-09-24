@@ -1,4 +1,4 @@
-package merail.life.auth.ui
+package merail.life.auth.impl.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,12 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import merail.life.auth.api.EmailSender
 import merail.life.auth.api.IAuthRepository
-import merail.life.auth.ui.state.EmailState
-import merail.life.auth.ui.state.EmailValidator
-import merail.life.auth.ui.state.PasswordState
-import merail.life.auth.ui.state.PasswordValidator
+import merail.life.auth.impl.ui.state.EmailState
+import merail.life.auth.impl.ui.state.EmailValidator
+import merail.life.auth.impl.ui.state.PasswordState
+import merail.life.auth.impl.ui.state.PasswordValidator
 import javax.inject.Inject
 
 @HiltViewModel

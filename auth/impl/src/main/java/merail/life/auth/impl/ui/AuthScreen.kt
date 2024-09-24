@@ -1,4 +1,4 @@
-package merail.life.auth.ui
+package merail.life.auth.impl.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,9 +34,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import merail.life.auth.R
-import merail.life.auth.ui.state.EmailState
-import merail.life.auth.ui.state.PasswordState
+import merail.life.auth.impl.R
+import merail.life.auth.impl.ui.state.EmailState
+import merail.life.auth.impl.ui.state.PasswordState
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.styles.ButtonStyle
