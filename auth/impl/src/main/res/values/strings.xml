@@ -8,4 +8,6 @@
     <string name="registration_repeated_password_validation_error">Пароли не\u00A0совпадают</string>
     <string name="registration_repeated_password_input_label">Введи пароль еще раз</string>
     <string name="registration_create_button">Создать</string>
+    <string name="email_title">Подтвердите адрес электронной почты</string>
+    <string name="email_body">Команда Cloud.ru приветствует вас!\nПожалуйста, подтвердите адрес электронной почты.\nКод подтверждения:\n%d\nВведите его на странице регистрации Cloud.ru. Код действителен в течение 5 минут с момента получения этого письма.\nЕсли вы не запрашивали код, просто игнорируйте это письмо. Данные не будут использоваться без вашего подтверждения.</string>
 </resources>

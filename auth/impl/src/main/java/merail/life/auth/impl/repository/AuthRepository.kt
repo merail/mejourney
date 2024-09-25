@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 internal class AuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
+    private val emailSender: EmailSender,
 ) : IAuthRepository {
 
     companion object {
@@ -35,7 +36,9 @@ internal class AuthRepository @Inject constructor(
         return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
     }
 
-    override fun createUser(
+    override suspend fun sendOneTimePassword(email: String) = emailSender.sendOneTimePassword(email)
+
+    override fun sendOneTimePassword(
         email: String,
         password: String,
     ): Flow<RequestResult<Unit>> {

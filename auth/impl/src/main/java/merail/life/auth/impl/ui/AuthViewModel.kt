@@ -32,7 +32,7 @@ class AuthViewModel @Inject constructor(
 
     private val passwordValidator = PasswordValidator()
 
-    private val emailSender = EmailSender()
+    //private val emailSender = EmailSender()
 
     fun updateEmail(
         value: String,
@@ -75,19 +75,13 @@ class AuthViewModel @Inject constructor(
             isValid = isRepeatedPasswordValid,
         )
         if (isEmailValid && isPasswordValid && isRepeatedPasswordValid) {
-            createUser()
+            sendOneTimePassword()
         }
     }
 
-    private fun createUser() {
+    private fun sendOneTimePassword() {
         viewModelScope.launch {
-            emailSender.sendEmail(emailState.value)
-//            authRepository.createUser(
-//                email = emailState.value,
-//                password = passwordState.value,
-//            ).collect {
-//
-//            }
+            authRepository.sendOneTimePassword(emailState.value)
         }
     }
 }

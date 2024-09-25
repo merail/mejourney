@@ -7,7 +7,11 @@ interface IAuthRepository {
 
     fun checkUser(): Flow<RequestResult<Boolean>>
 
-    fun createUser(
+    suspend fun sendOneTimePassword(
+        email: String,
+    )
+
+    fun sendOneTimePassword(
         email: String,
         password: String,
     ): Flow<RequestResult<Unit>>
