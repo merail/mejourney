@@ -1,4 +1,4 @@
-package merail.life.auth.impl.ui.state
+package merail.life.auth.impl.ui.emailInput.state
 
 data class EmailState(
     val value: String = "",

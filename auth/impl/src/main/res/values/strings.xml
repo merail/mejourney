@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="registration_title">Регистрация</string>
-    <string name="registration_email_input_label">Введи email</string>
-    <string name="registration_email_validation_error">Не\u00A0похоже на\u00A0почту</string>
-    <string name="registration_password_input_label">Введи пароль</string>
-    <string name="registration_password_validation_error">Пароль должен содержать не\u00A0менее 8\u00A0символов и\u00A0включать как минимум одну цифру, один специальный символ, одну прописную и\u00A0одну строчную букву</string>
-    <string name="registration_repeated_password_validation_error">Пароли не\u00A0совпадают</string>
-    <string name="registration_repeated_password_input_label">Введи пароль еще раз</string>
-    <string name="registration_create_button">Создать</string>
+    <string name="email_input_title">Привет</string>
+    <string name="email_input_description">Введи номер электронной почты, чтобы войти или зарегистрироваться</string>
+    <string name="email_input_label">Введи email</string>
+    <string name="email_input_validation_error">Не\u00A0похоже на\u00A0почту</string>
+    <string name="email_input_continue_button">Продолжить</string>
+
+    <string name="otp_input_title">Код из\u00A0письма</string>
+    <string name="otp_input_description">Подтверди почту кодом из\u00A0письма</string>
+    
+    <string name="password_input_title">Создание пароля</string>
+    <string name="password_input_description">Пароль должен содержать не\u00A0менее 8\u00A0символов, постарайся его не\u00A0забыть</string>
+    <string name="password_input_label">Введи пароль</string>
+    <string name="password_input_validation_error">Пароль должен содержать не\u00A0менее 8\u00A0символов и\u00A0включать как минимум одну цифру, один специальный символ, одну прописную и\u00A0одну строчную букву</string>
+    <string name="password_input_repeated_validation_error">Пароли не\u00A0совпадают</string>
+    <string name="password_input_repeated_label">Введи пароль еще раз</string>
+    <string name="password_input_continue_button">Продолжить</string>
+
     <string name="email_title">Подтвердите адрес электронной почты</string>
     <string name="email_body">Команда Cloud.ru приветствует вас!\nПожалуйста, подтвердите адрес электронной почты.\nКод подтверждения:\n%d\nВведите его на странице регистрации Cloud.ru. Код действителен в течение 5 минут с момента получения этого письма.\nЕсли вы не запрашивали код, просто игнорируйте это письмо. Данные не будут использоваться без вашего подтверждения.</string>
 </resources>

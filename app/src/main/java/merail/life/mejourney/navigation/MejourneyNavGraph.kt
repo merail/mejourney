@@ -14,8 +14,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import merail.life.auth.impl.ui.AuthDestination
-import merail.life.auth.impl.ui.AuthScreen
+import merail.life.auth.impl.ui.emailInput.EmailInputDestination
+import merail.life.auth.impl.ui.emailInput.EmailInputScreen
+import merail.life.auth.impl.ui.otpInput.OtpInputDestination
+import merail.life.auth.impl.ui.otpInput.OtpInputScreen
+import merail.life.auth.impl.ui.passwordInput.PasswordInputDestination
+import merail.life.auth.impl.ui.passwordInput.PasswordInputScreen
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
 import merail.life.home.content.ContentDestination
@@ -57,7 +61,7 @@ internal fun MejourneyNavHost(
 
             val navigateToAuth: (Throwable?) -> Unit = remember {
                 {
-                    navController.navigate(AuthDestination.route)
+                    navController.navigate(EmailInputDestination.route)
                     it?.let {
                         navController.navigateToError(it)
                     }
@@ -79,9 +83,33 @@ internal fun MejourneyNavHost(
             )
         }
         composable(
-            route = AuthDestination.route,
+            route = EmailInputDestination.route,
         ) {
-            AuthScreen(
+            EmailInputScreen(
+                onError = {
+                    navController.navigateToError(it)
+                },
+                navigateToOtp = {
+                    navController.navigate(OtpInputDestination.route)
+                },
+            )
+        }
+        composable(
+            route = OtpInputDestination.route,
+        ) {
+            OtpInputScreen(
+                onError = {
+                    navController.navigateToError(it)
+                },
+                navigateToPassword = {
+                    navController.navigate(PasswordInputDestination.route)
+                },
+            )
+        }
+        composable(
+            route = PasswordInputDestination.route,
+        ) {
+            PasswordInputScreen(
                 onError = {
                     navController.navigateToError(it)
                 },
