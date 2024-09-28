@@ -38,6 +38,8 @@ internal class AuthRepository @Inject constructor(
 
     override suspend fun sendOneTimePassword(email: String) = emailSender.sendOneTimePassword(email)
 
+    override fun getCurrentOtp() = emailSender.getCurrentOtp()
+
     override fun sendOneTimePassword(
         email: String,
         password: String,

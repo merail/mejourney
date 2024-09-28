@@ -22,9 +22,11 @@ class EmailSender(
         mimeMessage.addRecipient(Message.RecipientType.TO, InternetAddress(stringReceiverEmail))
         mimeMessage.subject = context.getString(R.string.email_title)
         code = generateCode()
-        mimeMessage.setText(context.getString(R.string.email_body))
+        mimeMessage.setText(context.getString(R.string.email_body, code))
         Transport.send(mimeMessage)
     }
+
+    fun getCurrentOtp() = code
 
     private fun generateCode() = Random.nextInt(0, 10000)
 }

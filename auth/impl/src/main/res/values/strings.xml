@@ -8,7 +8,8 @@
 
     <string name="otp_input_title">Код из\u00A0письма</string>
     <string name="otp_input_description">Подтверди почту кодом из\u00A0письма</string>
-    
+    <string name="otp_input_validation_error">Неправильный код</string>
+
     <string name="password_input_title">Создание пароля</string>
     <string name="password_input_description">Пароль должен содержать не\u00A0менее 8\u00A0символов, постарайся его не\u00A0забыть</string>
     <string name="password_input_label">Введи пароль</string>

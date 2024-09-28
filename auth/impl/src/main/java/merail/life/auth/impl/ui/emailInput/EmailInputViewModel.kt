@@ -41,7 +41,7 @@ class EmailInputViewModel @Inject constructor(
         emailState = emailState.copy(
             isValid = isEmailValid,
         )
-        if (emailValidator(emailState.value)) {
+        if (isEmailValid) {
             sendOneTimePassword()
         }
     }

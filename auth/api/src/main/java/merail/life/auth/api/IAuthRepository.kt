@@ -11,6 +11,8 @@ interface IAuthRepository {
         email: String,
     )
 
+    fun getCurrentOtp(): Int
+
     fun sendOneTimePassword(
         email: String,
         password: String,

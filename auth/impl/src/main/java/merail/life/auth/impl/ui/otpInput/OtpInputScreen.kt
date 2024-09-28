@@ -79,11 +79,13 @@ fun OtpInputScreen(
             )
 
             OtpField(
-                otpText = viewModel.otpState.value,
+                otpState = viewModel.otpState,
                 onOtpTextChange = {
                     viewModel.updateOtp(it)
                     if (it.length == 4) {
-                        navigateToPassword()
+                        if (viewModel.verifyOtp()) {
+                            navigateToPassword()
+                        }
                     }
                 },
             )
@@ -93,38 +95,53 @@ fun OtpInputScreen(
 
 @Composable
 private fun OtpField(
-    otpText: String,
+    otpState: OtpState,
     onOtpTextChange: (String) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
-
-    BasicTextField(
-        value = otpText,
-        onValueChange = {
-            if (it.length <= 4) {
-                onOtpTextChange(it)
-            }
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.NumberPassword,
-        ),
-        decorationBox = {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                repeat(4) { index ->
-                    OtpCell(
-                        index = index,
-                        text = otpText,
-                    )
-                }
-            }
-        },
+    Column(
         modifier = Modifier
-            .padding(12.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
-    )
+            .padding(12.dp),
+    ) {
+        BasicTextField(
+            value = otpState.value,
+            onValueChange = {
+                if (it.length <= 4) {
+                    onOtpTextChange(it)
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.NumberPassword,
+            ),
+            decorationBox = {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    repeat(4) { index ->
+                        OtpCell(
+                            index = index,
+                            text = otpState.value,
+                            isError = otpState.isValid.not(),
+                        )
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+        )
+        if (otpState.isValid.not()) {
+            Text(
+                text = stringResource(R.string.otp_input_validation_error),
+                color = MejourneyTheme.colors.textNegative,
+                modifier = Modifier
+                    .padding(
+                        start = 12.dp,
+                        top = 4.dp,
+                    ),
+            )
+        }
+    }
     LaunchedEffect(null) {
         focusRequester.requestFocus()
     }
@@ -134,6 +151,7 @@ private fun OtpField(
 private fun OtpCell(
     index: Int,
     text: String,
+    isError: Boolean,
 ) {
     val isCursorVisible = remember {
         mutableStateOf(false)
@@ -167,7 +185,11 @@ private fun OtpCell(
             .size(72.dp)
             .border(
                 width = 1.dp,
-                color = MejourneyTheme.colors.graphicPrimary,
+                color = if (isError) {
+                    MejourneyTheme.colors.graphicNegativePrimary
+                } else {
+                    MejourneyTheme.colors.graphicPrimary
+                },
                 shape = RoundedCornerShape(8.dp),
             )
             .padding(2.dp),
@@ -200,6 +222,11 @@ private fun OtpCell(
                 text = char,
                 style = MejourneyTheme.typography.displayMedium,
                 textAlign = TextAlign.Center,
+                color = if (isError) {
+                    MejourneyTheme.colors.textNegative
+                } else {
+                    MejourneyTheme.colors.textPrimary
+                }
             )
         }
     }

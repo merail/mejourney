@@ -1,6 +1,8 @@
 package merail.life.auth.impl.ui.otpInput
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import merail.life.auth.api.IAuthRepository
@@ -11,14 +13,24 @@ class OtpInputViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
 
-    private val _otpState = mutableStateOf("")
-
-    val otpState = _otpState
+    var otpState by mutableStateOf(OtpState())
+        private set
 
     fun updateOtp(
         value: String,
     ) {
-        _otpState.value = value
+        otpState = otpState.copy(
+            value = value,
+            isValid = true,
+        )
+    }
+
+    fun verifyOtp(): Boolean {
+        val isOtpValid = authRepository.getCurrentOtp() == otpState.value.toInt()
+        otpState = otpState.copy(
+            isValid = isOtpValid,
+        )
+        return isOtpValid
     }
 }
 
