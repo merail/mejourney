@@ -2,7 +2,11 @@ package merail.life.auth.api
 
 interface IAuthRepository {
 
-    fun checkUser(): Boolean
+    fun isUserAuthorized(): Boolean
+
+    suspend fun isUserExist(
+        email: String,
+    ): Boolean
 
     suspend fun sendOtp(
         email: String,

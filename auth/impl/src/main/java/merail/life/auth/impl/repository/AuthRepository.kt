@@ -13,11 +13,18 @@ internal class AuthRepository @Inject constructor(
     private val emailSender: EmailSender,
 ) : IAuthRepository {
 
-    override fun checkUser() = firebaseAuth.currentUser?.let {
-        it.email != null
-    } ?: false
+    override fun isUserAuthorized() = firebaseAuth.currentUser != null
 
-    override suspend fun sendOtp(email: String) = emailSender.sendOtp(email)
+    override suspend fun isUserExist(
+        email: String,
+    ) = withContext(Dispatchers.IO) {
+        // TODO: Deprecated method. Think about it!
+        firebaseAuth.fetchSignInMethodsForEmail(email).await().signInMethods?.isNotEmpty() ?: false
+    }
+
+    override suspend fun sendOtp(email: String) = withContext(Dispatchers.IO) {
+        emailSender.sendOtp(email)
+    }
 
     override fun getCurrentOtp() = emailSender.getCurrentOtp()
 

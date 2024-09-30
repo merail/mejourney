@@ -89,6 +89,9 @@ internal fun MejourneyNavHost(
                 onError = {
                     navController.navigateToError(it)
                 },
+                navigateToPassword = {
+                    navController.navigate("${PasswordInputDestination.route}/$it")
+                },
                 navigateToOtp = {
                     navController.navigate("${OtpInputDestination.route}/$it")
                 },

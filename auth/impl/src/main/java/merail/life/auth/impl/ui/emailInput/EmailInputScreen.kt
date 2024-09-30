@@ -27,8 +27,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.auth.impl.R
+import merail.life.auth.impl.ui.emailInput.state.EmailAuthState
 import merail.life.auth.impl.ui.emailInput.state.EmailState
-import merail.life.auth.impl.ui.emailInput.state.OtpSendingState
+import merail.life.auth.impl.ui.emailInput.state.needToBlockUi
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.styles.ButtonStyle
@@ -41,15 +42,17 @@ object EmailInputDestination : NavigationDestination {
 @Composable
 fun EmailInputScreen(
     onError: (Throwable?) -> Unit,
+    navigateToPassword: (String) -> Unit,
     navigateToOtp: (String) -> Unit,
     viewModel: EmailInputViewModel = hiltViewModel<EmailInputViewModel>(),
 ) {
-    val state = viewModel.otpSendingState.value
+    val state = viewModel.emailAuthState.value
     when (state) {
-        is OtpSendingState.Error -> onError(state.exception)
-        is OtpSendingState.Success -> navigateToOtp(viewModel.emailState.value)
-        is OtpSendingState.None,
-        is OtpSendingState.Loading,
+        is EmailAuthState.Error -> onError(state.exception)
+        is EmailAuthState.UserExists -> navigateToPassword(viewModel.emailState.value)
+        is EmailAuthState.OtpWasSent -> navigateToOtp(viewModel.emailState.value)
+        is EmailAuthState.None,
+        is EmailAuthState.Loading,
         -> Unit
     }
 
@@ -104,7 +107,7 @@ fun EmailInputScreen(
                     .fillMaxWidth()
                     .height(64.dp),
             ) {
-                if (state is OtpSendingState.Loading) {
+                if (state.needToBlockUi) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(24.dp),
@@ -118,7 +121,7 @@ fun EmailInputScreen(
                 }
             }
         }
-        if (state is OtpSendingState.Loading) {
+        if (state.needToBlockUi) {
             Surface(
                 color = Color.Transparent,
                 modifier = Modifier
