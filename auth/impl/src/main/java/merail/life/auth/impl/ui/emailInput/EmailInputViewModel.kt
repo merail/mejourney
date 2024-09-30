@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.emailInput.state.EmailState
 import merail.life.auth.impl.ui.emailInput.state.EmailValidator
-import merail.life.auth.impl.ui.emailInput.state.OtpSendingStateState
+import merail.life.auth.impl.ui.emailInput.state.OtpSendingState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,9 +18,9 @@ class EmailInputViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
 
-    private val _otpSendingStateState = mutableStateOf<OtpSendingStateState>(OtpSendingStateState.None)
+    private val _otpSendingState = mutableStateOf<OtpSendingState>(OtpSendingState.None)
 
-    val emailInputUiState = _otpSendingStateState
+    val otpSendingState = _otpSendingState
 
     var emailState by mutableStateOf(EmailState())
         private set
@@ -42,19 +42,19 @@ class EmailInputViewModel @Inject constructor(
             isValid = isEmailValid,
         )
         if (isEmailValid) {
-            sendOneTimePassword()
+            sendOtp()
         }
     }
 
-    private fun sendOneTimePassword() {
+    private fun sendOtp() {
         viewModelScope.launch {
-            emailInputUiState.value = OtpSendingStateState.Loading
+            _otpSendingState.value = OtpSendingState.Loading
             runCatching {
-                authRepository.sendOneTimePassword(emailState.value)
+                authRepository.sendOtp(emailState.value)
             }.onFailure {
-                emailInputUiState.value = OtpSendingStateState.Error(it.cause)
+                _otpSendingState.value = OtpSendingState.Error(it.cause)
             }.onSuccess {
-                emailInputUiState.value = OtpSendingStateState.Success
+                _otpSendingState.value = OtpSendingState.Success
             }
         }
     }

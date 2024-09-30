@@ -17,7 +17,7 @@ class EmailSender(
 
     private var code: Int = 0
 
-    suspend fun sendOneTimePassword(stringReceiverEmail: String) = withContext(Dispatchers.IO) {
+    suspend fun sendOtp(stringReceiverEmail: String) = withContext(Dispatchers.IO) {
         val mimeMessage = MimeMessage(session)
         mimeMessage.addRecipient(Message.RecipientType.TO, InternetAddress(stringReceiverEmail))
         mimeMessage.subject = context.getString(R.string.email_title)
@@ -28,5 +28,5 @@ class EmailSender(
 
     fun getCurrentOtp() = code
 
-    private fun generateCode() = Random.nextInt(0, 10000)
+    private fun generateCode() = Random.nextInt(1000, 10000)
 }

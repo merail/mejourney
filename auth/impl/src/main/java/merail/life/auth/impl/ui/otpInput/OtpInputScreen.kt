@@ -38,12 +38,15 @@ import merail.life.design.MejourneyTheme
 
 object OtpInputDestination : NavigationDestination {
     override val route = "otpInput"
+
+    const val EMAIL_ARG = "email"
+
+    val routeWithArgs = "$route/{$EMAIL_ARG}"
 }
 
 @Composable
 fun OtpInputScreen(
-    onError: (Throwable?) -> Unit,
-    navigateToPassword: () -> Unit,
+    navigateToPassword: (String) -> Unit,
     viewModel: OtpInputViewModel = hiltViewModel<OtpInputViewModel>(),
 ) {
     Column(
@@ -84,7 +87,7 @@ fun OtpInputScreen(
                     viewModel.updateOtp(it)
                     if (it.length == 4) {
                         if (viewModel.verifyOtp()) {
-                            navigateToPassword()
+                            navigateToPassword(viewModel.email)
                         }
                     }
                 },

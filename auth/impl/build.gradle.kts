@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.compose.icons)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -76,10 +77,6 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.parser.email)
-
-    implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
     implementation(files("libs/activation.jar"))
     implementation(files("libs/additionnal.jar"))

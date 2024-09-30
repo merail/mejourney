@@ -90,24 +90,31 @@ internal fun MejourneyNavHost(
                     navController.navigateToError(it)
                 },
                 navigateToOtp = {
-                    navController.navigate(OtpInputDestination.route)
+                    navController.navigate("${OtpInputDestination.route}/$it")
                 },
             )
         }
         composable(
-            route = OtpInputDestination.route,
+            route = OtpInputDestination.routeWithArgs,
+            arguments = listOf(
+                element = navArgument(OtpInputDestination.EMAIL_ARG) {
+                    type = NavType.StringType
+                },
+            ),
         ) {
             OtpInputScreen(
-                onError = {
-                    navController.navigateToError(it)
-                },
                 navigateToPassword = {
-                    navController.navigate(PasswordInputDestination.route)
+                    navController.navigate("${PasswordInputDestination.route}/$it")
                 },
             )
         }
         composable(
-            route = PasswordInputDestination.route,
+            route = PasswordInputDestination.routeWithArgs,
+            arguments = listOf(
+                element = navArgument(PasswordInputDestination.EMAIL_ARG) {
+                    type = NavType.StringType
+                },
+            ),
         ) {
             PasswordInputScreen(
                 onError = {

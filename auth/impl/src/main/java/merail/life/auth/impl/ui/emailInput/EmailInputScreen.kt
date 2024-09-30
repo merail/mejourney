@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.auth.impl.R
 import merail.life.auth.impl.ui.emailInput.state.EmailState
-import merail.life.auth.impl.ui.emailInput.state.OtpSendingStateState
+import merail.life.auth.impl.ui.emailInput.state.OtpSendingState
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.styles.ButtonStyle
@@ -41,17 +41,18 @@ object EmailInputDestination : NavigationDestination {
 @Composable
 fun EmailInputScreen(
     onError: (Throwable?) -> Unit,
-    navigateToOtp: () -> Unit,
+    navigateToOtp: (String) -> Unit,
     viewModel: EmailInputViewModel = hiltViewModel<EmailInputViewModel>(),
 ) {
-    val state = viewModel.emailInputUiState.value
+    val state = viewModel.otpSendingState.value
     when (state) {
-        is OtpSendingStateState.Error -> onError(state.exception)
-        is OtpSendingStateState.Success -> navigateToOtp()
-        is OtpSendingStateState.None,
-        is OtpSendingStateState.Loading,
+        is OtpSendingState.Error -> onError(state.exception)
+        is OtpSendingState.Success -> navigateToOtp(viewModel.emailState.value)
+        is OtpSendingState.None,
+        is OtpSendingState.Loading,
         -> Unit
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -103,7 +104,7 @@ fun EmailInputScreen(
                     .fillMaxWidth()
                     .height(64.dp),
             ) {
-                if (state is OtpSendingStateState.Loading) {
+                if (state is OtpSendingState.Loading) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(24.dp),
@@ -117,7 +118,7 @@ fun EmailInputScreen(
                 }
             }
         }
-        if (state is OtpSendingStateState.Loading) {
+        if (state is OtpSendingState.Loading) {
             Surface(
                 color = Color.Transparent,
                 modifier = Modifier

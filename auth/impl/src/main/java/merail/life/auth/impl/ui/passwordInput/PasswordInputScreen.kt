@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.auth.impl.R
+import merail.life.auth.impl.ui.passwordInput.state.UserCreatingState
 import merail.life.auth.impl.ui.state.PasswordState
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
@@ -39,6 +40,10 @@ import merail.life.design.styles.TextFieldStyle
 
 object PasswordInputDestination : NavigationDestination {
     override val route = "passwordInput"
+
+    const val EMAIL_ARG = "email"
+
+    val routeWithArgs = "$route/{$EMAIL_ARG}"
 }
 
 @Composable
@@ -47,6 +52,14 @@ fun PasswordInputScreen(
     navigateToHome: () -> Unit,
     viewModel: PasswordInputViewModel = hiltViewModel<PasswordInputViewModel>(),
 ) {
+    when (val state = viewModel.userCreatingState.value) {
+        is UserCreatingState.Error -> onError(state.exception)
+        is UserCreatingState.Success -> navigateToHome()
+        is UserCreatingState.None,
+        is UserCreatingState.Loading,
+        -> Unit
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
