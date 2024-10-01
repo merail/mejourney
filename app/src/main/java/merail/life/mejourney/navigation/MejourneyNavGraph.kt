@@ -18,6 +18,8 @@ import merail.life.auth.impl.ui.emailInput.EmailInputDestination
 import merail.life.auth.impl.ui.emailInput.EmailInputScreen
 import merail.life.auth.impl.ui.otpInput.OtpInputDestination
 import merail.life.auth.impl.ui.otpInput.OtpInputScreen
+import merail.life.auth.impl.ui.passwordEnter.PasswordEnterDestination
+import merail.life.auth.impl.ui.passwordEnter.PasswordEnterScreen
 import merail.life.auth.impl.ui.passwordInput.PasswordInputDestination
 import merail.life.auth.impl.ui.passwordInput.PasswordInputScreen
 import merail.life.core.extensions.activity
@@ -89,11 +91,28 @@ internal fun MejourneyNavHost(
                 onError = {
                     navController.navigateToError(it)
                 },
-                navigateToPassword = {
-                    navController.navigate("${PasswordInputDestination.route}/$it")
+                navigateToPasswordEnter = {
+                    navController.navigate("${PasswordEnterDestination.route}/$it")
                 },
                 navigateToOtp = {
                     navController.navigate("${OtpInputDestination.route}/$it")
+                },
+            )
+        }
+        composable(
+            route = PasswordEnterDestination.routeWithArgs,
+            arguments = listOf(
+                element = navArgument(PasswordEnterDestination.EMAIL_ARG) {
+                    type = NavType.StringType
+                },
+            ),
+        ) {
+            PasswordEnterScreen(
+                onError = {
+                    navController.navigateToError(it)
+                },
+                navigateToHome = {
+                    navController.navigate(HomeDestination.route)
                 },
             )
         }

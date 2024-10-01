@@ -42,14 +42,14 @@ object EmailInputDestination : NavigationDestination {
 @Composable
 fun EmailInputScreen(
     onError: (Throwable?) -> Unit,
-    navigateToPassword: (String) -> Unit,
+    navigateToPasswordEnter: (String) -> Unit,
     navigateToOtp: (String) -> Unit,
     viewModel: EmailInputViewModel = hiltViewModel<EmailInputViewModel>(),
 ) {
     val state = viewModel.emailAuthState.value
     when (state) {
         is EmailAuthState.Error -> onError(state.exception)
-        is EmailAuthState.UserExists -> navigateToPassword(viewModel.emailState.value)
+        is EmailAuthState.UserExists -> navigateToPasswordEnter(viewModel.emailState.value)
         is EmailAuthState.OtpWasSent -> navigateToOtp(viewModel.emailState.value)
         is EmailAuthState.None,
         is EmailAuthState.Loading,
@@ -124,9 +124,10 @@ fun EmailInputScreen(
         if (state.needToBlockUi) {
             Surface(
                 color = Color.Transparent,
+                content = {},
                 modifier = Modifier
                     .fillMaxSize(),
-            ) {}
+            )
         }
     }
 }

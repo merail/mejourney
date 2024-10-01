@@ -1,4 +1,4 @@
-package merail.life.auth.impl.ui.state
+package merail.life.auth.impl.ui.passwordInput.state
 
 data class PasswordState(
     val value: String = "",

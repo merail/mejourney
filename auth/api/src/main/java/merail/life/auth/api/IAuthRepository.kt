@@ -18,4 +18,9 @@ interface IAuthRepository {
         email: String,
         password: String,
     )
+
+    suspend fun authorize(
+        email: String,
+        password: String,
+    )
 }

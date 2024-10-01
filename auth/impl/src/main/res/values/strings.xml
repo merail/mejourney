@@ -6,6 +6,12 @@
     <string name="email_input_validation_error">Не\u00A0похоже на\u00A0почту</string>
     <string name="email_input_continue_button">Продолжить</string>
 
+    <string name="password_enter_title">Пароль</string>
+    <string name="password_enter_description">Введи пароль</string>
+    <string name="password_enter_label">Введи пароль</string>
+    <string name="password_enter_validation_error">Неверный пароль</string>
+    <string name="password_enter_continue_button">Продолжить</string>
+
     <string name="otp_input_title">Код из\u00A0письма</string>
     <string name="otp_input_description">Подтверди почту кодом из\u00A0письма</string>
     <string name="otp_input_validation_error">Неправильный код</string>

@@ -37,4 +37,14 @@ internal class AuthRepository @Inject constructor(
             password,
         ).await().toUnit()
     }
+
+    override suspend fun authorize(
+        email: String,
+        password: String,
+    ) = withContext(Dispatchers.IO) {
+        firebaseAuth.signInWithEmailAndPassword(
+            email,
+            password,
+        ).await().toUnit()
+    }
 }
