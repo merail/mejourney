@@ -29,12 +29,22 @@ android {
         debug {
             buildConfigField(
                 type = "String",
+                name = "FIREBASE_REPOSITORY_PATH",
+                value = properties.getProperty("devFirebaseRepositoryPath"),
+            )
+            buildConfigField(
+                type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
                 value = properties.getProperty("devFirebaseStorageBucket"),
             )
         }
 
         release {
+            buildConfigField(
+                type = "String",
+                name = "FIREBASE_REPOSITORY_PATH",
+                value = properties.getProperty("prodFirebaseRepositoryPath"),
+            )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",

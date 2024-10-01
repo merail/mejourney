@@ -7,9 +7,9 @@ interface IServerRepository {
 
     suspend fun getFirestoreData(
         folderName: String,
-    ): Result<FirestoreDto>
+    ): FirestoreDto
 
     suspend fun getStorageData(
         folderName: String,
-    ): Result<List<StorageDto>>
+    ): List<StorageDto>
 }

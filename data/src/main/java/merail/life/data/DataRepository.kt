@@ -1,6 +1,5 @@
 package merail.life.data
 
-import android.util.Log
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -37,13 +36,10 @@ class DataRepository @Inject constructor(
 ) : IDataRepository {
 
     companion object {
-        private const val TAG = "DataRepository"
 
-        private const val MAIN_PATH = BuildConfig.FIREBASE_REPOSITORY_PATH
+        private const val HOME_COVERS_PATH = "home_covers"
 
-        private const val HOME_COVERS_PATH = "$MAIN_PATH/home_covers"
-
-        private const val CONTENT_PATH = "$MAIN_PATH/"
+        private const val CONTENT_PATH = ""
     }
 
     override fun getHomeElements(): Flow<RequestResult<List<HomeElementModel>>> {
@@ -57,10 +53,10 @@ class DataRepository @Inject constructor(
         val result = flowWithResult {
             val firestoreData = serverRepository.getFirestoreData(
                 folderName = HOME_COVERS_PATH,
-            ).getOrThrow().toCoverDto()
+            ).toCoverDto()
             val storageData = serverRepository.getStorageData(
                 folderName = HOME_COVERS_PATH,
-            ).getOrThrow().map(StorageDto::toImageDto)
+            ).map(StorageDto::toImageDto)
             firestoreData.zip(storageData).map { (info, file) ->
                 HomeElementModel(
                     id = info.id,
@@ -74,10 +70,7 @@ class DataRepository @Inject constructor(
             }
         }.onEach {
             if (it.isSuccess) {
-                Log.d(TAG, "Getting home elements from server. Success")
                 saveHomeElementsToDatabase(it.getOrThrow())
-            } else {
-                Log.w(TAG, "Getting home elements from server. Failure", it.exceptionOrNull())
             }
         }.map(Result<List<HomeElementModel>>::toRequestResult)
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
@@ -98,13 +91,7 @@ class DataRepository @Inject constructor(
                     selectorFilter != null -> RequestResult.Success(databaseList.filterBySelector(selectorFilter))
                     else -> RequestResult.Success(databaseList)
                 }
-            }.onEach {
-                if (it is RequestResult.Success) {
-                    Log.d(TAG, "Getting home elements from database. Success")
-                }
-            }
-            .catchWithResult {
-                Log.w(TAG, "Getting home elements from database. Failure", it)
+            }.catchWithResult {
                 RequestResult.Error(error = it)
             }
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
@@ -121,21 +108,15 @@ class DataRepository @Inject constructor(
         val result = flowWithResult {
             val firestoreData = serverRepository.getFirestoreData(
                 folderName = "$CONTENT_PATH$id",
-            ).getOrThrow().toContentDto()
+            ).toContentDto()
             val storageData = serverRepository.getStorageData(
                 folderName = "$CONTENT_PATH$id",
-            ).getOrThrow().map(StorageDto::toImageDto)
+            ).map(StorageDto::toImageDto)
             ContentModel(
                 title = firestoreData.title,
                 text = firestoreData.text,
                 imagesUrls = storageData.map(ImageDto::reference).toImmutableList(),
             )
-        }.onEach {
-            if (it.isSuccess) {
-                Log.d(TAG, "Getting content from server. Success")
-            } else {
-                Log.w(TAG, "Getting content from server. Failure", it.exceptionOrNull())
-            }
         }.map(Result<ContentModel>::toRequestResult)
         val start = flowOf<RequestResult<ContentModel>>(RequestResult.InProgress())
         return merge(result, start)
