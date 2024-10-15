@@ -1,4 +1,4 @@
-package merail.life.auth.impl.ui.passwordInput.state
+package merail.life.auth.impl.ui.passwordCreation.state
 
 sealed class UserCreatingState {
 
@@ -10,3 +10,6 @@ sealed class UserCreatingState {
 
     data object Success: UserCreatingState()
 }
+
+val UserCreatingState.needToBlockUi
+    get() = this is UserCreatingState.Loading || this is UserCreatingState.Success

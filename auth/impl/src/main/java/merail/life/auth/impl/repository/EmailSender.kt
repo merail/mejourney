@@ -10,16 +10,22 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 import kotlin.random.Random
 
-class EmailSender(
+internal class EmailSender(
     private val context: Context,
 ) {
+    companion object {
+        private const val LOWER_CODE_LIMIT = 1000
+
+        private const val UPPER_CODE_LIMIT = 10000
+    }
+
     private val session by EmailSessionCreator()
 
-    private var code: Int = 0
+    private var code = 0
 
-    suspend fun sendOtp(stringReceiverEmail: String) = withContext(Dispatchers.IO) {
+    suspend fun sendOtp(email: String) = withContext(Dispatchers.IO) {
         val mimeMessage = MimeMessage(session)
-        mimeMessage.addRecipient(Message.RecipientType.TO, InternetAddress(stringReceiverEmail))
+        mimeMessage.addRecipient(Message.RecipientType.TO, InternetAddress(email))
         mimeMessage.subject = context.getString(R.string.email_title)
         code = generateCode()
         mimeMessage.setText(context.getString(R.string.email_body, code))
@@ -28,5 +34,5 @@ class EmailSender(
 
     fun getCurrentOtp() = code
 
-    private fun generateCode() = Random.nextInt(1000, 10000)
+    private fun generateCode() = Random.nextInt(LOWER_CODE_LIMIT, UPPER_CODE_LIMIT)
 }

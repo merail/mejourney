@@ -16,13 +16,13 @@
     <string name="otp_input_description">Подтверди почту кодом из\u00A0письма</string>
     <string name="otp_input_validation_error">Неправильный код</string>
 
-    <string name="password_input_title">Создание пароля</string>
-    <string name="password_input_description">Пароль должен содержать не\u00A0менее 8\u00A0символов, постарайся его не\u00A0забыть</string>
-    <string name="password_input_label">Введи пароль</string>
-    <string name="password_input_validation_error">Пароль должен содержать не\u00A0менее 8\u00A0символов и\u00A0включать как минимум одну цифру, один специальный символ, одну прописную и\u00A0одну строчную букву</string>
-    <string name="password_input_repeated_validation_error">Пароли не\u00A0совпадают</string>
-    <string name="password_input_repeated_label">Введи пароль еще раз</string>
-    <string name="password_input_continue_button">Продолжить</string>
+    <string name="password_creation_title">Создание пароля</string>
+    <string name="password_creation_description">Пароль должен содержать не\u00A0менее 8\u00A0символов и\u00A0включать как минимум одну цифру, один специальный символ, одну прописную и\u00A0одну строчную букву</string>
+    <string name="password_creation_label">Введи пароль</string>
+    <string name="password_creation_validation_error">Пароль не\u00A0соответствует требованиям</string>
+    <string name="password_creation_repeated_label">Введи пароль еще раз</string>
+    <string name="password_creation_repeated_validation_error">Пароли не\u00A0совпадают</string>
+    <string name="password_creation_continue_button">Продолжить</string>
 
     <string name="email_title">Подтвердите адрес электронной почты</string>
     <string name="email_body">Команда Cloud.ru приветствует вас!\nПожалуйста, подтвердите адрес электронной почты.\nКод подтверждения:\n%d\nВведите его на странице регистрации Cloud.ru. Код действителен в течение 5 минут с момента получения этого письма.\nЕсли вы не запрашивали код, просто игнорируйте это письмо. Данные не будут использоваться без вашего подтверждения.</string>

@@ -7,7 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import merail.life.auth.api.IAuthRepository
-import merail.life.auth.impl.ui.passwordInput.PasswordInputDestination
+import merail.life.auth.impl.ui.otpInput.state.OtpValidator
+import merail.life.auth.impl.ui.otpInput.state.OtpValueState
+import merail.life.auth.impl.ui.passwordCreation.PasswordCreationDestination
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,26 +18,30 @@ class OtpInputViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
 
-    val email: String = checkNotNull(savedStateHandle[PasswordInputDestination.EMAIL_ARG])
+    val email: String = checkNotNull(savedStateHandle[PasswordCreationDestination.EMAIL_ARG])
 
-    var otpState by mutableStateOf(OtpState())
+    var otpValueState by mutableStateOf(OtpValueState())
         private set
+
+    private val otpValidator = OtpValidator()
 
     fun updateOtp(
         value: String,
     ) {
-        otpState = otpState.copy(
-            value = value,
-            isValid = true,
-        )
+        if (otpValidator(value)) {
+            otpValueState = otpValueState.copy(
+                value = value,
+                isValid = true,
+            )
+        }
     }
 
     fun verifyOtp(): Boolean {
-        val isOtpValid = authRepository.getCurrentOtp() == otpState.value.toInt()
-        otpState = otpState.copy(
-            isValid = isOtpValid,
+        val isOtpVerified = authRepository.getCurrentOtp() == otpValueState.value.toInt()
+        otpValueState = otpValueState.copy(
+            isValid = isOtpVerified,
         )
-        return isOtpValid
+        return isOtpVerified
     }
 }
 

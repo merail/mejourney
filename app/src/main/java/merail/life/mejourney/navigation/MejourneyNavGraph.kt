@@ -18,10 +18,10 @@ import merail.life.auth.impl.ui.emailInput.EmailInputDestination
 import merail.life.auth.impl.ui.emailInput.EmailInputScreen
 import merail.life.auth.impl.ui.otpInput.OtpInputDestination
 import merail.life.auth.impl.ui.otpInput.OtpInputScreen
+import merail.life.auth.impl.ui.passwordCreation.PasswordCreationDestination
+import merail.life.auth.impl.ui.passwordCreation.PasswordCreationScreen
 import merail.life.auth.impl.ui.passwordEnter.PasswordEnterDestination
 import merail.life.auth.impl.ui.passwordEnter.PasswordEnterScreen
-import merail.life.auth.impl.ui.passwordInput.PasswordInputDestination
-import merail.life.auth.impl.ui.passwordInput.PasswordInputScreen
 import merail.life.core.UnauthorizedException
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
@@ -45,6 +45,8 @@ internal fun MejourneyNavHost(
     intentRoute: MutableState<String?>,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     // TODO: Routing from push doesn't work without getting intentRouteValue here
     intentRoute.value?.let {
         Log.d(TAG, "Route from push: $it")
@@ -88,16 +90,32 @@ internal fun MejourneyNavHost(
         composable(
             route = EmailInputDestination.route,
         ) {
-            EmailInputScreen(
-                onError = {
+            BackHandler {
+                context.activity?.moveTaskToBack(true)
+            }
+
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
                     navController.navigateToError(it)
-                },
-                navigateToPasswordEnter = {
+                }
+            }
+
+            val navigateToPasswordEnter: (String) -> Unit = remember {
+                {
                     navController.navigate("${PasswordEnterDestination.route}/$it")
-                },
-                navigateToOtp = {
+                }
+            }
+
+            val navigateToOtp: (String) -> Unit = remember {
+                {
                     navController.navigate("${OtpInputDestination.route}/$it")
-                },
+                }
+            }
+
+            EmailInputScreen(
+                onError = navigateToError,
+                navigateToPasswordEnter = navigateToPasswordEnter,
+                navigateToOtp = navigateToOtp,
             )
         }
         composable(
@@ -108,13 +126,25 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            PasswordEnterScreen(
-                onError = {
+            BackHandler {
+                navController.popBackStack(EmailInputDestination.route, true)
+            }
+
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
                     navController.navigateToError(it)
-                },
-                navigateToHome = {
+                }
+            }
+
+            val navigateToHome: () -> Unit = remember {
+                {
                     navController.navigate(HomeDestination.route)
-                },
+                }
+            }
+
+            PasswordEnterScreen(
+                onError = navigateToError,
+                navigateToHome = navigateToHome,
             )
         }
         composable(
@@ -125,35 +155,54 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
+            BackHandler {
+                navController.popBackStack(EmailInputDestination.route, true)
+            }
+
+            val navigateToPassword: (String) -> Unit = remember {
+                {
+                    navController.navigate("${PasswordCreationDestination.route}/$it")
+                }
+            }
+
             OtpInputScreen(
-                navigateToPassword = {
-                    navController.navigate("${PasswordInputDestination.route}/$it")
-                },
+                navigateToPassword = navigateToPassword,
             )
         }
         composable(
-            route = PasswordInputDestination.routeWithArgs,
+            route = PasswordCreationDestination.routeWithArgs,
             arguments = listOf(
-                element = navArgument(PasswordInputDestination.EMAIL_ARG) {
+                element = navArgument(PasswordCreationDestination.EMAIL_ARG) {
                     type = NavType.StringType
                 },
             ),
         ) {
-            PasswordInputScreen(
-                onError = {
+            BackHandler {
+                context.activity?.moveTaskToBack(true)
+            }
+
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
                     navController.navigateToError(it)
-                },
-                navigateToHome = {
+                }
+            }
+
+            val navigateToHome: () -> Unit = remember {
+                {
                     navController.navigate(HomeDestination.route)
-                },
+                }
+            }
+
+            PasswordCreationScreen(
+                onError = navigateToError,
+                navigateToHome = navigateToHome,
             )
         }
         composable(
             route = HomeDestination.route,
         ) {
-            val context = LocalContext.current
             BackHandler {
-                context.activity?.finish()
+                context.activity?.moveTaskToBack(true)
             }
 
             val navigateToError: (Throwable?) -> Unit = remember {

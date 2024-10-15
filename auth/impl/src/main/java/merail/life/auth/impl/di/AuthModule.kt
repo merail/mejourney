@@ -20,8 +20,8 @@ import javax.inject.Singleton
 internal interface AuthModule {
     @Singleton
     @Binds
-    fun bindFirebaseRepository(
-        firebaseRepository: AuthRepository,
+    fun bindAuthRepository(
+        authRepository: AuthRepository,
     ): IAuthRepository
 
     companion object {
@@ -32,7 +32,7 @@ internal interface AuthModule {
         @Provides
         @Singleton
         fun provideEmailSender(
-            @ApplicationContext context: Context
+            @ApplicationContext context: Context,
         ): EmailSender = EmailSender(context)
     }
 }

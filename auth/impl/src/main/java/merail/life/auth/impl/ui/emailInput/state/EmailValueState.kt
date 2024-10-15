@@ -1,6 +1,9 @@
 package merail.life.auth.impl.ui.emailInput.state
 
-data class EmailState(
+import androidx.compose.runtime.Immutable
+
+@Immutable
+data class EmailValueState(
     val value: String = "",
     val isValid: Boolean = true,
 )
@@ -12,5 +15,5 @@ class EmailValidator {
         option = RegexOption.IGNORE_CASE,
     )
 
-    operator fun invoke(email: String) = emailRegex.matches(email)
+    operator fun invoke(value: String) = emailRegex.matches(value)
 }

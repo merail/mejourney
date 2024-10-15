@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import merail.life.auth.impl.R
+import merail.life.auth.impl.ui.otpInput.state.OtpValueState
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 
@@ -82,12 +83,14 @@ fun OtpInputScreen(
             )
 
             OtpField(
-                otpState = viewModel.otpState,
-                onOtpTextChange = {
-                    viewModel.updateOtp(it)
-                    if (it.length == 4) {
-                        if (viewModel.verifyOtp()) {
-                            navigateToPassword(viewModel.email)
+                otpValueState = viewModel.otpValueState,
+                onOtpTextChange = remember {
+                    {
+                        viewModel.updateOtp(it)
+                        if (it.length == 4) {
+                            if (viewModel.verifyOtp()) {
+                                navigateToPassword(viewModel.email)
+                            }
                         }
                     }
                 },
@@ -98,7 +101,7 @@ fun OtpInputScreen(
 
 @Composable
 private fun OtpField(
-    otpState: OtpState,
+    otpValueState: OtpValueState,
     onOtpTextChange: (String) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -107,10 +110,12 @@ private fun OtpField(
             .padding(12.dp),
     ) {
         BasicTextField(
-            value = otpState.value,
-            onValueChange = {
-                if (it.length <= 4) {
-                    onOtpTextChange(it)
+            value = otpValueState.value,
+            onValueChange = remember {
+                {
+                    if (it.length <= 4) {
+                        onOtpTextChange(it)
+                    }
                 }
             },
             keyboardOptions = KeyboardOptions(
@@ -123,8 +128,8 @@ private fun OtpField(
                     repeat(4) { index ->
                         OtpCell(
                             index = index,
-                            text = otpState.value,
-                            isError = otpState.isValid.not(),
+                            text = otpValueState.value,
+                            isError = otpValueState.isValid.not(),
                         )
                     }
                 }
@@ -133,14 +138,14 @@ private fun OtpField(
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
         )
-        if (otpState.isValid.not()) {
+        if (otpValueState.isValid.not()) {
             Text(
                 text = stringResource(R.string.otp_input_validation_error),
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
                     .padding(
                         start = 12.dp,
-                        top = 4.dp,
+                        top = 8.dp,
                     ),
             )
         }

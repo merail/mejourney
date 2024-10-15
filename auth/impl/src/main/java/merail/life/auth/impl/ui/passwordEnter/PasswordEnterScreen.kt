@@ -8,41 +8,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.auth.impl.R
-import merail.life.auth.impl.ui.passwordEnter.state.AuthorizingState
-import merail.life.auth.impl.ui.passwordEnter.state.PasswordState
+import merail.life.auth.impl.ui.common.PasswordField
+import merail.life.auth.impl.ui.passwordEnter.state.AuthByPasswordState
 import merail.life.auth.impl.ui.passwordEnter.state.needToBlockUi
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.styles.ButtonStyle
-import merail.life.design.styles.TextFieldStyle
 
 object PasswordEnterDestination : NavigationDestination {
     override val route = "passwordEnter"
@@ -58,13 +44,17 @@ fun PasswordEnterScreen(
     navigateToHome: () -> Unit,
     viewModel: PasswordEnterViewModel = hiltViewModel<PasswordEnterViewModel>(),
 ) {
-    val state = viewModel.authorizingState.value
+    val state = viewModel.authByPasswordState.value
     when (state) {
-        is AuthorizingState.Error -> onError(state.exception)
-        is AuthorizingState.Success -> navigateToHome()
-        is AuthorizingState.None,
-        is AuthorizingState.Loading,
-        is AuthorizingState.InvalidPassword,
+        is AuthByPasswordState.Error -> LaunchedEffect(null) {
+            onError(state.exception)
+        }
+        is AuthByPasswordState.Success -> LaunchedEffect(null) {
+            navigateToHome()
+        }
+        is AuthByPasswordState.None,
+        is AuthByPasswordState.Loading,
+        is AuthByPasswordState.InvalidPassword,
         -> Unit
     }
 
@@ -105,9 +95,11 @@ fun PasswordEnterScreen(
                 )
 
                 PasswordField(
-                    passwordState = viewModel.passwordState,
-                    onChange = {
-                        viewModel.updatePassword(it)
+                    passwordValueState = viewModel.passwordValueState,
+                    onChange = remember {
+                        {
+                            viewModel.updatePassword(it)
+                        }
                     },
                     imeAction = ImeAction.Done,
                     label = stringResource(R.string.password_enter_label),
@@ -116,7 +108,12 @@ fun PasswordEnterScreen(
             }
 
             Button(
-                onClick = viewModel::authorize,
+                onClick = remember
+                {
+                    {
+                        viewModel.validatePassword()
+                    }
+                },
                 colors = ButtonStyle.Primary.colors(),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
@@ -138,90 +135,13 @@ fun PasswordEnterScreen(
                 }
             }
         }
+
         if (state.needToBlockUi) {
             Surface(
                 color = Color.Transparent,
                 content = {},
                 modifier = Modifier
                     .fillMaxSize(),
-            )
-        }
-    }
-}
-
-@Composable
-private fun PasswordField(
-    passwordState: PasswordState,
-    onChange: (String) -> Unit,
-    imeAction: ImeAction,
-    label: String,
-    errorText: String,
-) {
-    var isPasswordVisible by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .padding(
-                horizontal = 24.dp,
-                vertical = 12.dp,
-            ),
-    ) {
-        TextField(
-            value = passwordState.value,
-            onValueChange = onChange,
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Key,
-                    contentDescription = "",
-                )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        isPasswordVisible = !isPasswordVisible
-                    },
-                ) {
-                    Icon(
-                        imageVector = if (isPasswordVisible) {
-                            Icons.Default.VisibilityOff
-                        } else {
-                            Icons.Default.Visibility
-                        },
-                        contentDescription = "",
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = imeAction,
-                keyboardType = KeyboardType.Password,
-            ),
-            label = {
-                Text(
-                    text = label,
-                )
-            },
-            colors = TextFieldStyle.Primary.colors(),
-            singleLine = true,
-            isError = passwordState.isValid.not(),
-            visualTransformation = if (isPasswordVisible) {
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation()
-            },
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp),
-        )
-        if (passwordState.isValid.not()) {
-            Text(
-                text = errorText,
-                color = MejourneyTheme.colors.textNegative,
-                modifier = Modifier
-                    .padding(
-                        start = 12.dp,
-                        top = 4.dp,
-                    ),
             )
         }
     }

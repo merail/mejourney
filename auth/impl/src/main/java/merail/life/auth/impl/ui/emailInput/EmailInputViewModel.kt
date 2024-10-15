@@ -1,5 +1,6 @@
 package merail.life.auth.impl.ui.emailInput
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,8 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.emailInput.state.EmailAuthState
-import merail.life.auth.impl.ui.emailInput.state.EmailState
 import merail.life.auth.impl.ui.emailInput.state.EmailValidator
+import merail.life.auth.impl.ui.emailInput.state.EmailValueState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,11 +19,14 @@ class EmailInputViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
 
-    private val _emailAuthState = mutableStateOf<EmailAuthState>(EmailAuthState.None)
+    companion object {
+        private const val TAG = "EmailInputViewModel"
+    }
 
-    val emailAuthState = _emailAuthState
+    var emailAuthState = mutableStateOf<EmailAuthState>(EmailAuthState.None)
+        private set
 
-    var emailState by mutableStateOf(EmailState())
+    var emailValueState by mutableStateOf(EmailValueState())
         private set
 
     private val emailValidator = EmailValidator()
@@ -30,15 +34,15 @@ class EmailInputViewModel @Inject constructor(
     fun updateEmail(
         value: String,
     ) {
-        emailState = emailState.copy(
+        emailValueState = emailValueState.copy(
             value = value,
             isValid = true,
         )
     }
 
     fun validateEmail() {
-        val isEmailValid = emailValidator(emailState.value)
-        emailState = emailState.copy(
+        val isEmailValid = emailValidator(emailValueState.value)
+        emailValueState = emailValueState.copy(
             isValid = isEmailValid,
         )
         if (isEmailValid) {
@@ -47,14 +51,17 @@ class EmailInputViewModel @Inject constructor(
     }
 
     private fun checkIfUserExist() = viewModelScope.launch {
-        _emailAuthState.value = EmailAuthState.Loading
+        emailAuthState.value = EmailAuthState.Loading
         runCatching {
-            authRepository.isUserExist(emailState.value)
+            Log.d(TAG, "Проверка существования пользователя ${emailAuthState.value}. Старт")
+            authRepository.isUserExist(emailValueState.value)
         }.onFailure {
-            _emailAuthState.value = EmailAuthState.Error(it.cause)
+            Log.w(TAG, "Проверка существования пользователя ${emailAuthState.value}. Ошибка", it)
+            emailAuthState.value = EmailAuthState.Error(it.cause)
         }.onSuccess {
+            Log.d(TAG, "Проверка существования пользователя ${emailAuthState.value}. Успех")
             if (it) {
-                _emailAuthState.value = EmailAuthState.UserExists
+                emailAuthState.value = EmailAuthState.UserExists
             } else {
                 sendOtp()
             }
@@ -63,11 +70,14 @@ class EmailInputViewModel @Inject constructor(
 
     private fun sendOtp() = viewModelScope.launch {
         runCatching {
-            authRepository.sendOtp(emailState.value)
+            Log.d(TAG, "Отправка OTP. Старт")
+            authRepository.sendOtp(emailValueState.value)
         }.onFailure {
-            _emailAuthState.value = EmailAuthState.Error(it.cause)
+            Log.w(TAG, "Отправка OTP. Ошибка", it)
+            emailAuthState.value = EmailAuthState.Error(it.cause)
         }.onSuccess {
-            _emailAuthState.value = EmailAuthState.OtpWasSent
+            Log.d(TAG, "Отправка OTP. Успех")
+            emailAuthState.value = EmailAuthState.OtpWasSent
         }
     }
 }
