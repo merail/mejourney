@@ -6,22 +6,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,11 +29,16 @@ import merail.life.auth.impl.ui.emailInput.state.EmailValueState
 import merail.life.auth.impl.ui.emailInput.state.needToBlockUi
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
-import merail.life.design.styles.ButtonStyle
+import merail.life.design.components.BlockingSurface
+import merail.life.design.components.ContinueButton
 import merail.life.design.styles.TextFieldStyle
 
 object EmailInputDestination : NavigationDestination {
     override val route = "emailInput"
+
+    const val EMAIL_ARG = "email"
+
+    val routeWithArgs = "$route?$EMAIL_ARG={$EMAIL_ARG}"
 }
 
 @Composable
@@ -110,40 +110,19 @@ fun EmailInputScreen(
                 )
             }
 
-            Button(
+            ContinueButton(
                 onClick = remember {
                     {
                         viewModel.validateEmail()
                     }
                 },
-                colors = ButtonStyle.Primary.colors(),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-                    .height(64.dp),
-            ) {
-                if (state.needToBlockUi) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(24.dp),
-                    )
-                } else {
-                    Text(
-                        text = stringResource(R.string.email_input_continue_button),
-                        textAlign = TextAlign.Center,
-                        style = MejourneyTheme.typography.titleMedium,
-                    )
-                }
-            }
-        }
-        if (state.needToBlockUi) {
-            Surface(
-                color = Color.Transparent,
-                content = {},
-                modifier = Modifier
-                    .fillMaxSize(),
+                text = stringResource(R.string.email_input_continue_button),
+                needToBlockUi = state.needToBlockUi,
             )
+        }
+
+        if (state.needToBlockUi) {
+            BlockingSurface()
         }
     }
 }

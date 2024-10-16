@@ -4,19 +4,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +21,8 @@ import merail.life.auth.impl.ui.passwordCreation.state.UserCreatingState
 import merail.life.auth.impl.ui.passwordCreation.state.needToBlockUi
 import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
-import merail.life.design.styles.ButtonStyle
+import merail.life.design.components.BlockingSurface
+import merail.life.design.components.ContinueButton
 
 object PasswordCreationDestination : NavigationDestination {
     override val route = "passwordCreation"
@@ -121,41 +115,19 @@ fun PasswordCreationScreen(
                 }
             }
 
-            Button(
+            ContinueButton(
                 onClick = remember {
                     {
                         viewModel.validate()
                     }
                 },
-                colors = ButtonStyle.Primary.colors(),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-                    .height(64.dp),
-            ) {
-                if (state.needToBlockUi) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(24.dp),
-                    )
-                } else {
-                    Text(
-                        text = stringResource(R.string.password_creation_continue_button),
-                        textAlign = TextAlign.Center,
-                        style = MejourneyTheme.typography.titleMedium,
-                    )
-                }
-            }
+                needToBlockUi = state.needToBlockUi,
+                text = stringResource(R.string.password_creation_continue_button),
+            )
         }
 
         if (state.needToBlockUi) {
-            Surface(
-                color = Color.Transparent,
-                content = {},
-                modifier = Modifier
-                    .fillMaxSize(),
-            )
+            BlockingSurface()
         }
     }
 }

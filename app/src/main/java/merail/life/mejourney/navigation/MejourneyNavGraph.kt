@@ -66,7 +66,7 @@ internal fun MejourneyNavHost(
 
             val navigateToAuth: (Throwable?) -> Unit = remember {
                 {
-                    navController.navigate(EmailInputDestination.route)
+                    navController.navigate(EmailInputDestination.routeWithArgs)
                     it?.let {
                         navController.navigateToError(it)
                     }
@@ -88,7 +88,14 @@ internal fun MejourneyNavHost(
             )
         }
         composable(
-            route = EmailInputDestination.route,
+            route = EmailInputDestination.routeWithArgs,
+
+            arguments = listOf(
+                element = navArgument(EmailInputDestination.EMAIL_ARG) {
+                    nullable = true
+                    type = NavType.StringType
+                },
+            ),
         ) {
             BackHandler {
                 context.activity?.moveTaskToBack(true)
@@ -126,13 +133,15 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            BackHandler {
-                navController.popBackStack(EmailInputDestination.route, true)
-            }
-
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
                     navController.navigateToError(it)
+                }
+            }
+
+            val navigateToBack: (String) -> Unit = remember {
+                {
+                    navController.navigate("${EmailInputDestination.route}?${EmailInputDestination.EMAIL_ARG}=$it")
                 }
             }
 
@@ -143,6 +152,7 @@ internal fun MejourneyNavHost(
             }
 
             PasswordEnterScreen(
+                navigateToBack = navigateToBack,
                 onError = navigateToError,
                 navigateToHome = navigateToHome,
             )
@@ -155,8 +165,11 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
-            BackHandler {
-                navController.popBackStack(EmailInputDestination.route, true)
+
+            val navigateToBack: (String) -> Unit = remember {
+                {
+                    navController.navigate("${EmailInputDestination.route}?${EmailInputDestination.EMAIL_ARG}=$it")
+                }
             }
 
             val navigateToPassword: (String) -> Unit = remember {
@@ -166,6 +179,7 @@ internal fun MejourneyNavHost(
             }
 
             OtpInputScreen(
+                navigateToBack = navigateToBack,
                 navigateToPassword = navigateToPassword,
             )
         }
@@ -208,7 +222,7 @@ internal fun MejourneyNavHost(
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
                     if (it is UnauthorizedException) {
-                        navController.navigate(EmailInputDestination.route)
+                        navController.navigate(EmailInputDestination.routeWithArgs)
                     } else {
                         navController.navigateToError(it)
                     }

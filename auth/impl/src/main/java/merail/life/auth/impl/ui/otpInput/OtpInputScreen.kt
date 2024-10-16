@@ -1,5 +1,6 @@
 package merail.life.auth.impl.ui.otpInput
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
@@ -16,6 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -47,9 +52,14 @@ object OtpInputDestination : NavigationDestination {
 
 @Composable
 fun OtpInputScreen(
+    navigateToBack: (String) -> Unit,
     navigateToPassword: (String) -> Unit,
     viewModel: OtpInputViewModel = hiltViewModel<OtpInputViewModel>(),
 ) {
+    BackHandler {
+        navigateToBack(viewModel.email)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -58,18 +68,37 @@ fun OtpInputScreen(
             modifier = Modifier
                 .weight(1f),
         ) {
-            Text(
-                text = stringResource(R.string.otp_input_title),
-                style = MejourneyTheme.typography.displaySmall,
-                textAlign = TextAlign.Center,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        start = 40.dp,
                         top = 40.dp,
                         end = 40.dp,
                     ),
-            )
+            ) {
+                IconButton(
+                    onClick = remember {
+                        {
+                            navigateToBack(viewModel.email)
+                        }
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MejourneyTheme.colors.graphicPrimary,
+                        modifier = Modifier
+                            .size(36.dp),
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.otp_input_title),
+                    style = MejourneyTheme.typography.displaySmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .weight(1f),
+                )
+            }
 
             Text(
                 text = stringResource(R.string.otp_input_description),

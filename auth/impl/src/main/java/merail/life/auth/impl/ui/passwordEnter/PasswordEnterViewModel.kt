@@ -26,7 +26,7 @@ class PasswordEnterViewModel @Inject constructor(
         private const val TAG = "PasswordEnterViewModel"
     }
 
-    private val email: String = checkNotNull(savedStateHandle[PasswordEnterDestination.EMAIL_ARG])
+    val email: String = checkNotNull(savedStateHandle[PasswordEnterDestination.EMAIL_ARG])
 
     var authByPasswordState = mutableStateOf<AuthByPasswordState>(AuthByPasswordState.None)
         private set
