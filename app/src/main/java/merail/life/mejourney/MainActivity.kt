@@ -14,13 +14,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
+import merail.life.core.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
 import merail.life.mejourney.navigation.getRouteIfExists
 import merail.tools.permissions.runtime.RuntimePermissionRequester
 
 
 @AndroidEntryPoint
-internal class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity(), INotificationsPermissionRequester {
+
+    private lateinit var runtimePermissionRequester: RuntimePermissionRequester
 
     private lateinit var intentRoute: MutableState<String?>
 
@@ -46,7 +49,10 @@ internal class MainActivity : ComponentActivity() {
             }
         }
 
-        checkNotificationsPermission()
+        runtimePermissionRequester = RuntimePermissionRequester(
+            activity = this,
+            requestedPermission = Manifest.permission.POST_NOTIFICATIONS,
+        )
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -54,12 +60,8 @@ internal class MainActivity : ComponentActivity() {
         intentRoute.value = intent.getRouteIfExists()
     }
 
-    private fun checkNotificationsPermission() {
+    override fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val runtimePermissionRequester = RuntimePermissionRequester(
-                activity = this,
-                requestedPermission = Manifest.permission.POST_NOTIFICATIONS,
-            )
             if (runtimePermissionRequester.areAllPermissionsGranted().not()) {
                 runtimePermissionRequester.requestPermissions()
             }
