@@ -10,8 +10,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.design.MejourneyTheme
 import merail.life.design.styles.ButtonStyle
 
@@ -26,7 +28,14 @@ fun ContinueButton(
         colors = ButtonStyle.Primary.colors(),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
-            .padding(24.dp)
+            .padding(
+                horizontal = 12.dp,
+                vertical = if (LocalContext.current.isNavigationBarEnabled) {
+                    56.dp
+                } else {
+                    24.dp
+                },
+            )
             .fillMaxWidth()
             .height(64.dp),
     ) {

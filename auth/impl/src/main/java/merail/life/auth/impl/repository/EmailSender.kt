@@ -17,6 +17,8 @@ internal class EmailSender(
         private const val LOWER_CODE_LIMIT = 1000
 
         private const val UPPER_CODE_LIMIT = 10000
+
+        private const val MESSAGE_MIME_TYPE = "text/html; charset=utf-8"
     }
 
     private val session by EmailSessionCreator()
@@ -28,7 +30,7 @@ internal class EmailSender(
         mimeMessage.addRecipient(Message.RecipientType.TO, InternetAddress(email))
         mimeMessage.subject = context.getString(R.string.email_title)
         code = generateCode()
-        mimeMessage.setText(context.getString(R.string.email_body, code))
+        mimeMessage.setContent(context.getString(R.string.email_body, code), MESSAGE_MIME_TYPE)
         Transport.send(mimeMessage)
     }
 

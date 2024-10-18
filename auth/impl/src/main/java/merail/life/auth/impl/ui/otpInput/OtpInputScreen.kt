@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -159,6 +160,8 @@ private fun OtpField(
                             index = index,
                             text = otpValueState.value,
                             isError = otpValueState.isValid.not(),
+                            modifier = Modifier
+                                .weight(1f),
                         )
                     }
                 }
@@ -189,6 +192,7 @@ private fun OtpCell(
     index: Int,
     text: String,
     isError: Boolean,
+    modifier: Modifier,
 ) {
     val isCursorVisible = remember {
         mutableStateOf(false)
@@ -206,20 +210,8 @@ private fun OtpCell(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .padding(
-                start = if (index == 0) {
-                    0.dp
-                } else {
-                    12.dp
-                },
-                end = if (index == 4) {
-                    0.dp
-                } else {
-                    12.dp
-                },
-            )
-            .size(72.dp)
+        modifier = modifier
+            .requiredSize(72.dp)
             .border(
                 width = 1.dp,
                 color = if (isError) {

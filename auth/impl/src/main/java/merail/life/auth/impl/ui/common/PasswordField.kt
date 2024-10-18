@@ -41,10 +41,7 @@ internal fun PasswordField(
 
     Column(
         modifier = Modifier
-            .padding(
-                horizontal = 24.dp,
-                vertical = 12.dp,
-            ),
+            .padding(12.dp),
     ) {
         TextField(
             value = passwordValueState.value,
