@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.auth.impl.R
 import merail.life.auth.impl.ui.common.PasswordField
-import merail.life.auth.impl.ui.emailInput.EmailInputDestination
 import merail.life.auth.impl.ui.passwordEnter.state.AuthByPasswordState
 import merail.life.auth.impl.ui.passwordEnter.state.needToBlockUi
 import merail.life.core.NavigationDestination
@@ -48,7 +47,7 @@ fun PasswordEnterScreen(
     viewModel: PasswordEnterViewModel = hiltViewModel<PasswordEnterViewModel>(),
 ) {
     BackHandler {
-        navigateToBack(EmailInputDestination.routeWithArgs)
+        navigateToBack(viewModel.email)
     }
 
     val state = viewModel.authByPasswordState.value

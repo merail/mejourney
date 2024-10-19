@@ -313,6 +313,11 @@ internal fun MejourneyNavHost(
                 },
             ),
         ) {
+
+            BackHandler {
+                navController.popBackStack()
+            }
+
             val onDismiss: () -> Unit = remember {
                 {
                     navController.popBackStack()
