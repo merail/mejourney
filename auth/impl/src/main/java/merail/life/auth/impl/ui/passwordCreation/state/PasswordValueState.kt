@@ -8,11 +8,11 @@ data class PasswordValueState(
 class PasswordCreationValidator {
 
     private val passwordRegex = Regex(
-        pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$",
+        pattern = "^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)\$",
         option = RegexOption.IGNORE_CASE,
     )
 
-    operator fun invoke(password: String) = passwordRegex.matches(password)
+    operator fun invoke(password: String) = passwordRegex.matches(password).not()
 }
 
 class PasswordAuthValidator {
