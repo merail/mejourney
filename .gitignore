@@ -64,6 +64,7 @@ captures/
 .idea/androidTestResultsUserPreferences.xml
 .idea/deploymentTargetSelector.xml
 .idea/other.xml
+.idea/deviceManager.xml
 
 # Keystore files
 *.jks

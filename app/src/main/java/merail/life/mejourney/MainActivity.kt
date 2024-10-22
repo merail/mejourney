@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.MutableState
@@ -17,13 +18,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import merail.life.core.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
 import merail.life.mejourney.navigation.getRouteIfExists
-import merail.tools.permissions.runtime.RuntimePermissionRequester
+import merail.tools.permissions.runtime.runtimePermissionRequester
 
 
 @AndroidEntryPoint
 internal class MainActivity : ComponentActivity(), INotificationsPermissionRequester {
 
-    private lateinit var runtimePermissionRequester: RuntimePermissionRequester
+    @delegate:RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private val runtimePermissionRequester by runtimePermissionRequester(
+        requestedPermission = Manifest.permission.POST_NOTIFICATIONS,
+    )
 
     private lateinit var intentRoute: MutableState<String?>
 
@@ -48,11 +52,6 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
                 }
             }
         }
-
-        runtimePermissionRequester = RuntimePermissionRequester(
-            activity = this,
-            requestedPermission = Manifest.permission.POST_NOTIFICATIONS,
-        )
     }
 
     override fun onNewIntent(intent: Intent) {
