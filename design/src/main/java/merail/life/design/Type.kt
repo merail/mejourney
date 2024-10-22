@@ -18,6 +18,20 @@ private val defaultFontFamily = FontFamily(
 )
 
 val Typography = Typography(
+    displaySmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp,
+        lineHeight = 40.0.sp,
+        letterSpacing = 0.0.sp,
+    ),
+    displayMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 45.sp,
+        lineHeight = 52.0.sp,
+        letterSpacing = 0.0.sp,
+    ),
     bodyLarge = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,

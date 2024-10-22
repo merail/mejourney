@@ -1,6 +1,5 @@
 package merail.life.data.dto
 
-import merail.life.api.data.ServerRepository.Companion.TAG
 import merail.life.api.data.model.FirestoreDto
 import merail.life.core.extensions.mapWithResult
 
@@ -13,7 +12,7 @@ internal class CoverDto(
     val description: String,
 )
 
-internal fun FirestoreDto.toCoverDto() = snapshot.mapWithResult(TAG) {
+internal fun FirestoreDto.toCoverDto() = snapshot.mapWithResult {
     CoverDto(
         id = id,
         year = data["year"] as Long,

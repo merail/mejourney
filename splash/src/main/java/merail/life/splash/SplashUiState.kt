@@ -8,13 +8,17 @@ sealed class SplashUiState {
 
     data class Error(val exception: Throwable?): SplashUiState()
 
-    data object Success : SplashUiState()
+    data class Success(
+        val isRegistered: Boolean,
+    ) : SplashUiState()
 }
 
-internal fun RequestResult<Unit>.toState() = when (this) {
+internal fun RequestResult<Boolean>.toState() = when (this) {
     is RequestResult.InProgress -> SplashUiState.Loading
     is RequestResult.Error -> SplashUiState.Error(
         exception = error,
     )
-    is RequestResult.Success -> SplashUiState.Success
+    is RequestResult.Success -> SplashUiState.Success(
+        isRegistered = data,
+    )
 }

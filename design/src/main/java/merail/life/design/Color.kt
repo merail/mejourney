@@ -47,9 +47,16 @@ data class Colors(
     val elementNegative: Color = ColorConstants.merlot,
 
     val textPrimary: Color = ColorConstants.white,
-    val textNegative: Color = ColorConstants.red,
+    val textNegative: Color = ColorConstants.red_70,
+    val textInversePrimary: Color = ColorConstants.black,
 
     val borderPrimary: Color = ColorConstants.white,
+
+    val graphicPrimary: Color = ColorConstants.white,
+    val graphicInversePrimary: Color = ColorConstants.black,
+    val graphicInverseSecondary: Color = ColorConstants.lightGrey,
+    val graphicNegativePrimary: Color = ColorConstants.red_70,
+    val graphicNegativeSecondary: Color = ColorConstants.fairPink,
 )
 
 internal object ColorConstants {
@@ -59,5 +66,8 @@ internal object ColorConstants {
     val riverBed = Color(0xFF495253)
     val smokeyGrey = Color(0xFF6B7171)
     val red = Color(0xFFFF0000)
+    val red_70 = Color(0xB3FF0000)
     val merlot = Color(0xFF862020)
+    val lightGrey = Color(0xFFDBDAD7)
+    val fairPink = Color(0xFFFFEEEE)
 }

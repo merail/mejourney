@@ -40,7 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import merail.life.core.INotificationsPermissionRequester
 import merail.life.core.NavigationDestination
+import merail.life.core.extensions.activity
 import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
@@ -70,6 +72,10 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = viewModel.uiState.collectAsState().value
+
+    if (state is HomeUiState.Success) {
+        (LocalContext.current.activity as? INotificationsPermissionRequester)?.requestPermission()
+    }
 
     val onTabClick: (TabFilter) -> Unit = remember {
         { tabFilter: TabFilter ->

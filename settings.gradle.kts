@@ -37,5 +37,7 @@ include(":core")
 include(":home")
 
 include(":auth")
+include(":auth:api")
+include(":auth:impl")
 
 include(":profiling")

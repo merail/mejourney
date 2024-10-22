@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email_input_title">Привет</string>
+    <string name="email_input_description">Введи номер электронной почты, чтобы войти или зарегистрироваться</string>
+    <string name="email_input_label">Введи email</string>
+    <string name="email_input_validation_error">Не\u00A0похоже на\u00A0почту</string>
+    <string name="email_input_continue_button">Продолжить</string>
+
+    <string name="password_enter_title">Пароль</string>
+    <string name="password_enter_description">Введи пароль</string>
+    <string name="password_enter_label">Введи пароль</string>
+    <string name="password_enter_validation_error">Неверный пароль</string>
+    <string name="password_enter_continue_button">Продолжить</string>
+
+    <string name="otp_input_title">Код из\u00A0письма</string>
+    <string name="otp_input_description">Подтверди почту кодом из\u00A0письма</string>
+    <string name="otp_input_validation_error">Неправильный код</string>
+
+    <string name="password_creation_title">Создание пароля</string>
+    <string name="password_creation_description">Пароль должен содержать не\u00A0менее 8\u00A0символов и\u00A0включать как минимум одну цифру, один специальный символ, одну прописную и\u00A0одну строчную букву</string>
+    <string name="password_creation_label">Введи пароль</string>
+    <string name="password_creation_validation_error">Пароль не\u00A0соответствует требованиям</string>
+    <string name="password_creation_repeated_label">Введи пароль еще раз</string>
+    <string name="password_creation_repeated_validation_error">Пароли не\u00A0совпадают</string>
+    <string name="password_creation_continue_button">Продолжить</string>
+
+    <string name="email_title">Подтвердите адрес электронной почты</string>
+    <string name="email_body"><![CDATA[🌍 <b>Mejourney</b> приветствует вас!<br/><br/>Пожалуйста, подтвердите адрес электронной почты. Код подтверждения:<br/><br/><big><b>%d</b></big><br/><br/>Введите его в\u00A0приложении. Если вы\u00A0не\u00A0запрашивали код, просто игнорируйте это письмо.]]></string>
+</resources>
