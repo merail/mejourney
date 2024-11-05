@@ -1,5 +1,3 @@
-import jdk.tools.jlink.resources.plugins
-import org.jetbrains.kotlin.scripting.definitions.StandardScriptDefinition.platform
 import java.util.Properties
 
 plugins {
