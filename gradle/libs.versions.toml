@@ -65,6 +65,7 @@ androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profi
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 request-permissions-tool = { module = "com.github.merail:request-permissions-tool", version.ref = "permissionsTool" }
 androidx-compose-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeIcons" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

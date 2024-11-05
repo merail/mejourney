@@ -60,7 +60,7 @@ class PasswordEnterViewModel @Inject constructor(
             authByPasswordState.value = AuthByPasswordState.Loading
             runCatching {
                 Log.d(TAG, "Авторизация по паролю. Старт")
-                authRepository.authorize(
+                authRepository.authorizeWithEmail(
                     email = email,
                     password = passwordValueState.value,
                 )

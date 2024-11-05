@@ -4,6 +4,8 @@ import android.content.Context
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.remoteConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -28,6 +30,10 @@ internal interface AuthModule {
         @Provides
         @Singleton
         fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
+
+        @Provides
+        @Singleton
+        fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig = Firebase.remoteConfig
 
         @Provides
         @Singleton

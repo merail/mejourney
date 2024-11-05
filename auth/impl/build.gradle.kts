@@ -1,3 +1,5 @@
+import jdk.tools.jlink.resources.plugins
+import org.jetbrains.kotlin.scripting.definitions.StandardScriptDefinition.platform
 import java.util.Properties
 
 plugins {
@@ -73,6 +75,7 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.config)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

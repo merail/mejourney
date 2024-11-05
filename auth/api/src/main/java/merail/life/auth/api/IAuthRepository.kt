@@ -1,8 +1,10 @@
 package merail.life.auth.api
 
+import merail.life.auth.api.model.UserAuthorizationState
+
 interface IAuthRepository {
 
-    fun isUserAuthorized(): Boolean
+    suspend fun getUserAuthorizationState(): UserAuthorizationState
 
     suspend fun isUserExist(
         email: String,
@@ -19,7 +21,9 @@ interface IAuthRepository {
         password: String,
     )
 
-    suspend fun authorize(
+    suspend fun authorizeAnonymously()
+
+    suspend fun authorizeWithEmail(
         email: String,
         password: String,
     )

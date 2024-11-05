@@ -64,6 +64,12 @@ internal fun MejourneyNavHost(
             route = SplashDestination.route,
         ) {
 
+            val navigateToError: (Throwable?) -> Unit = remember {
+                {
+                    navController.navigateToError(it)
+                }
+            }
+
             val navigateToAuth: (Throwable?) -> Unit = remember {
                 {
                     navController.navigate(EmailInputDestination.routeWithArgs)
@@ -83,6 +89,7 @@ internal fun MejourneyNavHost(
             }
 
             SplashScreen(
+                onError = navigateToError,
                 navigateToAuth = navigateToAuth,
                 navigateToHome = navigateToHome,
             )
