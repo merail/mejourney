@@ -37,7 +37,7 @@ internal class AuthRepository @Inject constructor(
 
     override suspend fun getUserAuthorizationState() = withContext(Dispatchers.IO) {
         firebaseRemoteConfig.fetchAndActivate().await().run {
-            val isEmailRegistrationEnabled = firebaseRemoteConfig.getBoolean(REGISTRATION_CONFIG_KEY)
+            val isEmailRegistrationEnabled = isEmailRegistrationEnabled()
             if (isEmailRegistrationEnabled) {
                 val isUserAuthorizedByEmail = isUserAuthorizedByEmail()
                 if (isUserAuthorizedByEmail) {
@@ -87,6 +87,8 @@ internal class AuthRepository @Inject constructor(
     override suspend fun authorizeAnonymously() = withContext(Dispatchers.IO) {
         firebaseAuth.signInAnonymously().await().toUnit()
     }
+
+    private fun isEmailRegistrationEnabled() = firebaseRemoteConfig.getBoolean(REGISTRATION_CONFIG_KEY)
 
     private fun isUserAuthorizedByEmail() = firebaseAuth.currentUser?.email.isNullOrBlank().not()
 }

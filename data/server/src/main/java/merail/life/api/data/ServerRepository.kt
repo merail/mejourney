@@ -16,6 +16,7 @@ class ServerRepository @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
     private val firebaseFirestore: FirebaseFirestore,
 ) : IServerRepository {
+
     companion object {
 
         private const val STORAGE_ROOT = BuildConfig.FIREBASE_REPOSITORY_PATH

@@ -44,6 +44,7 @@ import merail.life.core.INotificationsPermissionRequester
 import merail.life.core.NavigationDestination
 import merail.life.core.extensions.activity
 import merail.life.core.extensions.isNavigationBarEnabled
+import merail.life.core.extensions.rerunApp
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
 import merail.life.design.selectedTabColor
@@ -71,7 +72,24 @@ fun HomeScreen(
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+
     val state = viewModel.uiState.collectAsState().value
+
+    when (state) {
+        is HomeUiState.UnauthorizedException -> LaunchedEffect(null) {
+            context.rerunApp()
+        }
+        is HomeUiState.CommonError -> LaunchedEffect(null) {
+            onError(state.exception)
+        }
+        is HomeUiState.Success -> LaunchedEffect(null) {
+            (context.activity as? INotificationsPermissionRequester)?.requestPermission()
+        }
+        is HomeUiState.None,
+        is HomeUiState.Loading,
+        -> Unit
+    }
 
     if (state is HomeUiState.Success) {
         (LocalContext.current.activity as? INotificationsPermissionRequester)?.requestPermission()
@@ -86,12 +104,6 @@ fun HomeScreen(
     val onSelectorClick = remember {
         { selectorFilter: SelectorFilter ->
             navigateToSelector(selectorFilter.toModel())
-        }
-    }
-
-    if (state is HomeUiState.Error) {
-        LaunchedEffect(null) {
-            onError(state.exception)
         }
     }
 

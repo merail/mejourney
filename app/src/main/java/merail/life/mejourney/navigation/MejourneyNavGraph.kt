@@ -22,7 +22,6 @@ import merail.life.auth.impl.ui.passwordCreation.PasswordCreationDestination
 import merail.life.auth.impl.ui.passwordCreation.PasswordCreationScreen
 import merail.life.auth.impl.ui.passwordEnter.PasswordEnterDestination
 import merail.life.auth.impl.ui.passwordEnter.PasswordEnterScreen
-import merail.life.core.UnauthorizedException
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
 import merail.life.home.content.ContentDestination
@@ -228,11 +227,7 @@ internal fun MejourneyNavHost(
 
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
-                    if (it is UnauthorizedException) {
-                        navController.navigate(EmailInputDestination.routeWithArgs)
-                    } else {
-                        navController.navigateToError(it)
-                    }
+                    navController.navigateToError(it)
                 }
             }
 
