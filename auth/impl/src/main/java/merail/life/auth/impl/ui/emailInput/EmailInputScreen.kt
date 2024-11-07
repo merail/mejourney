@@ -27,19 +27,10 @@ import merail.life.auth.impl.R
 import merail.life.auth.impl.ui.emailInput.state.EmailAuthState
 import merail.life.auth.impl.ui.emailInput.state.EmailValueState
 import merail.life.auth.impl.ui.emailInput.state.needToBlockUi
-import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.BlockingSurface
 import merail.life.design.components.ContinueButton
 import merail.life.design.styles.TextFieldStyle
-
-object EmailInputDestination : NavigationDestination {
-    override val route = "emailInput"
-
-    const val EMAIL_ARG = "email"
-
-    val routeWithArgs = "$route?$EMAIL_ARG={$EMAIL_ARG}"
-}
 
 @Composable
 fun EmailInputScreen(

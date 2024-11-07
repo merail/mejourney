@@ -40,16 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import merail.life.auth.impl.R
 import merail.life.auth.impl.ui.otpInput.state.OtpValueState
-import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
-
-object OtpInputDestination : NavigationDestination {
-    override val route = "otpInput"
-
-    const val EMAIL_ARG = "email"
-
-    val routeWithArgs = "$route/{$EMAIL_ARG}"
-}
 
 @Composable
 fun OtpInputScreen(

@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import merail.life.core.NavigationDestination
 import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
@@ -25,14 +24,6 @@ import merail.life.design.components.Loading
 import merail.life.home.model.ContentItem
 import merail.life.home.model.IMAGE_DELIMITER
 import merail.life.home.model.splitWithImages
-
-object ContentDestination : NavigationDestination {
-    override val route = "content"
-
-    const val CONTENT_ID_ARG = "contentId"
-
-    val routeWithArgs = "$route/{$CONTENT_ID_ARG}"
-}
 
 @Composable
 fun ContentScreen(

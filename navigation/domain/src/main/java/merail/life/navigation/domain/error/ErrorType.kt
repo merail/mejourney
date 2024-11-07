@@ -1,14 +1,14 @@
-package merail.life.mejourney.error
+package merail.life.navigation.domain.error
 
 import merail.life.core.NoInternetConnectionException
 
-internal enum class ErrorType {
+enum class ErrorType {
     INTERNET_CONNECTION,
     OTHER,
     ;
 }
 
-internal fun Throwable?.toType() = when (this) {
+fun Throwable?.toType() = when (this) {
     is NoInternetConnectionException -> ErrorType.INTERNET_CONNECTION
     else -> ErrorType.OTHER
 }

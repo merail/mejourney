@@ -3,6 +3,7 @@ package merail.life.home.content
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
 import merail.life.data.model.ContentModel
+import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +21,7 @@ class ContentViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val contentId: String = checkNotNull(savedStateHandle[ContentDestination.CONTENT_ID_ARG])
+    private val contentId = checkNotNull(savedStateHandle.toRoute<NavigationRoute.Content>().contentId)
 
     val uiState: StateFlow<ContentUiState> = dataRepository
         .getContent(contentId)

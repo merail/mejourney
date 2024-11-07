@@ -17,7 +17,8 @@ import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import merail.life.core.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
-import merail.life.mejourney.navigation.getRouteIfExists
+import merail.life.navigation.domain.NavigationRoute
+import merail.life.navigation.domain.getRouteIfExists
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
 
@@ -29,7 +30,7 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
         requestedPermission = Manifest.permission.POST_NOTIFICATIONS,
     )
 
-    private lateinit var intentRoute: MutableState<String?>
+    private lateinit var intentRoute: MutableState<NavigationRoute?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

@@ -41,7 +41,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.INotificationsPermissionRequester
-import merail.life.core.NavigationDestination
 import merail.life.core.extensions.activity
 import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.core.extensions.rerunApp
@@ -60,10 +59,6 @@ import merail.life.home.model.HomeItem
 import merail.life.home.model.SelectorFilter
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
-
-object HomeDestination : NavigationDestination {
-    override val route = "home"
-}
 
 @Composable
 fun HomeScreen(

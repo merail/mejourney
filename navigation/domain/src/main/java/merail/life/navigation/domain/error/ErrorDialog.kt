@@ -1,4 +1,4 @@
-package merail.life.mejourney.error
+package merail.life.navigation.domain.error
 
 import android.view.Gravity
 import android.view.WindowManager
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -22,22 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
-import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
-import merail.life.design.R
 import merail.life.design.cardColors
+import merail.life.navigation.domain.R
 
-object ErrorDestination : NavigationDestination {
-    override val route = "error"
-
-    const val ERROR_TYPE_ARG = "errorType"
-
-    val routeWithArgs = "$route/{$ERROR_TYPE_ARG}"
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ErrorDialog(
+fun ErrorDialog(
     errorType: ErrorType,
     onDismiss: () -> Unit,
 ) {
@@ -70,7 +59,7 @@ internal fun ErrorDialog(
                         .weight(1f),
                 ) {
                     Text(
-                        text = stringResource(merail.life.mejourney.R.string.error_title),
+                        text = stringResource(R.string.error_title),
                         style = MejourneyTheme.typography.titleMedium,
                     )
                     Text(
@@ -80,7 +69,7 @@ internal fun ErrorDialog(
                 }
 
                 Image(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
+                    imageVector = ImageVector.vectorResource(merail.life.design.R.drawable.ic_cross),
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.Top)
@@ -95,6 +84,6 @@ internal fun ErrorDialog(
 
 private val ErrorType.message: Int
     get() = when (this) {
-        ErrorType.INTERNET_CONNECTION -> merail.life.mejourney.R.string.error_internet_connection_subtitle
-        ErrorType.OTHER -> merail.life.mejourney.R.string.error_common_subtitle
+        ErrorType.INTERNET_CONNECTION -> R.string.error_internet_connection_subtitle
+        ErrorType.OTHER -> R.string.error_common_subtitle
     }

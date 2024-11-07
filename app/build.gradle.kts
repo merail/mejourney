@@ -87,6 +87,8 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":design"))
+    implementation(project(":navigation:graph"))
+    implementation(project(":navigation:domain"))
     implementation(project(":data"))
     implementation(project(":splash"))
     implementation(project(":home"))

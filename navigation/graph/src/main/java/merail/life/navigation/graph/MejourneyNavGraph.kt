@@ -1,4 +1,4 @@
-package merail.life.mejourney.navigation
+package merail.life.navigation.graph
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -9,39 +9,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import androidx.navigation.navArgument
-import merail.life.auth.impl.ui.emailInput.EmailInputDestination
 import merail.life.auth.impl.ui.emailInput.EmailInputScreen
-import merail.life.auth.impl.ui.otpInput.OtpInputDestination
 import merail.life.auth.impl.ui.otpInput.OtpInputScreen
-import merail.life.auth.impl.ui.passwordCreation.PasswordCreationDestination
 import merail.life.auth.impl.ui.passwordCreation.PasswordCreationScreen
-import merail.life.auth.impl.ui.passwordEnter.PasswordEnterDestination
 import merail.life.auth.impl.ui.passwordEnter.PasswordEnterScreen
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
-import merail.life.home.content.ContentDestination
 import merail.life.home.content.ContentScreen
-import merail.life.home.main.HomeDestination
 import merail.life.home.main.HomeScreen
-import merail.life.home.selector.SelectorDestination
 import merail.life.home.selector.SelectorScreen
-import merail.life.mejourney.error.ErrorDestination
-import merail.life.mejourney.error.ErrorDialog
-import merail.life.mejourney.error.ErrorType
-import merail.life.splash.SplashDestination
+import merail.life.navigation.domain.NavigationRoute
+import merail.life.navigation.domain.addOnPushNotificationListener
+import merail.life.navigation.domain.error.ErrorDialog
+import merail.life.navigation.domain.errorType
+import merail.life.navigation.domain.navigateToError
 import merail.life.splash.SplashScreen
 
 private const val TAG = "MejourneyNavHost"
 
 @Composable
-internal fun MejourneyNavHost(
+fun MejourneyNavHost(
     navController: NavHostController,
-    intentRoute: MutableState<String?>,
+    intentRoute: MutableState<NavigationRoute?>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -56,12 +48,10 @@ internal fun MejourneyNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = SplashDestination.route,
+        startDestination = NavigationRoute.Splash,
         modifier = modifier,
     ) {
-        composable(
-            route = SplashDestination.route,
-        ) {
+        composable<NavigationRoute.Splash> {
 
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
@@ -71,7 +61,7 @@ internal fun MejourneyNavHost(
 
             val navigateToAuth: (Throwable?) -> Unit = remember {
                 {
-                    navController.navigate("${EmailInputDestination.route}?${EmailInputDestination.EMAIL_ARG}=")
+                    navController.navigate(NavigationRoute.Email(null))
                     it?.let {
                         navController.navigateToError(it)
                     }
@@ -80,7 +70,7 @@ internal fun MejourneyNavHost(
 
             val navigateToHome: (Throwable?) -> Unit = remember {
                 {
-                    navController.navigate(HomeDestination.route)
+                    navController.navigate(NavigationRoute.Home)
                     it?.let {
                         navController.navigateToError(it)
                     }
@@ -93,16 +83,7 @@ internal fun MejourneyNavHost(
                 navigateToHome = navigateToHome,
             )
         }
-        composable(
-            route = EmailInputDestination.routeWithArgs,
-
-            arguments = listOf(
-                element = navArgument(EmailInputDestination.EMAIL_ARG) {
-                    nullable = true
-                    type = NavType.StringType
-                },
-            ),
-        ) {
+        composable<NavigationRoute.Email> {
             BackHandler {
                 context.activity?.moveTaskToBack(true)
             }
@@ -115,13 +96,13 @@ internal fun MejourneyNavHost(
 
             val navigateToPasswordEnter: (String) -> Unit = remember {
                 {
-                    navController.navigate("${PasswordEnterDestination.route}/$it")
+                    navController.navigate(NavigationRoute.PasswordEnter(it))
                 }
             }
 
             val navigateToOtp: (String) -> Unit = remember {
                 {
-                    navController.navigate("${OtpInputDestination.route}/$it")
+                    navController.navigate(NavigationRoute.OtpInput(it))
                 }
             }
 
@@ -131,14 +112,7 @@ internal fun MejourneyNavHost(
                 navigateToOtp = navigateToOtp,
             )
         }
-        composable(
-            route = PasswordEnterDestination.routeWithArgs,
-            arguments = listOf(
-                element = navArgument(PasswordEnterDestination.EMAIL_ARG) {
-                    type = NavType.StringType
-                },
-            ),
-        ) {
+        composable<NavigationRoute.PasswordEnter> {
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
                     navController.navigateToError(it)
@@ -147,13 +121,13 @@ internal fun MejourneyNavHost(
 
             val navigateToBack: (String) -> Unit = remember {
                 {
-                    navController.navigate("${EmailInputDestination.route}?${EmailInputDestination.EMAIL_ARG}=$it")
+                    navController.navigate(NavigationRoute.Email(it))
                 }
             }
 
             val navigateToHome: () -> Unit = remember {
                 {
-                    navController.navigate(HomeDestination.route)
+                    navController.navigate(NavigationRoute.Home)
                 }
             }
 
@@ -163,24 +137,17 @@ internal fun MejourneyNavHost(
                 navigateToHome = navigateToHome,
             )
         }
-        composable(
-            route = OtpInputDestination.routeWithArgs,
-            arguments = listOf(
-                element = navArgument(OtpInputDestination.EMAIL_ARG) {
-                    type = NavType.StringType
-                },
-            ),
-        ) {
+        composable<NavigationRoute.OtpInput> {
 
             val navigateToBack: (String) -> Unit = remember {
                 {
-                    navController.navigate("${EmailInputDestination.route}?${EmailInputDestination.EMAIL_ARG}=$it")
+                    navController.navigate(NavigationRoute.Email(it))
                 }
             }
 
             val navigateToPassword: (String) -> Unit = remember {
                 {
-                    navController.navigate("${PasswordCreationDestination.route}/$it")
+                    navController.navigate(NavigationRoute.PasswordCreation(it))
                 }
             }
 
@@ -189,14 +156,7 @@ internal fun MejourneyNavHost(
                 navigateToPassword = navigateToPassword,
             )
         }
-        composable(
-            route = PasswordCreationDestination.routeWithArgs,
-            arguments = listOf(
-                element = navArgument(PasswordCreationDestination.EMAIL_ARG) {
-                    type = NavType.StringType
-                },
-            ),
-        ) {
+        composable<NavigationRoute.PasswordCreation> {
             BackHandler {
                 context.activity?.moveTaskToBack(true)
             }
@@ -209,7 +169,7 @@ internal fun MejourneyNavHost(
 
             val navigateToHome: () -> Unit = remember {
                 {
-                    navController.navigate(HomeDestination.route)
+                    navController.navigate(NavigationRoute.Home)
                 }
             }
 
@@ -218,9 +178,7 @@ internal fun MejourneyNavHost(
                 navigateToHome = navigateToHome,
             )
         }
-        composable(
-            route = HomeDestination.route,
-        ) {
+        composable<NavigationRoute.Home> {
             BackHandler {
                 context.activity?.moveTaskToBack(true)
             }
@@ -231,15 +189,15 @@ internal fun MejourneyNavHost(
                 }
             }
 
-            val navigateToSelector: (SelectorFilterType?) -> Unit = remember {
+            val navigateToSelector: (SelectorFilterType) -> Unit = remember {
                 {
-                    navController.navigate("${SelectorDestination.route}/$it")
+                    navController.navigate(NavigationRoute.Selector(it))
                 }
             }
 
             val navigateToContent: (String?) -> Unit = remember {
                 {
-                    navController.navigate("${ContentDestination.route}/$it")
+                    navController.navigate(NavigationRoute.Content(it))
                 }
             }
 
@@ -249,14 +207,7 @@ internal fun MejourneyNavHost(
                 navigateToContent = navigateToContent,
             )
         }
-        composable(
-            route = SelectorDestination.routeWithArgs,
-            arguments = listOf(
-                element = navArgument(SelectorDestination.SELECTOR_FILTER_ARG) {
-                    type = NavType.EnumType(SelectorFilterType::class.java)
-                },
-            ),
-        ) {
+        composable<NavigationRoute.Selector> {
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
                     navController.popBackStack()
@@ -266,14 +217,14 @@ internal fun MejourneyNavHost(
 
             val navigateToContent: (String?) -> Unit = remember {
                 {
-                    navController.navigate("${ContentDestination.route}/$it")
+                    navController.navigate(NavigationRoute.Content(it))
                 }
             }
 
             val navigateToContentImmediately: (String?) -> Unit = remember {
                 {
                     navController.popBackStack()
-                    navController.navigate("${ContentDestination.route}/$it")
+                    navController.navigate(NavigationRoute.Content(it))
                 }
             }
 
@@ -283,14 +234,7 @@ internal fun MejourneyNavHost(
                 navigateToContentImmediately = navigateToContentImmediately,
             )
         }
-        composable(
-            route = ContentDestination.routeWithArgs,
-            arguments = listOf(
-                element = navArgument(ContentDestination.CONTENT_ID_ARG) {
-                    type = NavType.StringType
-                },
-            ),
-        ) {
+        composable<NavigationRoute.Content> {
             val navigateToError: (Throwable?) -> Unit = remember {
                 {
                     navController.popBackStack()
@@ -302,17 +246,11 @@ internal fun MejourneyNavHost(
                 navigateToError = navigateToError,
             )
         }
-        dialog(
-            route = ErrorDestination.routeWithArgs,
+        dialog<NavigationRoute.Error>(
             dialogProperties = DialogProperties(
                 dismissOnBackPress = false,
                 dismissOnClickOutside = false,
                 usePlatformDefaultWidth = false,
-            ),
-            arguments = listOf(
-                element = navArgument(ErrorDestination.ERROR_TYPE_ARG) {
-                    type = NavType.EnumType(ErrorType::class.java)
-                },
             ),
         ) {
 

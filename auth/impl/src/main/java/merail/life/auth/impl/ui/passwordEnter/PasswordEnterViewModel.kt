@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.passwordCreation.state.PasswordAuthValidator
 import merail.life.auth.impl.ui.passwordCreation.state.PasswordValueState
 import merail.life.auth.impl.ui.passwordEnter.state.AuthByPasswordState
+import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +28,7 @@ class PasswordEnterViewModel @Inject constructor(
         private const val TAG = "PasswordEnterViewModel"
     }
 
-    val email: String = checkNotNull(savedStateHandle[PasswordEnterDestination.EMAIL_ARG])
+    val email = savedStateHandle.toRoute<NavigationRoute.PasswordEnter>().email
 
     var authByPasswordState = mutableStateOf<AuthByPasswordState>(AuthByPasswordState.None)
         private set

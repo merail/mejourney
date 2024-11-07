@@ -2,12 +2,10 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.hilt.gradle)
-    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
-    namespace = "merail.life.home"
+    namespace = "merail.life.navigation.graph"
     compileSdk = 35
 
     defaultConfig {
@@ -30,20 +28,15 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    debugImplementation(libs.androidx.ui.tooling)
 
-    implementation(libs.kotlinx.immutable.collections)
+    implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.compose.shimmer)
-
-    implementation(project(":design"))
     implementation(project(":core"))
+    implementation(project(":design"))
     implementation(project(":navigation:domain"))
     implementation(project(":data"))
+    implementation(project(":splash"))
+    implementation(project(":home"))
+    implementation(project(":auth:api"))
+    implementation(project(":auth:impl"))
 }
