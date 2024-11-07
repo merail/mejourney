@@ -3,13 +3,14 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt.gradle)
     alias(libs.plugins.kotlin.kapt)
 }
 
 android {
     namespace = "merail.life.auth.impl"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30
@@ -58,10 +59,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
 }
 
 dependencies {
@@ -79,9 +76,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(files("libs/activation.jar"))
-    implementation(files("libs/additionnal.jar"))
-    implementation(files("libs/mail.jar"))
+    implementation(libs.android.mail)
+    implementation(libs.android.activation)
 
     implementation(project(":design"))
     implementation(project(":core"))

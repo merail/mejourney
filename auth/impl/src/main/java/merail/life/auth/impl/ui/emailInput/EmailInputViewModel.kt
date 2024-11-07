@@ -57,13 +57,13 @@ class EmailInputViewModel @Inject constructor(
     private fun checkIfUserExist() = viewModelScope.launch {
         emailAuthState.value = EmailAuthState.Loading
         runCatching {
-            Log.d(TAG, "Проверка существования пользователя ${emailAuthState.value}. Старт")
+            Log.d(TAG, "Проверка существования пользователя ${emailValueState.value}. Старт")
             authRepository.isUserExist(emailValueState.value)
         }.onFailure {
-            Log.w(TAG, "Проверка существования пользователя ${emailAuthState.value}. Ошибка", it)
+            Log.w(TAG, "Проверка существования пользователя ${emailValueState.value}. Ошибка", it)
             emailAuthState.value = EmailAuthState.Error(it.cause)
         }.onSuccess {
-            Log.d(TAG, "Проверка существования пользователя ${emailAuthState.value}. Успех")
+            Log.d(TAG, "Проверка существования пользователя ${emailValueState.value}. Успех")
             if (it) {
                 emailAuthState.value = EmailAuthState.UserExists
             } else {

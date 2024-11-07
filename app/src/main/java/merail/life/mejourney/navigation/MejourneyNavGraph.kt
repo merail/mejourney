@@ -71,7 +71,7 @@ internal fun MejourneyNavHost(
 
             val navigateToAuth: (Throwable?) -> Unit = remember {
                 {
-                    navController.navigate(EmailInputDestination.routeWithArgs)
+                    navController.navigate("${EmailInputDestination.route}?${EmailInputDestination.EMAIL_ARG}=")
                     it?.let {
                         navController.navigateToError(it)
                     }
