@@ -45,8 +45,8 @@ fun NavController.addOnPushNotificationListener(
                     navigate(it)
                     intentRoute.value = null
                 }
-                hasRoute(NavigationRoute.Selector::class) -> {
-                    if ((it as NavigationRoute.Content).contentId?.contains(currentContentId) == false) {
+                hasRoute(NavigationRoute.Content::class) -> {
+                    if (currentContentId !in (it as NavigationRoute.Content).contentId.orEmpty()) {
                         navigate(it)
                     }
                     intentRoute.value = null
