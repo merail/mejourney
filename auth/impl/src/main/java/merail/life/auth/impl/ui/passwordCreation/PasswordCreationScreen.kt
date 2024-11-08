@@ -32,9 +32,7 @@ fun PasswordCreationScreen(
     val state = viewModel.userCreatingState.value
 
     when (state) {
-        is UserCreatingState.Error -> LaunchedEffect(null) {
-            onError(state.exception)
-        }
+        is UserCreatingState.Error -> onError(state.exception)
         is UserCreatingState.Success -> LaunchedEffect(null) {
             navigateToHome()
         }

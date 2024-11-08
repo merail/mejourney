@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -36,8 +37,18 @@ fun ErrorDialog(
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
     }
 
+    val state = rememberSwipeToDismissBoxState()
+
+    when (state.targetValue) {
+        SwipeToDismissBoxValue.StartToEnd,
+        SwipeToDismissBoxValue.EndToStart,
+        -> onDismiss()
+        SwipeToDismissBoxValue.Settled,
+        -> Unit
+    }
+
     SwipeToDismissBox(
-        state = rememberSwipeToDismissBoxState(),
+        state = state,
         backgroundContent = {},
     ) {
         Card(

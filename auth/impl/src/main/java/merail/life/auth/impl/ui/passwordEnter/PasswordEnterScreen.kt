@@ -43,9 +43,7 @@ fun PasswordEnterScreen(
 
     val state = viewModel.authByPasswordState.value
     when (state) {
-        is AuthByPasswordState.Error -> LaunchedEffect(null) {
-            onError(state.exception)
-        }
+        is AuthByPasswordState.Error -> onError(state.exception)
         is AuthByPasswordState.Success -> LaunchedEffect(null) {
             navigateToHome()
         }
