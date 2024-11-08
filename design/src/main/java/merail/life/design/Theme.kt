@@ -1,7 +1,6 @@
 package merail.life.design
 
 import android.os.Build
-import android.view.View
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
@@ -21,7 +20,7 @@ import merail.life.core.extensions.activity
 @Composable
 fun MejourneyTheme(content: @Composable () -> Unit) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-        LocalView.current.setNavigationBarColor()
+        NavigationBarColor()
     }
 
     val colors = remember {
@@ -74,9 +73,11 @@ object MejourneyTheme {
 
 @Suppress("DEPRECATION")
 @Composable
-private fun View.setNavigationBarColor() {
-    val navigationBarColor = MejourneyTheme.colors.graphicInversePrimary.toArgb()
-    SideEffect {
-        context.activity?.window?.navigationBarColor = navigationBarColor
+private fun NavigationBarColor() {
+    LocalView.current.run {
+        val navigationBarColor = MejourneyTheme.colors.graphicInversePrimary.toArgb()
+        SideEffect {
+            context.activity?.window?.navigationBarColor = navigationBarColor
+        }
     }
 }
