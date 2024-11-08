@@ -19,6 +19,7 @@ val NavBackStackEntry.errorType: ErrorType
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getSerializable(NavigationRoute.Error.ERROR_TYPE_KEY, ErrorType::class.java) as ErrorType
         } else {
+            @Suppress("DEPRECATION")
             arguments?.getSerializable(NavigationRoute.Error.ERROR_TYPE_KEY) as ErrorType
         }
     } else {
