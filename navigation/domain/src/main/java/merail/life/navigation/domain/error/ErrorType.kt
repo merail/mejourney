@@ -1,7 +1,9 @@
 package merail.life.navigation.domain.error
 
+import androidx.annotation.Keep
 import merail.life.core.NoInternetConnectionException
 
+@Keep
 enum class ErrorType {
     INTERNET_CONNECTION,
     OTHER,
