@@ -66,6 +66,9 @@ captures/
 .idea/other.xml
 .idea/deviceManager.xml
 
+# Kotlin compiler
+.kotlin
+
 # Keystore files
 *.jks
 *.keystore

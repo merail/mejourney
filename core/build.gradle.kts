@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "merail.life.core"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30

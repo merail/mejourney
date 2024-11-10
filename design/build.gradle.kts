@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "merail.life.design"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30
@@ -22,10 +23,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 }
 

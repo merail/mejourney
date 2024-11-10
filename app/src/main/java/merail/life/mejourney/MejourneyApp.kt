@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import merail.life.mejourney.navigation.MejourneyNavHost
+import merail.life.navigation.domain.NavigationRoute
+import merail.life.navigation.graph.MejourneyNavHost
 
 @Composable
 internal fun MejourneyApp(
     navController: NavHostController = rememberNavController(),
-    intentRoute: MutableState<String?>,
+    intentRoute: MutableState<NavigationRoute?>,
 ) {
     MejourneyNavHost(
         navController = navController,

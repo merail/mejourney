@@ -1,6 +1,5 @@
 package merail.life.home.selector
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.core.NavigationDestination
 import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.core.extensions.isSingle
 import merail.life.design.MejourneyTheme
@@ -33,14 +31,6 @@ import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
 import merail.life.design.components.Loading
 import merail.life.home.model.HomeItem
-
-object SelectorDestination : NavigationDestination {
-    override val route = "selector"
-
-    const val SELECTOR_FILTER_ARG = "selectorFilter"
-
-    val routeWithArgs = "$route/{$SELECTOR_FILTER_ARG}"
-}
 
 @Composable
 fun SelectorScreen(
@@ -66,7 +56,6 @@ fun SelectorScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(
     items: ImmutableList<HomeItem>,

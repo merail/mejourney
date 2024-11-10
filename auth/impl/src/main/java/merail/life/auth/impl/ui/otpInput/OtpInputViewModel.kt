@@ -5,11 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.otpInput.state.OtpValidator
 import merail.life.auth.impl.ui.otpInput.state.OtpValueState
-import merail.life.auth.impl.ui.passwordCreation.PasswordCreationDestination
+import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +19,7 @@ class OtpInputViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
 
-    val email: String = checkNotNull(savedStateHandle[PasswordCreationDestination.EMAIL_ARG])
+    val email = savedStateHandle.toRoute<NavigationRoute.OtpInput>().email
 
     var otpValueState by mutableStateOf(OtpValueState())
         private set

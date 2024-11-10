@@ -7,12 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.emailInput.state.EmailAuthState
 import merail.life.auth.impl.ui.emailInput.state.EmailValidator
 import merail.life.auth.impl.ui.emailInput.state.EmailValueState
+import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +27,7 @@ class EmailInputViewModel @Inject constructor(
         private const val TAG = "EmailInputViewModel"
     }
 
-    val email: String? = savedStateHandle[EmailInputDestination.EMAIL_ARG]
+    val email = savedStateHandle.toRoute<NavigationRoute.Email>().email
 
     var emailAuthState = mutableStateOf<EmailAuthState>(EmailAuthState.None)
         private set
@@ -57,13 +59,13 @@ class EmailInputViewModel @Inject constructor(
     private fun checkIfUserExist() = viewModelScope.launch {
         emailAuthState.value = EmailAuthState.Loading
         runCatching {
-            Log.d(TAG, "Проверка существования пользователя ${emailAuthState.value}. Старт")
+            Log.d(TAG, "Проверка существования пользователя ${emailValueState.value}. Старт")
             authRepository.isUserExist(emailValueState.value)
         }.onFailure {
-            Log.w(TAG, "Проверка существования пользователя ${emailAuthState.value}. Ошибка", it)
+            Log.w(TAG, "Проверка существования пользователя ${emailValueState.value}. Ошибка", it)
             emailAuthState.value = EmailAuthState.Error(it.cause)
         }.onSuccess {
-            Log.d(TAG, "Проверка существования пользователя ${emailAuthState.value}. Успех")
+            Log.d(TAG, "Проверка существования пользователя ${emailValueState.value}. Успех")
             if (it) {
                 emailAuthState.value = EmailAuthState.UserExists
             } else {

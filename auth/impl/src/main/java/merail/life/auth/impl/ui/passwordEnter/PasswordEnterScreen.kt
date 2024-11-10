@@ -26,18 +26,9 @@ import merail.life.auth.impl.R
 import merail.life.auth.impl.ui.common.PasswordField
 import merail.life.auth.impl.ui.passwordEnter.state.AuthByPasswordState
 import merail.life.auth.impl.ui.passwordEnter.state.needToBlockUi
-import merail.life.core.NavigationDestination
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.BlockingSurface
 import merail.life.design.components.ContinueButton
-
-object PasswordEnterDestination : NavigationDestination {
-    override val route = "passwordEnter"
-
-    const val EMAIL_ARG = "email"
-
-    val routeWithArgs = "$route/{$EMAIL_ARG}"
-}
 
 @Composable
 fun PasswordEnterScreen(
@@ -52,9 +43,7 @@ fun PasswordEnterScreen(
 
     val state = viewModel.authByPasswordState.value
     when (state) {
-        is AuthByPasswordState.Error -> LaunchedEffect(null) {
-            onError(state.exception)
-        }
+        is AuthByPasswordState.Error -> onError(state.exception)
         is AuthByPasswordState.Success -> LaunchedEffect(null) {
             navigateToHome()
         }

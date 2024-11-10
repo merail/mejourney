@@ -1,13 +1,14 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt.gradle)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "merail.life.home"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30
@@ -25,10 +26,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
 }
 
 dependencies {
@@ -40,12 +37,13 @@ dependencies {
     implementation(libs.kotlinx.immutable.collections)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.compose.shimmer)
 
     implementation(project(":design"))
     implementation(project(":core"))
+    implementation(project(":navigation:domain"))
     implementation(project(":data"))
 }

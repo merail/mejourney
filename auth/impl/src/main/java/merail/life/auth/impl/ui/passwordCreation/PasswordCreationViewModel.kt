@@ -7,12 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.passwordCreation.state.PasswordCreationValidator
 import merail.life.auth.impl.ui.passwordCreation.state.PasswordValueState
 import merail.life.auth.impl.ui.passwordCreation.state.UserCreatingState
+import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +27,7 @@ class PasswordCreationViewModel @Inject constructor(
         private const val TAG = "PasswordCreationViewModel"
     }
 
-    private val email: String = checkNotNull(savedStateHandle[PasswordCreationDestination.EMAIL_ARG])
+    private val email = savedStateHandle.toRoute<NavigationRoute.PasswordCreation>().email
 
     var userCreatingState = mutableStateOf<UserCreatingState>(UserCreatingState.None)
         private set

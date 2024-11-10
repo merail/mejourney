@@ -3,6 +3,7 @@ package merail.life.home.selector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
 import merail.life.data.model.HomeElementModel
-import merail.life.data.model.SelectorFilterType
+import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,13 +21,11 @@ class SelectorViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val selectorFilter: SelectorFilterType = checkNotNull(
-        value = savedStateHandle[SelectorDestination.SELECTOR_FILTER_ARG],
-    )
+    private val selectorFilter = savedStateHandle.toRoute<NavigationRoute.Selector>()
 
     val uiState: StateFlow<SelectorUiState> = dataRepository
         .getHomeElementsFromDatabase(
-            selectorFilter = selectorFilter,
+            selectorFilter = selectorFilter.selectorFilterType,
         )
         .map(RequestResult<List<HomeElementModel>>::toState)
         .stateIn(viewModelScope, SharingStarted.Lazily, SelectorUiState.None)

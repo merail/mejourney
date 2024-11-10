@@ -8,12 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
-import merail.life.core.NavigationDestination
 import merail.life.core.extensions.activity
-
-object SplashDestination : NavigationDestination {
-    override val route = "splash"
-}
 
 @Composable
 fun SplashScreen(
