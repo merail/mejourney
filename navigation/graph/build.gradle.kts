@@ -24,6 +24,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        resources {
+            pickFirsts += "/META-INF/{NOTICE.md,LICENSE.md}"
+        }
+    }
 }
 
 dependencies {

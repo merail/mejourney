@@ -60,6 +60,12 @@ android {
         compose = true
         buildConfig = true
     }
+
+    packaging {
+        resources {
+            pickFirsts += "/META-INF/{NOTICE.md,LICENSE.md}"
+        }
+    }
 }
 
 dependencies {
