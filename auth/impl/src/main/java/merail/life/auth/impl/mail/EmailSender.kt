@@ -1,4 +1,4 @@
-package merail.life.auth.impl.repository
+package merail.life.auth.impl.mail
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,9 @@ internal class EmailSender(
 
     private var code = 0
 
-    suspend fun sendOtp(email: String) = withContext(Dispatchers.IO) {
+    suspend fun sendOtp(
+        email: String,
+    ) = withContext(Dispatchers.IO) {
         val mimeMessage = MimeMessage(session)
         mimeMessage.addRecipient(Message.RecipientType.TO, InternetAddress(email))
         mimeMessage.subject = context.getString(R.string.email_title)

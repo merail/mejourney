@@ -1,23 +1,15 @@
-package merail.life.auth.impl.repository
+package merail.life.auth.impl.mail
 
-import merail.life.auth.impl.BuildConfig
-import javax.mail.Authenticator
-import javax.mail.PasswordAuthentication
 import javax.mail.Session
 import kotlin.reflect.KProperty
 
 internal class EmailSessionCreator {
     operator fun getValue(thisRef: Any?, property: KProperty<*>): Session {
-        val stringSenderEmail = BuildConfig.HOST_EMAIL
-        val stringPasswordSenderEmail = BuildConfig.HOST_PASSWORD
-
-        val stringHost = "smtp.gmail.com"
-
         val properties = System.getProperties()
 
         properties["mail.transport.protocol"] = "smtp"
-        properties["mail.host"] = stringHost
-        properties["mail.smtp.host"] = stringHost
+        properties["mail.host"] = "smtp.gmail.com"
+        properties["mail.smtp.host"] = "smtp.gmail.com"
         properties["mail.smtp.port"] = "465"
         properties["mail.smtp.socketFactory.fallback"] = "false"
         properties["mail.smtp.quitwait"] = "false"
@@ -30,12 +22,7 @@ internal class EmailSessionCreator {
 
         val session = Session.getInstance(
             properties,
-            object : Authenticator() {
-                override fun getPasswordAuthentication() = PasswordAuthentication(
-                    stringSenderEmail,
-                    stringPasswordSenderEmail,
-                )
-            },
+            PasswordAuthenticator,
         )
 
         return session

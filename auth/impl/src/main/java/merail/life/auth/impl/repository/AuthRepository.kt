@@ -1,15 +1,19 @@
 package merail.life.auth.impl.repository
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.remoteconfig.ConfigUpdate
+import com.google.firebase.remoteconfig.ConfigUpdateListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.api.model.UserAuthorizationState
-import merail.life.auth.impl.BuildConfig
 import merail.life.auth.impl.R
+import merail.life.auth.impl.mail.EmailSender
+import merail.life.auth.impl.mail.PasswordAuthenticator
 import merail.life.core.extensions.toUnit
 import javax.inject.Inject
 
@@ -20,16 +24,14 @@ internal class AuthRepository @Inject constructor(
 ) : IAuthRepository {
 
     companion object {
-        private const val REGISTRATION_CONFIG_KEY = "isEmailRegistrationEnabled"
+        private const val EMAIL_REGISTRATION_STATE_CONFIG_KEY = "isEmailRegistrationEnabled"
+        private const val HOST_EMAIL_CONFIG_KEY = "hostEmail"
+        private const val HOST_PASSWORD_CONFIG_KEY = "hostPassword"
     }
 
     init {
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) {
-                0
-            } else {
-                3600
-            }
+            minimumFetchIntervalInSeconds = 0
         }
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
         firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
@@ -37,8 +39,11 @@ internal class AuthRepository @Inject constructor(
 
     override suspend fun getUserAuthorizationState() = withContext(Dispatchers.IO) {
         firebaseRemoteConfig.fetchAndActivate().await().run {
+            subscribeToRemoteConfigUpdates()
             val isEmailRegistrationEnabled = isEmailRegistrationEnabled()
             if (isEmailRegistrationEnabled) {
+                PasswordAuthenticator.hostEmail = getHostEmail()
+                PasswordAuthenticator.hostPassword = getHostPassword()
                 val isUserAuthorizedByEmail = isUserAuthorizedByEmail()
                 if (isUserAuthorizedByEmail) {
                     UserAuthorizationState.AUTHORIZED
@@ -88,7 +93,26 @@ internal class AuthRepository @Inject constructor(
         firebaseAuth.signInAnonymously().await().toUnit()
     }
 
-    private fun isEmailRegistrationEnabled() = firebaseRemoteConfig.getBoolean(REGISTRATION_CONFIG_KEY)
+    private fun subscribeToRemoteConfigUpdates() = firebaseRemoteConfig.addOnConfigUpdateListener(
+        object : ConfigUpdateListener {
+            override fun onUpdate(configUpdate : ConfigUpdate) {
+                firebaseRemoteConfig.activate().addOnCompleteListener {
+                    PasswordAuthenticator.hostEmail = getHostEmail()
+                    PasswordAuthenticator.hostPassword = getHostPassword()
+                }
+            }
+
+            override fun onError(error : FirebaseRemoteConfigException) {
+                error.printStackTrace()
+            }
+        },
+    )
+
+    private fun isEmailRegistrationEnabled() = firebaseRemoteConfig.getBoolean(EMAIL_REGISTRATION_STATE_CONFIG_KEY)
+
+    private fun getHostEmail() = firebaseRemoteConfig.getString(HOST_EMAIL_CONFIG_KEY)
+
+    private fun getHostPassword() = firebaseRemoteConfig.getString(HOST_PASSWORD_CONFIG_KEY)
 
     private fun isUserAuthorizedByEmail() = firebaseAuth.currentUser?.email.isNullOrBlank().not()
 }
