@@ -13,8 +13,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import merail.life.auth.api.IAuthRepository
+import merail.life.auth.impl.mail.EmailSender
 import merail.life.auth.impl.repository.AuthRepository
-import merail.life.auth.impl.repository.EmailSender
 import javax.inject.Singleton
 
 @Module

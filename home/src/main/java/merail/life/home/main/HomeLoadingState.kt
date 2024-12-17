@@ -9,45 +9,45 @@ import merail.life.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toHomeItems
 
-sealed class HomeUiState(
+sealed class HomeLoadingState(
     open val items: ImmutableList<HomeItem>,
 ) {
-    data object None : HomeUiState(persistentListOf())
+    data object None : HomeLoadingState(persistentListOf())
 
     data class Loading(
         override val items: ImmutableList<HomeItem>,
-    ) : HomeUiState(items)
+    ) : HomeLoadingState(items)
 
     data class UnauthorizedException(
         val exception: Throwable?,
         override val items: ImmutableList<HomeItem>,
-    ) : HomeUiState(items)
+    ) : HomeLoadingState(items)
 
     data class CommonError(
         val exception: Throwable?,
         override val items: ImmutableList<HomeItem>,
-    ) : HomeUiState(items)
+    ) : HomeLoadingState(items)
 
     data class Success(
         override val items: ImmutableList<HomeItem>,
-    ) : HomeUiState(items)
+    ) : HomeLoadingState(items)
 }
 
 internal fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
     is RequestResult.Error -> when {
-        error is UnauthorizedException -> HomeUiState.UnauthorizedException(
+        error is UnauthorizedException -> HomeLoadingState.UnauthorizedException(
             exception = error,
             items = data?.toHomeItems().orEmpty().toImmutableList(),
         )
-        else -> HomeUiState.CommonError(
+        else -> HomeLoadingState.CommonError(
             exception = error,
             items = data?.toHomeItems().orEmpty().toImmutableList(),
         )
     }
-    is RequestResult.InProgress -> HomeUiState.Loading(
+    is RequestResult.InProgress -> HomeLoadingState.Loading(
         items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
-    is RequestResult.Success -> HomeUiState.Success(
+    is RequestResult.Success -> HomeLoadingState.Success(
         items = data.toHomeItems().toImmutableList(),
     )
 }

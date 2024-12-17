@@ -8,35 +8,35 @@ import merail.life.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toHomeItems
 
-sealed class SelectorUiState(
+sealed class SelectionState(
     open val items: ImmutableList<HomeItem>,
 ) {
 
-    data object None: SelectorUiState(persistentListOf())
+    data object None: SelectionState(persistentListOf())
 
     data class Loading(
         override val items: ImmutableList<HomeItem>,
-    ): SelectorUiState(items)
+    ): SelectionState(items)
 
     data class Error(
         override val items: ImmutableList<HomeItem>,
         val exception: Throwable?,
-    ): SelectorUiState(items)
+    ): SelectionState(items)
 
     data class Success(
         override val items: ImmutableList<HomeItem>,
-    ): SelectorUiState(items)
+    ): SelectionState(items)
 }
 
 internal fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
-    is RequestResult.Error -> SelectorUiState.Error(
+    is RequestResult.Error -> SelectionState.Error(
         exception = error,
         items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
-    is RequestResult.InProgress -> SelectorUiState.Loading(
+    is RequestResult.InProgress -> SelectionState.Loading(
         items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
-    is RequestResult.Success -> SelectorUiState.Success(
+    is RequestResult.Success -> SelectionState.Success(
         items = data.toHomeItems().toImmutableList(),
     )
 }

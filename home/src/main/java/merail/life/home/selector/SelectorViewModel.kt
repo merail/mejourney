@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
@@ -23,10 +22,11 @@ class SelectorViewModel @Inject constructor(
 
     private val selectorFilter = savedStateHandle.toRoute<NavigationRoute.Selector>()
 
-    val uiState: StateFlow<SelectorUiState> = dataRepository
+    var selectionState = dataRepository
         .getHomeElementsFromDatabase(
             selectorFilter = selectorFilter.selectorFilterType,
         )
         .map(RequestResult<List<HomeElementModel>>::toState)
-        .stateIn(viewModelScope, SharingStarted.Lazily, SelectorUiState.None)
+        .stateIn(viewModelScope, SharingStarted.Lazily, SelectionState.None)
+        private set
 }

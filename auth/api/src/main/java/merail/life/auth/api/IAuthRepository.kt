@@ -27,4 +27,6 @@ interface IAuthRepository {
         email: String,
         password: String,
     )
+
+    fun isSnowfallEnabled(): Boolean
 }

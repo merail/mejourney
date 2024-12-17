@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.INotificationsPermissionRequester
@@ -72,21 +73,21 @@ fun HomeScreen(
     val state = viewModel.uiState.collectAsState().value
 
     when (state) {
-        is HomeUiState.UnauthorizedException -> LaunchedEffect(null) {
+        is HomeLoadingState.UnauthorizedException -> LaunchedEffect(null) {
             context.rerunApp()
         }
-        is HomeUiState.CommonError -> LaunchedEffect(null) {
+        is HomeLoadingState.CommonError -> LaunchedEffect(null) {
             onError(state.exception)
         }
-        is HomeUiState.Success -> LaunchedEffect(null) {
+        is HomeLoadingState.Success -> LaunchedEffect(null) {
             (context.activity as? INotificationsPermissionRequester)?.requestPermission()
         }
-        is HomeUiState.None,
-        is HomeUiState.Loading,
+        is HomeLoadingState.None,
+        is HomeLoadingState.Loading,
         -> Unit
     }
 
-    if (state is HomeUiState.Success) {
+    if (state is HomeLoadingState.Success) {
         (LocalContext.current.activity as? INotificationsPermissionRequester)?.requestPermission()
     }
 
@@ -104,6 +105,7 @@ fun HomeScreen(
 
     Content(
         state = state,
+        isSnowfallEnabled = viewModel.isSnowfallEnabled,
         navigateToSelector = onSelectorClick,
         navigateToContent = navigateToContent,
         onTabClick = onTabClick,
@@ -112,7 +114,8 @@ fun HomeScreen(
 
 @Composable
 private fun Content(
-    state: HomeUiState,
+    state: HomeLoadingState,
+    isSnowfallEnabled: Boolean,
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
@@ -120,7 +123,16 @@ private fun Content(
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .run {
+                if (isSnowfallEnabled) {
+                    snowfall(
+                        density = 0.005,
+                    )
+                } else {
+                    this
+                }
+            },
     ) {
         HomeLoader(state)
 
@@ -150,7 +162,7 @@ private fun Content(
 
 @Composable
 private fun HomeLoader(
-    state: HomeUiState,
+    state: HomeLoadingState,
 ) {
     if (state.items.isEmpty()) {
         Box(
@@ -161,7 +173,7 @@ private fun HomeLoader(
         }
     } else {
         AnimatedVisibility(
-            visible = state is HomeUiState.Loading,
+            visible = state is HomeLoadingState.Loading,
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {

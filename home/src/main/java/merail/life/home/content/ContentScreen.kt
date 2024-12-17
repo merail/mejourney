@@ -30,12 +30,12 @@ fun ContentScreen(
     navigateToError: (Throwable?) -> Unit,
     viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
 ) {
-    when (val uiState = viewModel.uiState.collectAsState().value) {
-        is ContentUiState.Loading -> Loading()
-        is ContentUiState.Error -> LaunchedEffect(null) {
+    when (val uiState = viewModel.contentLoadingState.collectAsState().value) {
+        is ContentLoadingState.Loading -> Loading()
+        is ContentLoadingState.Error -> LaunchedEffect(null) {
             navigateToError(uiState.exception)
         }
-        is ContentUiState.Success -> Content(uiState.item)
+        is ContentLoadingState.Success -> Content(uiState.item)
     }
 }
 

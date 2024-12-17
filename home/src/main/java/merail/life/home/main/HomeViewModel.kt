@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import merail.life.auth.api.IAuthRepository
 import merail.life.core.RequestResult
 import merail.life.data.IDataRepository
 import merail.life.data.model.HomeElementModel
@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val authRepository: IAuthRepository,
     private val dataRepository: IDataRepository,
 ) : ViewModel() {
 
@@ -25,9 +26,10 @@ class HomeViewModel @Inject constructor(
         private const val TAG = "HomeViewModel"
     }
 
-    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.None)
+    var uiState = MutableStateFlow<HomeLoadingState>(HomeLoadingState.None)
+        private set
 
-    val uiState: StateFlow<HomeUiState> = _uiState
+    val isSnowfallEnabled = authRepository.isSnowfallEnabled()
 
     private var _isInit: Boolean = true
 
@@ -36,14 +38,14 @@ class HomeViewModel @Inject constructor(
             dataRepository.getHomeElements().map(RequestResult<List<HomeElementModel>>::toState).collect {
                 if (_isInit) {
                     when (it) {
-                        is HomeUiState.Loading -> Log.d(TAG, "Получение списка элементов. Старт")
-                        is HomeUiState.UnauthorizedException -> Log.w(TAG, "Получение списка элементов. Ошибка авторизации", it.exception)
-                        is HomeUiState.CommonError -> Log.w(TAG, "Получение списка элементов. Ошибка", it.exception)
-                        is HomeUiState.Success -> Log.d(TAG, "Получение списка элементов. Успех")
-                        is HomeUiState.None,
+                        is HomeLoadingState.Loading -> Log.d(TAG, "Получение списка элементов. Старт")
+                        is HomeLoadingState.UnauthorizedException -> Log.w(TAG, "Получение списка элементов. Ошибка авторизации", it.exception)
+                        is HomeLoadingState.CommonError -> Log.w(TAG, "Получение списка элементов. Ошибка", it.exception)
+                        is HomeLoadingState.Success -> Log.d(TAG, "Получение списка элементов. Успех")
+                        is HomeLoadingState.None,
                         -> Unit
                     }
-                    _uiState.value = it
+                    uiState.value = it
                 }
             }
         }
@@ -56,7 +58,7 @@ class HomeViewModel @Inject constructor(
         dataRepository.getHomeElementsFromDatabase(
             tabFilter = filter.toModel(),
         ).map(RequestResult<List<HomeElementModel>>::toState).collect {
-            _uiState.value = it
+            uiState.value = it
         }
     }
 }

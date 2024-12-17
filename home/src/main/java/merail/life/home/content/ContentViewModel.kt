@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import merail.life.core.RequestResult
@@ -23,8 +22,9 @@ class ContentViewModel @Inject constructor(
 
     private val contentId = checkNotNull(savedStateHandle.toRoute<NavigationRoute.Content>().contentId)
 
-    val uiState: StateFlow<ContentUiState> = dataRepository
+    var contentLoadingState = dataRepository
         .getContent(contentId)
         .map(RequestResult<ContentModel>::toState)
-        .stateIn(viewModelScope, SharingStarted.Lazily, ContentUiState.Loading)
+        .stateIn(viewModelScope, SharingStarted.Lazily, ContentLoadingState.Loading)
+        private set
 }
