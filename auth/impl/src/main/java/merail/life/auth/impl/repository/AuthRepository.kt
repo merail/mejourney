@@ -27,6 +27,7 @@ internal class AuthRepository @Inject constructor(
         private const val EMAIL_REGISTRATION_STATE_CONFIG_KEY = "isEmailRegistrationEnabled"
         private const val HOST_EMAIL_CONFIG_KEY = "hostEmail"
         private const val HOST_PASSWORD_CONFIG_KEY = "hostPassword"
+        private const val SNOWFALL_STATE_KEY = "isSnowfallEnabled"
     }
 
     init {
@@ -92,6 +93,8 @@ internal class AuthRepository @Inject constructor(
     override suspend fun authorizeAnonymously() = withContext(Dispatchers.IO) {
         firebaseAuth.signInAnonymously().await().toUnit()
     }
+
+    override fun isSnowfallEnabled() = firebaseRemoteConfig.getBoolean(SNOWFALL_STATE_KEY)
 
     private fun subscribeToRemoteConfigUpdates() = firebaseRemoteConfig.addOnConfigUpdateListener(
         object : ConfigUpdateListener {

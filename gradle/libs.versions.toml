@@ -28,6 +28,7 @@ composeIcons = "1.7.6"
 androidMail = "1.6.7"
 serialization = "1.6.3"
 ksp = "2.0.20-1.0.25"
+snowfall = "0.9.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
@@ -68,6 +69,7 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 android-mail = { module = "com.sun.mail:android-mail", version.ref = "androidMail" }
 android-activation = { module = "com.sun.mail:android-activation", version.ref = "androidMail" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+snowfall = { group = "com.github.idapgroup", name = "Snowfall", version.ref = "snowfall" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

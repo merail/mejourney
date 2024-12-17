@@ -5,23 +5,23 @@ import merail.life.data.model.ContentModel
 import merail.life.home.model.ContentItem
 import merail.life.home.model.toContentItem
 
-sealed class ContentUiState {
+sealed class ContentLoadingState {
 
-    data object Loading: ContentUiState()
+    data object Loading: ContentLoadingState()
 
-    data class Error(val exception: Throwable?): ContentUiState()
+    data class Error(val exception: Throwable?): ContentLoadingState()
 
     class Success(
         val item: ContentItem,
-    ): ContentUiState()
+    ): ContentLoadingState()
 }
 
 internal fun RequestResult<ContentModel>.toState() = when (this) {
-    is RequestResult.Error -> ContentUiState.Error(
+    is RequestResult.Error -> ContentLoadingState.Error(
         exception = error,
     )
-    is RequestResult.InProgress -> ContentUiState.Loading
-    is RequestResult.Success -> ContentUiState.Success(
+    is RequestResult.InProgress -> ContentLoadingState.Loading
+    is RequestResult.Success -> ContentLoadingState.Success(
         item = data.toContentItem(),
     )
 }

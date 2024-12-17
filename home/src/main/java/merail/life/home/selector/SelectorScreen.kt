@@ -39,13 +39,13 @@ fun SelectorScreen(
     navigateToContentImmediately: (String) -> Unit,
     viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
 ) {
-    when (val uiState = viewModel.uiState.collectAsState().value) {
-        is SelectorUiState.None -> Unit
-        is SelectorUiState.Loading -> Loading()
-        is SelectorUiState.Error -> LaunchedEffect(null) {
+    when (val uiState = viewModel.selectionState.collectAsState().value) {
+        is SelectionState.None -> Unit
+        is SelectionState.Loading -> Loading()
+        is SelectionState.Error -> LaunchedEffect(null) {
             onError(uiState.exception)
         }
-        is SelectorUiState.Success -> if (uiState.items.isSingle) {
+        is SelectionState.Success -> if (uiState.items.isSingle) {
             navigateToContentImmediately(uiState.items.first().id)
         } else {
             Content(

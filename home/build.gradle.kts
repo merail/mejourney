@@ -41,9 +41,11 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.compose.shimmer)
+    implementation(libs.snowfall)
 
     implementation(project(":design"))
     implementation(project(":core"))
     implementation(project(":navigation:domain"))
+    implementation(project(":auth:api"))
     implementation(project(":data"))
 }
