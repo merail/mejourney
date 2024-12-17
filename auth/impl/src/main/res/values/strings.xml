@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="email_input_title">Привет</string>
-    <string name="email_input_description">Введи номер электронной почты, чтобы войти или зарегистрироваться</string>
+    <string name="email_input_description">Введи адрес электронной почты, чтобы войти или зарегистрироваться</string>
     <string name="email_input_label">Введи email</string>
     <string name="email_input_validation_error">Не\u00A0похоже на\u00A0почту</string>
     <string name="email_input_continue_button">Продолжить</string>
