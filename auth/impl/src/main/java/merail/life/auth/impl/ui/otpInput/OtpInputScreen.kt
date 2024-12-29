@@ -6,6 +6,7 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -35,11 +37,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import merail.life.auth.impl.R
-import merail.life.auth.impl.ui.otpInput.state.OtpValueState
+import merail.life.auth.impl.ui.otpInput.state.needToBlockUi
 import merail.life.design.MejourneyTheme
 
 @Composable
@@ -104,7 +107,7 @@ fun OtpInputScreen(
             )
 
             OtpField(
-                otpValueState = viewModel.otpValueState,
+                viewModel = viewModel,
                 onOtpTextChange = remember {
                     {
                         viewModel.updateOtp(it)
@@ -122,9 +125,10 @@ fun OtpInputScreen(
 
 @Composable
 private fun OtpField(
-    otpValueState: OtpValueState,
+    viewModel: OtpInputViewModel,
     onOtpTextChange: (String) -> Unit,
 ) {
+    val otpValueState = viewModel.otpValueState
     val focusRequester = remember { FocusRequester() }
     Column(
         modifier = Modifier
@@ -161,9 +165,11 @@ private fun OtpField(
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
         )
+
         if (otpValueState.isValid.not()) {
             Text(
                 text = stringResource(R.string.otp_input_validation_error),
+                style = MejourneyTheme.typography.bodyMedium,
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
                     .padding(
@@ -171,6 +177,72 @@ private fun OtpField(
                         top = 8.dp,
                     ),
             )
+        }
+
+        Text(
+            text = stringResource(
+                R.string.otp_input_email_hint,
+                viewModel.email,
+            ),
+            style = MejourneyTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(
+                    start = 12.dp,
+                    top = 8.dp,
+                ),
+        )
+
+        Row(
+            modifier = Modifier
+                .padding(
+                    start = 12.dp,
+                    top = 4.dp,
+                ),
+        ) {
+            Text(
+                text = stringResource(R.string.otp_input_resend_countdown_hint_text_part),
+                style = MejourneyTheme.typography.bodyMedium,
+                textDecoration = if (viewModel.isCountdownTextVisible) {
+                    TextDecoration.None
+                } else {
+                    TextDecoration.Underline
+                },
+                modifier = Modifier.then(
+                    if (viewModel.isCountdownTextVisible.not() && viewModel.otpResendState.needToBlockUi.not()) {
+                        Modifier.clickable {
+                            viewModel.resendOtp()
+                        }
+                    } else {
+                        Modifier
+                    }
+                ),
+            )
+
+            if (viewModel.isCountdownTextVisible) {
+                Text(
+                    text = stringResource(
+                        R.string.otp_input_resend_countdown_hint_seconds_part,
+                        viewModel.otpResendRemindTime,
+                    ),
+                    style = MejourneyTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(
+                            start = 4.dp,
+                        ),
+                )
+            }
+
+            if (viewModel.otpResendState.needToBlockUi) {
+                CircularProgressIndicator(
+                    strokeWidth = 3.dp,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(
+                            start = 4.dp,
+                        )
+                        .size(16.dp),
+                )
+            }
         }
     }
     LaunchedEffect(null) {

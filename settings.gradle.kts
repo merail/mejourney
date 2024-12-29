@@ -45,3 +45,7 @@ include(":profiling")
 include(":navigation")
 include(":navigation:domain")
 include(":navigation:graph")
+
+include(":store")
+include(":store:api")
+include(":store:impl")

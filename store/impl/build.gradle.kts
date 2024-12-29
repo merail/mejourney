@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "merail.life.auth.impl"
+    namespace = "merail.life.store.impl"
     compileSdk = 35
 
     defaultConfig {
@@ -27,35 +27,17 @@ android {
         compose = true
         buildConfig = true
     }
-
-    packaging {
-        resources {
-            pickFirsts += "/META-INF/{NOTICE.md,LICENSE.md}"
-        }
-    }
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    debugImplementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.compose.icons)
+    implementation(libs.androidx.core.ktx)
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.config)
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(libs.android.mail)
-    implementation(libs.android.activation)
-
-    implementation(project(":design"))
     implementation(project(":core"))
-    implementation(project(":navigation:domain"))
-    implementation(project(":auth:api"))
     implementation(project(":store:api"))
 }
