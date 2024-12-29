@@ -154,7 +154,7 @@ private fun OtpField(
                         OtpCell(
                             index = index,
                             text = otpValueState.value,
-                            isError = otpValueState.isValid.not(),
+                            isError = otpValueState.isOtpVerified.not(),
                             modifier = Modifier
                                 .weight(1f),
                         )
@@ -168,7 +168,12 @@ private fun OtpField(
 
         if (otpValueState.isValid.not()) {
             Text(
-                text = stringResource(R.string.otp_input_validation_error),
+                text = stringResource(
+                    when {
+                        otpValueState.isOtpNotExpired.not() -> R.string.otp_input_expired_error
+                        else -> R.string.otp_input_validation_error
+                    },
+                ),
                 style = MejourneyTheme.typography.bodyMedium,
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
@@ -245,6 +250,7 @@ private fun OtpField(
             }
         }
     }
+
     LaunchedEffect(null) {
         focusRequester.requestFocus()
     }
