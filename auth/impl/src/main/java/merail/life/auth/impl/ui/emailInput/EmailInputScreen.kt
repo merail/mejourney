@@ -156,6 +156,7 @@ private fun EmailField(
         if (emailValueState.isValid.not()) {
             Text(
                 text = stringResource(R.string.email_input_validation_error),
+                style = MejourneyTheme.typography.bodyMedium,
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
                     .padding(

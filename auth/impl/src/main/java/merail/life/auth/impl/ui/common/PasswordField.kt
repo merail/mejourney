@@ -95,6 +95,7 @@ internal fun PasswordField(
         if (passwordValueState.isValid.not()) {
             Text(
                 text = errorText,
+                style = MejourneyTheme.typography.bodyMedium,
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
                     .padding(

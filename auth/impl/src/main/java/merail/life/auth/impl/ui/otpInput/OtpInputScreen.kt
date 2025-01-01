@@ -138,8 +138,10 @@ private fun OtpField(
             value = otpValueState.value,
             onValueChange = remember {
                 {
-                    if (it.length <= 4) {
-                        onOtpTextChange(it)
+                    if (viewModel.isInputAvailable) {
+                        if (it.length <= 4) {
+                            onOtpTextChange(it)
+                        }
                     }
                 }
             },
@@ -166,10 +168,11 @@ private fun OtpField(
                 .focusRequester(focusRequester),
         )
 
-        if (otpValueState.isValid.not()) {
+        if (viewModel.isValid.not()) {
             Text(
                 text = stringResource(
                     when {
+                        otpValueState.hasAvailableAttempts.not() -> R.string.otp_input_block_error
                         otpValueState.isOtpNotExpired.not() -> R.string.otp_input_expired_error
                         else -> R.string.otp_input_validation_error
                     },
@@ -180,28 +183,33 @@ private fun OtpField(
                     .padding(
                         start = 12.dp,
                         top = 8.dp,
+                        end = 12.dp,
                     ),
             )
         }
 
-        Text(
-            text = stringResource(
-                R.string.otp_input_email_hint,
-                viewModel.email,
-            ),
-            style = MejourneyTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(
-                    start = 12.dp,
-                    top = 8.dp,
+        if (viewModel.isInputAvailable) {
+            Text(
+                text = stringResource(
+                    R.string.otp_input_email_hint,
+                    viewModel.email,
                 ),
-        )
+                style = MejourneyTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(
+                        start = 12.dp,
+                        top = 8.dp,
+                        end = 12.dp,
+                    ),
+            )
+        }
 
         Row(
             modifier = Modifier
                 .padding(
                     start = 12.dp,
                     top = 4.dp,
+                    end = 12.dp,
                 ),
         ) {
             Text(

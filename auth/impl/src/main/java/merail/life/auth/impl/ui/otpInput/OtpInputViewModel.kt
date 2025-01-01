@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.otpInput.state.OtpResendState
@@ -32,9 +32,13 @@ class OtpInputViewModel @Inject constructor(
     companion object {
         private const val TAG = "OtpInputViewModel"
 
-        private const val OTP_EXPIRED_TIME = 10L
+        private const val OTP_EXPIRED_TIME = 25L
 
-        private const val OTP_RESEND_TIME = 5L
+        private const val OTP_RESEND_TIME = 10L
+
+        private const val OTP_BLOCK_TIME = 20L
+
+        private const val MAX_ATTEMPTS_COUNT = 2
     }
 
     val email = savedStateHandle.toRoute<NavigationRoute.OtpInput>().email
@@ -55,24 +59,15 @@ class OtpInputViewModel @Inject constructor(
 
     private var initialTimestamp = 0L
 
+    private var otpResendCountdownJob: Job? = null
+
+    private var attemptsCount = 0
+
     init {
         viewModelScope.launch {
-            val emailWithSentOtp = storeRepository.getCurrentEmail().first()
+            initialTimestamp = System.currentTimeMillis()
 
-            storeRepository.getOtpSendingTimestamp().first().run {
-                initialTimestamp = System.currentTimeMillis()
-                otpResendRemindTime = when {
-                    emailWithSentOtp != email -> OTP_RESEND_TIME
-                    this == null -> OTP_RESEND_TIME
-                    OTP_RESEND_TIME - subtractInitialInSeconds() > 0 -> OTP_RESEND_TIME - subtractInitialInSeconds()
-                    else -> OTP_RESEND_TIME
-                }
-                isCountdownTextVisible = true
-            }
-
-            storeRepository.setCurrentEmail(email)
-            storeRepository.setOtpSendingTimestamp(initialTimestamp)
-            startOtpResendCountdown()
+            otpResendCountdownJob = startOtpResendCountdown()
         }
     }
 
@@ -84,23 +79,37 @@ class OtpInputViewModel @Inject constructor(
                 value = value,
                 isOtpNotExpired = true,
                 isOtpVerified = true,
+                hasAvailableAttempts = true,
             )
         }
     }
 
     fun verifyOtp(): Boolean {
-        val isOtpNotExpired = OTP_EXPIRED_TIME - System.currentTimeMillis().subtractInitialInSeconds() > 0
+        val isOtpNotExpired = OTP_EXPIRED_TIME - differenceBetweenCurrentAndInitialTimestamps > 0
 
         val isOtpVerified = authRepository.getCurrentOtp() == otpValueState.value.toInt()
+
+        if (isOtpVerified.not() && isOtpNotExpired) {
+            attemptsCount++
+        }
+        val hasAvailableAttempts = attemptsCount < MAX_ATTEMPTS_COUNT
+        if (hasAvailableAttempts.not()) {
+            otpResendCountdownJob?.cancel()
+            otpResendRemindTime = OTP_BLOCK_TIME
+            otpResendCountdownJob = startOtpResendCountdown()
+        }
+
         otpValueState = otpValueState.copy(
             isOtpNotExpired = isOtpNotExpired,
             isOtpVerified = isOtpVerified,
+            hasAvailableAttempts = hasAvailableAttempts,
         )
 
-        return isOtpNotExpired && isOtpVerified
+        return isValid
     }
 
-    private suspend fun startOtpResendCountdown() {
+    private fun startOtpResendCountdown() = viewModelScope.launch {
+        isCountdownTextVisible = true
         while(otpResendRemindTime > 0) {
             delay(1000)
             otpResendRemindTime--
@@ -118,17 +127,29 @@ class OtpInputViewModel @Inject constructor(
             otpResendState = OtpResendState.Error(it)
         }.onSuccess {
             Log.d(TAG, "Отправка OTP. Успех")
-            otpResendState = OtpResendState.OtpWasResent
             otpResendRemindTime = OTP_RESEND_TIME
-            isCountdownTextVisible = true
             initialTimestamp = System.currentTimeMillis()
-            storeRepository.setOtpSendingTimestamp(initialTimestamp)
-            startOtpResendCountdown()
+            attemptsCount = 0
+            otpValueState = otpValueState.copy(
+                value = "",
+                isOtpNotExpired = true,
+                isOtpVerified = true,
+                hasAvailableAttempts = true,
+            )
+            otpResendCountdownJob = startOtpResendCountdown()
+            otpResendState = OtpResendState.OtpWasResent
         }
     }
 
-    private fun Long.subtractInitialInSeconds() = TimeUnit.MILLISECONDS.toSeconds(
-        this - initialTimestamp,
-    )
+    private val differenceBetweenCurrentAndInitialTimestamps: Long
+        get() = TimeUnit.MILLISECONDS.toSeconds(
+            System.currentTimeMillis() - initialTimestamp,
+            )
 }
+
+val OtpInputViewModel.isValid: Boolean
+    get() = otpValueState.isValid
+
+val OtpInputViewModel.isInputAvailable: Boolean
+    get() = otpValueState.isInputAvailable
 
