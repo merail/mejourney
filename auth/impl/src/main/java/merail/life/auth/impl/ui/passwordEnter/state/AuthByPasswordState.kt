@@ -1,6 +1,6 @@
 package merail.life.auth.impl.ui.passwordEnter.state
 
-sealed class AuthByPasswordState {
+internal sealed class AuthByPasswordState {
 
     data object None : AuthByPasswordState()
 
@@ -13,5 +13,5 @@ sealed class AuthByPasswordState {
     data object Success: AuthByPasswordState()
 }
 
-val AuthByPasswordState.needToBlockUi
+internal val AuthByPasswordState.needToBlockUi
     get() = this is AuthByPasswordState.Loading || this is AuthByPasswordState.Success

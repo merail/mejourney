@@ -15,7 +15,7 @@ import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
-class ContentViewModel @Inject constructor(
+internal class ContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     dataRepository: IDataRepository,
 ) : ViewModel() {

@@ -18,7 +18,7 @@ import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
-class EmailInputViewModel @Inject constructor(
+internal class EmailInputViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: IAuthRepository,
 ) : ViewModel() {
@@ -29,7 +29,7 @@ class EmailInputViewModel @Inject constructor(
 
     val email = savedStateHandle.toRoute<NavigationRoute.Email>().email
 
-    var emailAuthState = mutableStateOf<EmailAuthState>(EmailAuthState.None)
+    var emailAuthState by mutableStateOf<EmailAuthState>(EmailAuthState.None)
         private set
 
     var emailValueState by mutableStateOf(EmailValueState(email.orEmpty()))
@@ -57,17 +57,17 @@ class EmailInputViewModel @Inject constructor(
     }
 
     private fun checkIfUserExist() = viewModelScope.launch {
-        emailAuthState.value = EmailAuthState.Loading
+        emailAuthState = EmailAuthState.Loading
         runCatching {
             Log.d(TAG, "Проверка существования пользователя ${emailValueState.value}. Старт")
             authRepository.isUserExist(emailValueState.value)
         }.onFailure {
             Log.w(TAG, "Проверка существования пользователя ${emailValueState.value}. Ошибка", it)
-            emailAuthState.value = EmailAuthState.Error(it.cause)
+            emailAuthState = EmailAuthState.Error(it.cause)
         }.onSuccess {
             Log.d(TAG, "Проверка существования пользователя ${emailValueState.value}. Успех")
             if (it) {
-                emailAuthState.value = EmailAuthState.UserExists
+                emailAuthState = EmailAuthState.UserExists
             } else {
                 sendOtp()
             }
@@ -80,10 +80,10 @@ class EmailInputViewModel @Inject constructor(
             authRepository.sendOtp(emailValueState.value)
         }.onFailure {
             Log.w(TAG, "Отправка OTP. Ошибка", it)
-            emailAuthState.value = EmailAuthState.Error(it.cause)
+            emailAuthState = EmailAuthState.Error(it.cause)
         }.onSuccess {
             Log.d(TAG, "Отправка OTP. Успех")
-            emailAuthState.value = EmailAuthState.OtpWasSent
+            emailAuthState = EmailAuthState.OtpWasSent
         }
     }
 }

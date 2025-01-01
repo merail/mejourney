@@ -3,7 +3,7 @@ package merail.life.auth.impl.mail
 import javax.mail.Authenticator
 import javax.mail.PasswordAuthentication
 
-object PasswordAuthenticator: Authenticator() {
+internal object PasswordAuthenticator: Authenticator() {
 
     var hostEmail: String? = null
 

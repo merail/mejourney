@@ -37,7 +37,9 @@ internal fun PasswordField(
     label: String,
     errorText: String,
 ) {
-    var isPasswordVisible by remember { mutableStateOf(false) }
+    var isPasswordVisible by remember {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = Modifier
@@ -48,7 +50,7 @@ internal fun PasswordField(
             onValueChange = onChange,
             leadingIcon = {
                 Icon(
-                    Icons.Default.Key,
+                    imageVector = Icons.Default.Key,
                     contentDescription = "",
                 )
             },

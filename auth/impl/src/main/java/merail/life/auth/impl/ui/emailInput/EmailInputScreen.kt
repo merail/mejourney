@@ -33,13 +33,24 @@ import merail.life.design.components.ContinueButton
 import merail.life.design.styles.TextFieldStyle
 
 @Composable
-fun EmailInputScreen(
+fun EmailInputContainer(
+    onError: (Throwable?) -> Unit,
+    navigateToPasswordEnter: (String) -> Unit,
+    navigateToOtp: (String) -> Unit,
+) = EmailInputScreen(
+    onError = onError,
+    navigateToPasswordEnter = navigateToPasswordEnter,
+    navigateToOtp = navigateToOtp,
+)
+
+@Composable
+internal fun EmailInputScreen(
     onError: (Throwable?) -> Unit,
     navigateToPasswordEnter: (String) -> Unit,
     navigateToOtp: (String) -> Unit,
     viewModel: EmailInputViewModel = hiltViewModel<EmailInputViewModel>(),
 ) {
-    val state = viewModel.emailAuthState.value
+    val state = viewModel.emailAuthState
     when (state) {
         is EmailAuthState.Error -> LaunchedEffect(null) {
             onError(state.exception)

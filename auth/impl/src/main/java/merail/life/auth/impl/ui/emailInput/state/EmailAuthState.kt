@@ -1,6 +1,6 @@
 package merail.life.auth.impl.ui.emailInput.state
 
-sealed class EmailAuthState {
+internal sealed class EmailAuthState {
 
     data object None : EmailAuthState()
 
@@ -13,7 +13,7 @@ sealed class EmailAuthState {
     data object OtpWasSent: EmailAuthState()
 }
 
-val EmailAuthState.needToBlockUi
+internal val EmailAuthState.needToBlockUi
     get() = this is EmailAuthState.Loading
             || this is EmailAuthState.UserExists
             || this is EmailAuthState.OtpWasSent

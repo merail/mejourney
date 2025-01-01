@@ -18,15 +18,13 @@ import merail.life.auth.impl.ui.otpInput.state.OtpResendState
 import merail.life.auth.impl.ui.otpInput.state.OtpValidator
 import merail.life.auth.impl.ui.otpInput.state.OtpValueState
 import merail.life.navigation.domain.NavigationRoute
-import merail.life.store.api.IStoreRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class OtpInputViewModel @Inject constructor(
+internal class OtpInputViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: IAuthRepository,
-    private val storeRepository: IStoreRepository,
 ) : ViewModel() {
 
     companion object {
@@ -147,9 +145,9 @@ class OtpInputViewModel @Inject constructor(
             )
 }
 
-val OtpInputViewModel.isValid: Boolean
+internal val OtpInputViewModel.isValid: Boolean
     get() = otpValueState.isValid
 
-val OtpInputViewModel.isInputAvailable: Boolean
+internal val OtpInputViewModel.isInputAvailable: Boolean
     get() = otpValueState.isInputAvailable
 

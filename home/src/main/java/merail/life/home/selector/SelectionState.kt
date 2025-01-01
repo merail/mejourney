@@ -8,7 +8,7 @@ import merail.life.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toHomeItems
 
-sealed class SelectionState(
+internal sealed class SelectionState(
     open val items: ImmutableList<HomeItem>,
 ) {
 

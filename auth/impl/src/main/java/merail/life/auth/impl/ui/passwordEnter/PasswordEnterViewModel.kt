@@ -19,7 +19,7 @@ import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordEnterViewModel @Inject constructor(
+internal class PasswordEnterViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: IAuthRepository,
 ) : ViewModel() {

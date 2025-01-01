@@ -26,7 +26,14 @@ import merail.life.home.model.IMAGE_DELIMITER
 import merail.life.home.model.splitWithImages
 
 @Composable
-fun ContentScreen(
+fun ContentContainer(
+    navigateToError: (Throwable?) -> Unit,
+) = ContentScreen(
+    navigateToError = navigateToError,
+)
+
+@Composable
+internal fun ContentScreen(
     navigateToError: (Throwable?) -> Unit,
     viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
 ) {

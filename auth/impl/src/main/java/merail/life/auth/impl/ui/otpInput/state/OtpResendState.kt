@@ -1,6 +1,6 @@
 package merail.life.auth.impl.ui.otpInput.state
 
-sealed class OtpResendState {
+internal sealed class OtpResendState {
 
     data object None : OtpResendState()
 
@@ -11,5 +11,5 @@ sealed class OtpResendState {
     data object OtpWasResent: OtpResendState()
 }
 
-val OtpResendState.needToBlockUi
+internal val OtpResendState.needToBlockUi
     get() = this is OtpResendState.Loading

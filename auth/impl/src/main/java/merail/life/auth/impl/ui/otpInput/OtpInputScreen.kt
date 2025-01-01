@@ -46,7 +46,16 @@ import merail.life.auth.impl.ui.otpInput.state.needToBlockUi
 import merail.life.design.MejourneyTheme
 
 @Composable
-fun OtpInputScreen(
+fun OtpInputContainer(
+    navigateToBack: (String) -> Unit,
+    navigateToPassword: (String) -> Unit,
+) = OtpInputScreen(
+    navigateToBack = navigateToBack,
+    navigateToPassword = navigateToPassword,
+)
+
+@Composable
+internal fun OtpInputScreen(
     navigateToBack: (String) -> Unit,
     navigateToPassword: (String) -> Unit,
     viewModel: OtpInputViewModel = hiltViewModel<OtpInputViewModel>(),

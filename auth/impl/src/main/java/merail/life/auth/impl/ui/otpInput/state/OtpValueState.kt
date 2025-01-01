@@ -1,6 +1,6 @@
 package merail.life.auth.impl.ui.otpInput.state
 
-data class OtpValueState(
+internal data class OtpValueState(
     val value: String = "",
     val isOtpNotExpired: Boolean = true,
     val isOtpVerified: Boolean = true,
@@ -11,6 +11,6 @@ data class OtpValueState(
     val isInputAvailable = isOtpNotExpired && hasAvailableAttempts
 }
 
-class OtpValidator {
+internal class OtpValidator {
     operator fun invoke(value: String) = value.isEmpty() || value.last().isDigit()
 }
