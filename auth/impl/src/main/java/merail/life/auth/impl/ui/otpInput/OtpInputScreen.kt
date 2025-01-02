@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import merail.life.auth.impl.R
 import merail.life.auth.impl.ui.otpInput.state.needToBlockUi
+import merail.life.core.extensions.toCountdownTime
 import merail.life.design.MejourneyTheme
 
 @Composable
@@ -244,7 +245,7 @@ private fun OtpField(
                 Text(
                     text = stringResource(
                         R.string.otp_input_resend_countdown_hint_seconds_part,
-                        viewModel.otpResendRemindTime,
+                        viewModel.otpResendRemindTime.toCountdownTime(),
                     ),
                     style = MejourneyTheme.typography.bodyMedium,
                     modifier = Modifier

@@ -18,6 +18,7 @@ import merail.life.auth.impl.ui.otpInput.state.OtpResendState
 import merail.life.auth.impl.ui.otpInput.state.OtpValidator
 import merail.life.auth.impl.ui.otpInput.state.OtpValueState
 import merail.life.navigation.domain.NavigationRoute
+import merail.life.store.api.IStoreRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -25,18 +26,19 @@ import javax.inject.Inject
 internal class OtpInputViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: IAuthRepository,
+    private val storeRepository: IStoreRepository,
 ) : ViewModel() {
 
     companion object {
         private const val TAG = "OtpInputViewModel"
 
-        private const val OTP_EXPIRED_TIME = 25L
+        private const val OTP_EXPIRED_TIME = 300L
 
-        private const val OTP_RESEND_TIME = 10L
+        private const val OTP_RESEND_TIME = 60L
 
-        private const val OTP_BLOCK_TIME = 20L
+        private const val OTP_BLOCK_TIME = 300L
 
-        private const val MAX_ATTEMPTS_COUNT = 2
+        private const val MAX_ATTEMPTS_COUNT = 5
     }
 
     val email = savedStateHandle.toRoute<NavigationRoute.OtpInput>().email
