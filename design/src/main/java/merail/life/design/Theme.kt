@@ -1,6 +1,5 @@
 package merail.life.design
 
-import android.os.Build
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
@@ -12,16 +11,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import com.valentinilk.shimmer.LocalShimmerTheme
 import merail.life.core.extensions.activity
 
 @Composable
 fun MejourneyTheme(content: @Composable () -> Unit) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-        NavigationBarColor()
-    }
+    SystemBarsColor()
 
     val colors = remember {
         Colors()
@@ -71,13 +68,16 @@ object MejourneyTheme {
         get() = LocalMejourneyTypography.current
 }
 
-@Suppress("DEPRECATION")
 @Composable
-private fun NavigationBarColor() {
+private fun SystemBarsColor() {
     LocalView.current.run {
-        val navigationBarColor = MejourneyTheme.colors.graphicInversePrimary.toArgb()
         SideEffect {
-            context.activity?.window?.navigationBarColor = navigationBarColor
+            context.activity?.window?.let {
+                WindowCompat.getInsetsController(it, it.decorView).apply {
+                    isAppearanceLightStatusBars = false
+                    isAppearanceLightNavigationBars = false
+                }
+            }
         }
     }
 }
