@@ -102,7 +102,8 @@ internal fun PasswordField(
                 modifier = Modifier
                     .padding(
                         start = 12.dp,
-                        top = 4.dp,
+                        top = 8.dp,
+                        end = 12.dp,
                     ),
             )
         }

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -230,14 +232,20 @@ private fun OtpField(
                 } else {
                     TextDecoration.Underline
                 },
-                modifier = Modifier.then(
-                    if (viewModel.isCountdownTextVisible.not() && viewModel.otpResendState.needToBlockUi.not()) {
-                        Modifier.clickable {
+                modifier = Modifier.clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    },
+                    indication = if (viewModel.isOtpResendingAvailable) {
+                        ripple()
+                    } else {
+                        null
+                    },
+                    onClick = {
+                        if (viewModel.isOtpResendingAvailable) {
                             viewModel.resendOtp()
                         }
-                    } else {
-                        Modifier
-                    }
+                    },
                 ),
             )
 

@@ -17,6 +17,7 @@ import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.ui.otpInput.state.OtpResendState
 import merail.life.auth.impl.ui.otpInput.state.OtpValidator
 import merail.life.auth.impl.ui.otpInput.state.OtpValueState
+import merail.life.auth.impl.ui.otpInput.state.needToBlockUi
 import merail.life.navigation.domain.NavigationRoute
 import merail.life.store.api.IStoreRepository
 import java.util.concurrent.TimeUnit
@@ -152,4 +153,7 @@ internal val OtpInputViewModel.isValid: Boolean
 
 internal val OtpInputViewModel.isInputAvailable: Boolean
     get() = otpValueState.isInputAvailable
+
+internal val OtpInputViewModel.isOtpResendingAvailable: Boolean
+    get() = isCountdownTextVisible.not() && otpResendState.needToBlockUi.not()
 

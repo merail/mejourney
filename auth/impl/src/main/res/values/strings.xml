@@ -4,6 +4,9 @@
     <string name="email_input_description">Введи адрес электронной почты, чтобы войти или зарегистрироваться</string>
     <string name="email_input_label">Введи email</string>
     <string name="email_input_validation_error">Не\u00A0похоже на\u00A0почту</string>
+    <string name="email_input_personal_data_consent_text_hint">Нажимая кнопку «Продолжить», ты\u00A0соглашаешься на\u00A0</string>
+    <string name="email_input_personal_data_consent_link_value">https://drive.google.com/file/d/1QjG3US_YSi1n8fl0tyuW9RBhL6pZnXeN/view?usp=sharing</string>
+    <string name="email_input_personal_data_consent_link_hint">обработку персональных данных</string>
     <string name="email_input_continue_button">Продолжить</string>
 
     <string name="password_enter_title">Пароль</string>
