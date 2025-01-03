@@ -33,13 +33,13 @@ private const val TAG = "MejourneyNavHost"
 @Composable
 fun MejourneyNavHost(
     navController: NavHostController,
-    intentRoute: MutableState<NavigationRoute?>,
+    intentRoute: MutableState<NavigationRoute?>?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 
     // TODO: Routing from push doesn't work without getting intentRouteValue here
-    intentRoute.value?.let {
+    intentRoute?.value?.let {
         Log.d(TAG, "Route from push: $it")
     }
     navController.addOnPushNotificationListener(
