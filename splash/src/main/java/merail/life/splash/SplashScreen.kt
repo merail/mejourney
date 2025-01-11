@@ -36,6 +36,7 @@ internal fun SplashScreen(
     val uiState = viewModel.uiState
 
     val activity = LocalContext.current.activity
+    activity?.actionBar?.hide()
     val splashScreen by remember {
         mutableStateOf(activity?.installSplashScreen())
     }

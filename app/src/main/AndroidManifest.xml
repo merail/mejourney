@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Mejourney"
+        android:theme="@style/Theme.Starting"
         tools:ignore="UnusedAttribute"
         tools:targetApi="31">
 
@@ -25,7 +25,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Mejourney"
+            android:theme="@style/Theme.Starting"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
 
             <intent-filter>
