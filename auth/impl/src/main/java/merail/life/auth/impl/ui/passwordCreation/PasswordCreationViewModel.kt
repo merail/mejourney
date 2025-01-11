@@ -18,7 +18,7 @@ import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordCreationViewModel @Inject constructor(
+internal class PasswordCreationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: IAuthRepository,
 ) : ViewModel() {

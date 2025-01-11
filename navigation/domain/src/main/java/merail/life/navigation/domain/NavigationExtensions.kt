@@ -27,13 +27,13 @@ val NavBackStackEntry.errorType: ErrorType
     }
 
 fun NavController.addOnPushNotificationListener(
-    intentRoute: MutableState<NavigationRoute?>,
+    intentRoute: MutableState<NavigationRoute?>?,
 ) = addOnDestinationChangedListener { localController, _, _ ->
     val currentContentId = localController
         .currentBackStackEntry
         ?.arguments
         ?.getString(NavigationRoute.Content.CONTENT_ID_KEY).toString()
-    val intentRouteValue = intentRoute.value
+    val intentRouteValue = intentRoute?.value
     intentRouteValue?.let {
         localController.currentBackStackEntry?.destination?.run {
             when {

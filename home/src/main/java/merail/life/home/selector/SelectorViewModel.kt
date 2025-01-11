@@ -15,7 +15,7 @@ import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectorViewModel @Inject constructor(
+internal class SelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     dataRepository: IDataRepository,
 ) : ViewModel() {

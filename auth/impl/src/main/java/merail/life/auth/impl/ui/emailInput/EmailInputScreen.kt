@@ -18,9 +18,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.auth.impl.R
@@ -33,13 +38,24 @@ import merail.life.design.components.ContinueButton
 import merail.life.design.styles.TextFieldStyle
 
 @Composable
-fun EmailInputScreen(
+fun EmailInputContainer(
+    onError: (Throwable?) -> Unit,
+    navigateToPasswordEnter: (String) -> Unit,
+    navigateToOtp: (String) -> Unit,
+) = EmailInputScreen(
+    onError = onError,
+    navigateToPasswordEnter = navigateToPasswordEnter,
+    navigateToOtp = navigateToOtp,
+)
+
+@Composable
+internal fun EmailInputScreen(
     onError: (Throwable?) -> Unit,
     navigateToPasswordEnter: (String) -> Unit,
     navigateToOtp: (String) -> Unit,
     viewModel: EmailInputViewModel = hiltViewModel<EmailInputViewModel>(),
 ) {
-    val state = viewModel.emailAuthState.value
+    val state = viewModel.emailAuthState
     when (state) {
         is EmailAuthState.Error -> LaunchedEffect(null) {
             onError(state.exception)
@@ -156,12 +172,51 @@ private fun EmailField(
         if (emailValueState.isValid.not()) {
             Text(
                 text = stringResource(R.string.email_input_validation_error),
+                style = MejourneyTheme.typography.bodyMedium,
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
                     .padding(
                         start = 12.dp,
-                        top = 4.dp,
+                        top = 8.dp,
                     ),
+            )
+        }
+
+        Text(
+            text = buildPersonalDataConsentText(),
+            style = MejourneyTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(
+                    start = 12.dp,
+                    top = 8.dp,
+                    end = 12.dp,
+                ),
+        )
+    }
+}
+
+@Composable
+private fun buildPersonalDataConsentText() = buildAnnotatedString {
+    withStyle(
+        style = MejourneyTheme.typography.bodyMedium.toSpanStyle(),
+    ) {
+        append(
+            text = stringResource(R.string.email_input_personal_data_consent_text_hint),
+        )
+    }
+
+    withLink(
+        link = LinkAnnotation.Url(
+            url = stringResource(R.string.email_input_personal_data_consent_link_value),
+        ),
+    ) {
+        withStyle(
+            style = MejourneyTheme.typography.bodyMedium.copy(
+                textDecoration = TextDecoration.Underline,
+            ).toSpanStyle(),
+        ) {
+            append(
+                text = stringResource(R.string.email_input_personal_data_consent_link_hint),
             )
         }
     }

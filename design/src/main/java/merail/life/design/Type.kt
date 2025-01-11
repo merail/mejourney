@@ -32,6 +32,13 @@ val Typography = Typography(
         lineHeight = 52.0.sp,
         letterSpacing = 0.0.sp,
     ),
+    bodyMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.2.sp,
+    ),
     bodyLarge = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,

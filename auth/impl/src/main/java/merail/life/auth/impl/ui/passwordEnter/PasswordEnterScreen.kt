@@ -31,7 +31,18 @@ import merail.life.design.components.BlockingSurface
 import merail.life.design.components.ContinueButton
 
 @Composable
-fun PasswordEnterScreen(
+fun PasswordEnterContainer(
+    onError: (Throwable?) -> Unit,
+    navigateToBack: (String) -> Unit,
+    navigateToHome: () -> Unit,
+) = PasswordEnterScreen(
+    onError = onError,
+    navigateToBack = navigateToBack,
+    navigateToHome = navigateToHome,
+)
+
+@Composable
+internal fun PasswordEnterScreen(
     onError: (Throwable?) -> Unit,
     navigateToBack: (String) -> Unit,
     navigateToHome: () -> Unit,

@@ -62,7 +62,18 @@ import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 
 @Composable
-fun HomeScreen(
+fun HomeContainer(
+    onError: (Throwable?) -> Unit,
+    navigateToSelector: (SelectorFilterType) -> Unit,
+    navigateToContent: (String) -> Unit,
+) = HomeScreen(
+    onError = onError,
+    navigateToSelector = navigateToSelector,
+    navigateToContent = navigateToContent,
+)
+
+@Composable
+internal fun HomeScreen(
     onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilterType) -> Unit,
     navigateToContent: (String) -> Unit,

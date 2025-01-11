@@ -9,7 +9,7 @@ import merail.life.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toHomeItems
 
-sealed class HomeLoadingState(
+internal sealed class HomeLoadingState(
     open val items: ImmutableList<HomeItem>,
 ) {
     data object None : HomeLoadingState(persistentListOf())

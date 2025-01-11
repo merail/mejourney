@@ -5,7 +5,7 @@ import merail.life.data.model.ContentModel
 import merail.life.home.model.ContentItem
 import merail.life.home.model.toContentItem
 
-sealed class ContentLoadingState {
+internal sealed class ContentLoadingState {
 
     data object Loading: ContentLoadingState()
 

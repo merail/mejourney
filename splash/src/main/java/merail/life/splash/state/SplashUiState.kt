@@ -1,6 +1,6 @@
-package merail.life.splash
+package merail.life.splash.state
 
-sealed class SplashUiState {
+internal sealed class SplashUiState {
 
     data object Loading: SplashUiState()
 

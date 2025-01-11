@@ -6,6 +6,8 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,10 +22,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -35,15 +39,26 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import merail.life.auth.impl.R
-import merail.life.auth.impl.ui.otpInput.state.OtpValueState
+import merail.life.auth.impl.ui.otpInput.state.needToBlockUi
+import merail.life.core.extensions.toCountdownTime
 import merail.life.design.MejourneyTheme
 
 @Composable
-fun OtpInputScreen(
+fun OtpInputContainer(
+    navigateToBack: (String) -> Unit,
+    navigateToPassword: (String) -> Unit,
+) = OtpInputScreen(
+    navigateToBack = navigateToBack,
+    navigateToPassword = navigateToPassword,
+)
+
+@Composable
+internal fun OtpInputScreen(
     navigateToBack: (String) -> Unit,
     navigateToPassword: (String) -> Unit,
     viewModel: OtpInputViewModel = hiltViewModel<OtpInputViewModel>(),
@@ -104,7 +119,7 @@ fun OtpInputScreen(
             )
 
             OtpField(
-                otpValueState = viewModel.otpValueState,
+                viewModel = viewModel,
                 onOtpTextChange = remember {
                     {
                         viewModel.updateOtp(it)
@@ -122,9 +137,10 @@ fun OtpInputScreen(
 
 @Composable
 private fun OtpField(
-    otpValueState: OtpValueState,
+    viewModel: OtpInputViewModel,
     onOtpTextChange: (String) -> Unit,
 ) {
+    val otpValueState = viewModel.otpValueState
     val focusRequester = remember { FocusRequester() }
     Column(
         modifier = Modifier
@@ -134,8 +150,10 @@ private fun OtpField(
             value = otpValueState.value,
             onValueChange = remember {
                 {
-                    if (it.length <= 4) {
-                        onOtpTextChange(it)
+                    if (viewModel.isInputAvailable) {
+                        if (it.length <= 4) {
+                            onOtpTextChange(it)
+                        }
                     }
                 }
             },
@@ -150,7 +168,7 @@ private fun OtpField(
                         OtpCell(
                             index = index,
                             text = otpValueState.value,
-                            isError = otpValueState.isValid.not(),
+                            isError = otpValueState.isOtpVerified.not(),
                             modifier = Modifier
                                 .weight(1f),
                         )
@@ -161,18 +179,104 @@ private fun OtpField(
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
         )
-        if (otpValueState.isValid.not()) {
+
+        if (viewModel.isValid.not()) {
             Text(
-                text = stringResource(R.string.otp_input_validation_error),
+                text = stringResource(
+                    when {
+                        otpValueState.hasAvailableAttempts.not() -> R.string.otp_input_block_error
+                        otpValueState.isOtpNotExpired.not() -> R.string.otp_input_expired_error
+                        else -> R.string.otp_input_validation_error
+                    },
+                ),
+                style = MejourneyTheme.typography.bodyMedium,
                 color = MejourneyTheme.colors.textNegative,
                 modifier = Modifier
                     .padding(
                         start = 12.dp,
                         top = 8.dp,
+                        end = 12.dp,
                     ),
             )
         }
+
+        if (viewModel.isInputAvailable) {
+            Text(
+                text = stringResource(
+                    R.string.otp_input_email_hint,
+                    viewModel.email,
+                ),
+                style = MejourneyTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(
+                        start = 12.dp,
+                        top = 8.dp,
+                        end = 12.dp,
+                    ),
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(
+                    start = 12.dp,
+                    top = 4.dp,
+                    end = 12.dp,
+                ),
+        ) {
+            Text(
+                text = stringResource(R.string.otp_input_resend_countdown_hint_text_part),
+                style = MejourneyTheme.typography.bodyMedium,
+                textDecoration = if (viewModel.isCountdownTextVisible) {
+                    TextDecoration.None
+                } else {
+                    TextDecoration.Underline
+                },
+                modifier = Modifier.clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    },
+                    indication = if (viewModel.isOtpResendingAvailable) {
+                        ripple()
+                    } else {
+                        null
+                    },
+                    onClick = {
+                        if (viewModel.isOtpResendingAvailable) {
+                            viewModel.resendOtp()
+                        }
+                    },
+                ),
+            )
+
+            if (viewModel.isCountdownTextVisible) {
+                Text(
+                    text = stringResource(
+                        R.string.otp_input_resend_countdown_hint_seconds_part,
+                        viewModel.otpResendRemindTime.toCountdownTime(),
+                    ),
+                    style = MejourneyTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(
+                            start = 4.dp,
+                        ),
+                )
+            }
+
+            if (viewModel.otpResendState.needToBlockUi) {
+                CircularProgressIndicator(
+                    strokeWidth = 3.dp,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(
+                            start = 4.dp,
+                        )
+                        .size(16.dp),
+                )
+            }
+        }
     }
+
     LaunchedEffect(null) {
         focusRequester.requestFocus()
     }

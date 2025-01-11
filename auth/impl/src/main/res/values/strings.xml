@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="email_input_title">Привет</string>
-    <string name="email_input_description">Введи номер электронной почты, чтобы войти или зарегистрироваться</string>
+    <string name="email_input_description">Введи адрес электронной почты, чтобы войти или зарегистрироваться</string>
     <string name="email_input_label">Введи email</string>
     <string name="email_input_validation_error">Не\u00A0похоже на\u00A0почту</string>
+    <string name="email_input_personal_data_consent_text_hint">Нажимая кнопку «Продолжить», ты\u00A0соглашаешься на\u00A0</string>
+    <string name="email_input_personal_data_consent_link_value">https://drive.google.com/file/d/1QjG3US_YSi1n8fl0tyuW9RBhL6pZnXeN/view?usp=sharing</string>
+    <string name="email_input_personal_data_consent_link_hint">обработку персональных данных</string>
     <string name="email_input_continue_button">Продолжить</string>
 
     <string name="password_enter_title">Пароль</string>
@@ -14,7 +17,12 @@
 
     <string name="otp_input_title">Код из\u00A0письма</string>
     <string name="otp_input_description">Подтверди почту кодом из\u00A0письма</string>
+    <string name="otp_input_expired_error">Срок действия кода истек</string>
     <string name="otp_input_validation_error">Неправильный код</string>
+    <string name="otp_input_block_error">Мы\u00A0временно заблокировали ввод кода</string>
+    <string name="otp_input_email_hint">Мы\u00A0отправили код на\u00A0почту  %s</string>
+    <string name="otp_input_resend_countdown_hint_text_part">Отправить код повторно</string>
+    <string name="otp_input_resend_countdown_hint_seconds_part">через %s</string>
 
     <string name="password_creation_title">Создание пароля</string>
     <string name="password_creation_description">Пароль должен содержать не\u00A0менее 8\u00A0символов и\u00A0включать как минимум одну цифру, один специальный символ, одну прописную и\u00A0одну строчную букву</string>

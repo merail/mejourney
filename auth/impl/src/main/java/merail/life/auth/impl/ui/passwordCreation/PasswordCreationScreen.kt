@@ -24,7 +24,16 @@ import merail.life.design.components.BlockingSurface
 import merail.life.design.components.ContinueButton
 
 @Composable
-fun PasswordCreationScreen(
+fun PasswordCreationContainer(
+    onError: (Throwable?) -> Unit,
+    navigateToHome: () -> Unit,
+) = PasswordCreationScreen(
+    onError = onError,
+    navigateToHome = navigateToHome,
+)
+
+@Composable
+internal fun PasswordCreationScreen(
     onError: (Throwable?) -> Unit,
     navigateToHome: () -> Unit,
     viewModel: PasswordCreationViewModel = hiltViewModel<PasswordCreationViewModel>(),

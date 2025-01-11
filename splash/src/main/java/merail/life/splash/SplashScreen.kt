@@ -9,9 +9,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import merail.life.core.extensions.activity
+import merail.life.splash.state.SplashUiState
 
 @Composable
-fun SplashScreen(
+fun SplashContainer(
+    onError: (Throwable?) -> Unit,
+    navigateToAuth: (Throwable?) -> Unit,
+    navigateToHome: (Throwable?) -> Unit,
+) = SplashScreen(
+    onError = onError,
+    navigateToAuth = navigateToAuth,
+    navigateToHome = navigateToHome,
+)
+
+@Composable
+internal fun SplashScreen(
     onError: (Throwable?) -> Unit,
     navigateToAuth: (Throwable?) -> Unit,
     navigateToHome: (Throwable?) -> Unit,
@@ -21,9 +33,10 @@ fun SplashScreen(
         viewModel.getUserAuthorizationState()
     }
 
-    val uiState = viewModel.uiState.value
+    val uiState = viewModel.uiState
 
     val activity = LocalContext.current.activity
+    activity?.actionBar?.hide()
     val splashScreen by remember {
         mutableStateOf(activity?.installSplashScreen())
     }

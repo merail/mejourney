@@ -10,7 +10,7 @@ import merail.life.navigation.graph.MejourneyNavHost
 @Composable
 internal fun MejourneyApp(
     navController: NavHostController = rememberNavController(),
-    intentRoute: MutableState<NavigationRoute?>,
+    intentRoute: MutableState<NavigationRoute?>?,
 ) {
     MejourneyNavHost(
         navController = navController,

@@ -2,7 +2,7 @@ package merail.life.home.model
 
 import merail.life.data.model.HomeFilterType
 
-enum class TabFilter {
+internal enum class TabFilter {
     YEAR,
     COUNTRY,
     PLACE,

@@ -30,7 +30,7 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
         requestedPermission = Manifest.permission.POST_NOTIFICATIONS,
     )
 
-    private lateinit var intentRoute: MutableState<NavigationRoute?>
+    private var intentRoute: MutableState<NavigationRoute?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -57,7 +57,7 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intentRoute.value = intent.getRouteIfExists()
+        intentRoute?.value = intent.getRouteIfExists()
     }
 
     override fun requestPermission() {

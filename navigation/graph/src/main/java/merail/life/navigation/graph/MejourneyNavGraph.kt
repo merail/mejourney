@@ -12,34 +12,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import merail.life.auth.impl.ui.emailInput.EmailInputScreen
-import merail.life.auth.impl.ui.otpInput.OtpInputScreen
-import merail.life.auth.impl.ui.passwordCreation.PasswordCreationScreen
-import merail.life.auth.impl.ui.passwordEnter.PasswordEnterScreen
+import merail.life.auth.impl.ui.emailInput.EmailInputContainer
+import merail.life.auth.impl.ui.otpInput.OtpInputContainer
+import merail.life.auth.impl.ui.passwordCreation.PasswordCreationContainer
+import merail.life.auth.impl.ui.passwordEnter.PasswordEnterContainer
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
-import merail.life.home.content.ContentScreen
-import merail.life.home.main.HomeScreen
-import merail.life.home.selector.SelectorScreen
+import merail.life.home.content.ContentContainer
+import merail.life.home.main.HomeContainer
+import merail.life.home.selector.SelectorContainer
 import merail.life.navigation.domain.NavigationRoute
 import merail.life.navigation.domain.addOnPushNotificationListener
 import merail.life.navigation.domain.error.ErrorDialog
 import merail.life.navigation.domain.errorType
 import merail.life.navigation.domain.navigateToError
-import merail.life.splash.SplashScreen
+import merail.life.splash.SplashContainer
 
 private const val TAG = "MejourneyNavHost"
 
 @Composable
 fun MejourneyNavHost(
     navController: NavHostController,
-    intentRoute: MutableState<NavigationRoute?>,
+    intentRoute: MutableState<NavigationRoute?>?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 
     // TODO: Routing from push doesn't work without getting intentRouteValue here
-    intentRoute.value?.let {
+    intentRoute?.value?.let {
         Log.d(TAG, "Route from push: $it")
     }
     navController.addOnPushNotificationListener(
@@ -77,7 +77,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            SplashScreen(
+            SplashContainer(
                 onError = navigateToError,
                 navigateToAuth = navigateToAuth,
                 navigateToHome = navigateToHome,
@@ -106,7 +106,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            EmailInputScreen(
+            EmailInputContainer(
                 onError = navigateToError,
                 navigateToPasswordEnter = navigateToPasswordEnter,
                 navigateToOtp = navigateToOtp,
@@ -131,7 +131,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            PasswordEnterScreen(
+            PasswordEnterContainer(
                 navigateToBack = navigateToBack,
                 onError = navigateToError,
                 navigateToHome = navigateToHome,
@@ -151,7 +151,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            OtpInputScreen(
+            OtpInputContainer(
                 navigateToBack = navigateToBack,
                 navigateToPassword = navigateToPassword,
             )
@@ -173,7 +173,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            PasswordCreationScreen(
+            PasswordCreationContainer(
                 onError = navigateToError,
                 navigateToHome = navigateToHome,
             )
@@ -201,7 +201,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            HomeScreen(
+            HomeContainer(
                 onError = navigateToError,
                 navigateToSelector = navigateToSelector,
                 navigateToContent = navigateToContent,
@@ -228,7 +228,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            SelectorScreen(
+            SelectorContainer(
                 onError = navigateToError,
                 navigateToContent = navigateToContent,
                 navigateToContentImmediately = navigateToContentImmediately,
@@ -242,7 +242,7 @@ fun MejourneyNavHost(
                 }
             }
 
-            ContentScreen(
+            ContentContainer(
                 navigateToError = navigateToError,
             )
         }
