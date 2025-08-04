@@ -93,9 +93,5 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":splash"))
     implementation(project(":home"))
-    implementation(project(":auth:api"))
-    implementation(project(":auth:impl"))
-    implementation(project(":store:api"))
-    implementation(project(":store:impl"))
     "baselineProfile"(project(":profiling"))
 }

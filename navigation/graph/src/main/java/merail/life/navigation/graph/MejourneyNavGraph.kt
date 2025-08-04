@@ -12,10 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import merail.life.auth.impl.ui.emailInput.EmailInputContainer
-import merail.life.auth.impl.ui.otpInput.OtpInputContainer
-import merail.life.auth.impl.ui.passwordCreation.PasswordCreationContainer
-import merail.life.auth.impl.ui.passwordEnter.PasswordEnterContainer
 import merail.life.core.extensions.activity
 import merail.life.data.model.SelectorFilterType
 import merail.life.home.content.ContentContainer
@@ -59,15 +55,6 @@ fun MejourneyNavHost(
                 }
             }
 
-            val navigateToAuth: (Throwable?) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.Email(null))
-                    it?.let {
-                        navController.navigateToError(it)
-                    }
-                }
-            }
-
             val navigateToHome: (Throwable?) -> Unit = remember {
                 {
                     navController.navigate(NavigationRoute.Home)
@@ -78,102 +65,6 @@ fun MejourneyNavHost(
             }
 
             SplashContainer(
-                onError = navigateToError,
-                navigateToAuth = navigateToAuth,
-                navigateToHome = navigateToHome,
-            )
-        }
-        composable<NavigationRoute.Email> {
-            BackHandler {
-                context.activity?.moveTaskToBack(true)
-            }
-
-            val navigateToError: (Throwable?) -> Unit = remember {
-                {
-                    navController.navigateToError(it)
-                }
-            }
-
-            val navigateToPasswordEnter: (String) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.PasswordEnter(it))
-                }
-            }
-
-            val navigateToOtp: (String) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.OtpInput(it))
-                }
-            }
-
-            EmailInputContainer(
-                onError = navigateToError,
-                navigateToPasswordEnter = navigateToPasswordEnter,
-                navigateToOtp = navigateToOtp,
-            )
-        }
-        composable<NavigationRoute.PasswordEnter> {
-            val navigateToError: (Throwable?) -> Unit = remember {
-                {
-                    navController.navigateToError(it)
-                }
-            }
-
-            val navigateToBack: (String) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.Email(it))
-                }
-            }
-
-            val navigateToHome: () -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.Home)
-                }
-            }
-
-            PasswordEnterContainer(
-                navigateToBack = navigateToBack,
-                onError = navigateToError,
-                navigateToHome = navigateToHome,
-            )
-        }
-        composable<NavigationRoute.OtpInput> {
-
-            val navigateToBack: (String) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.Email(it))
-                }
-            }
-
-            val navigateToPassword: (String) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.PasswordCreation(it))
-                }
-            }
-
-            OtpInputContainer(
-                navigateToBack = navigateToBack,
-                navigateToPassword = navigateToPassword,
-            )
-        }
-        composable<NavigationRoute.PasswordCreation> {
-            BackHandler {
-                context.activity?.moveTaskToBack(true)
-            }
-
-            val navigateToError: (Throwable?) -> Unit = remember {
-                {
-                    navController.navigateToError(it)
-                }
-            }
-
-            val navigateToHome: () -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.Home)
-                }
-            }
-
-            PasswordCreationContainer(
                 onError = navigateToError,
                 navigateToHome = navigateToHome,
             )

@@ -7,6 +7,4 @@ internal sealed class SplashUiState {
     data class Error(val exception: Throwable?): SplashUiState()
 
     data object AuthSuccess : SplashUiState()
-
-    data object AuthWithEmail : SplashUiState()
 }

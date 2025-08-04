@@ -14,23 +14,20 @@ import merail.life.splash.state.SplashUiState
 @Composable
 fun SplashContainer(
     onError: (Throwable?) -> Unit,
-    navigateToAuth: (Throwable?) -> Unit,
     navigateToHome: (Throwable?) -> Unit,
 ) = SplashScreen(
     onError = onError,
-    navigateToAuth = navigateToAuth,
     navigateToHome = navigateToHome,
 )
 
 @Composable
 internal fun SplashScreen(
     onError: (Throwable?) -> Unit,
-    navigateToAuth: (Throwable?) -> Unit,
     navigateToHome: (Throwable?) -> Unit,
     viewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
 ) {
     LaunchedEffect(null) {
-        viewModel.getUserAuthorizationState()
+        viewModel.authAnonymously()
     }
 
     val uiState = viewModel.uiState
@@ -51,9 +48,6 @@ internal fun SplashScreen(
         }
         is SplashUiState.AuthSuccess -> LaunchedEffect(null) {
             navigateToHome(null)
-        }
-        is SplashUiState.AuthWithEmail -> LaunchedEffect(null) {
-            navigateToAuth(null)
         }
     }
 }

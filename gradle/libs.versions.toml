@@ -24,12 +24,9 @@ benchmarkMacroJunit4 = "1.3.3"
 baselineprofile = "1.3.3"
 profileinstaller = "1.4.1"
 permissionsTool = "1.1.2"
-composeIcons = "1.7.6"
-androidMail = "1.6.7"
 serialization = "1.6.3"
 ksp = "2.0.20-1.0.25"
 snowfall = "0.9.10"
-datastorePreferences = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
@@ -65,13 +62,9 @@ androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchm
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 request-permissions-tool = { module = "com.github.merail:request-permissions-tool", version.ref = "permissionsTool" }
-androidx-compose-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeIcons" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
-android-mail = { module = "com.sun.mail:android-mail", version.ref = "androidMail" }
-android-activation = { module = "com.sun.mail:android-activation", version.ref = "androidMail" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 snowfall = { group = "com.github.idapgroup", name = "Snowfall", version.ref = "snowfall" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

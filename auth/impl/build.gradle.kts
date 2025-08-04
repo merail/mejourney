@@ -40,7 +40,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     debugImplementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.compose.icons)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -50,12 +49,8 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(libs.android.mail)
-    implementation(libs.android.activation)
-
     implementation(project(":design"))
     implementation(project(":core"))
     implementation(project(":navigation:domain"))
     implementation(project(":auth:api"))
-    implementation(project(":store:api"))
 }

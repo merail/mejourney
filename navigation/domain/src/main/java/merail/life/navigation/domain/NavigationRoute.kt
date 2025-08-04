@@ -10,26 +10,6 @@ sealed class NavigationRoute {
     data object Splash : NavigationRoute()
 
     @Serializable
-    data class Email(
-        val email: String?,
-    ) : NavigationRoute()
-
-    @Serializable
-    data class PasswordEnter(
-        val email: String,
-    ) : NavigationRoute()
-
-    @Serializable
-    data class OtpInput(
-        val email: String,
-    ) : NavigationRoute()
-
-    @Serializable
-    data class PasswordCreation(
-        val email: String,
-    ) : NavigationRoute()
-
-    @Serializable
     data object Home : NavigationRoute()
 
     @Serializable
