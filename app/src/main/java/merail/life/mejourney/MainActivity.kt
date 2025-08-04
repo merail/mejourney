@@ -2,13 +2,17 @@ package merail.life.mejourney
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +38,10 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+        )
 
         super.onCreate(savedInstanceState)
 
@@ -50,6 +57,9 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
                     MejourneyApp(
                         intentRoute = intentRoute,
                     )
+
+                    // Only with this line system bars paddings work correctly everywhere :(
+                    WindowInsets.systemBars
                 }
             }
         }

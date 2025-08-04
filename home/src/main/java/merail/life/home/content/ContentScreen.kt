@@ -2,6 +2,7 @@ package merail.life.home.content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -13,10 +14,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
@@ -53,15 +52,11 @@ private fun Content(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .navigationBarsPadding()
             .padding(
                 start = 24.dp,
                 top = 24.dp,
                 end = 24.dp,
-                bottom = if (LocalContext.current.isNavigationBarEnabled) {
-                    56.dp
-                } else {
-                    24.dp
-                },
             )
             .verticalScroll(rememberScrollState()),
     ) {

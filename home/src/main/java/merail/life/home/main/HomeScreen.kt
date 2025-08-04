@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -43,7 +44,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.INotificationsPermissionRequester
 import merail.life.core.extensions.activity
-import merail.life.core.extensions.isNavigationBarEnabled
 import merail.life.core.extensions.rerunApp
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
@@ -278,12 +278,8 @@ private fun HomeTabs(
                 start = 24.dp,
                 top = 8.dp,
                 end = 24.dp,
-                bottom = if (LocalContext.current.isNavigationBarEnabled) {
-                    56.dp
-                } else {
-                    24.dp
-                },
             )
+            .navigationBarsPadding()
             .clip(RoundedCornerShape(64)),
     ) {
         list.forEachIndexed { index, tabElement ->
