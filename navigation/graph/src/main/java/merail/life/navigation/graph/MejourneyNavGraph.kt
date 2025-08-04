@@ -20,9 +20,9 @@ import merail.life.home.selector.SelectorContainer
 import merail.life.navigation.domain.NavigationRoute
 import merail.life.navigation.domain.addOnPushNotificationListener
 import merail.life.navigation.domain.error.ErrorDialog
+import merail.life.navigation.domain.error.ErrorType
 import merail.life.navigation.domain.errorType
 import merail.life.navigation.domain.navigateToError
-import merail.life.splash.SplashContainer
 
 private const val TAG = "MejourneyNavHost"
 
@@ -30,6 +30,7 @@ private const val TAG = "MejourneyNavHost"
 fun MejourneyNavHost(
     navController: NavHostController,
     intentRoute: MutableState<NavigationRoute?>?,
+    errorType: ErrorType?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -44,31 +45,13 @@ fun MejourneyNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.Splash,
+        startDestination = if (errorType == null) {
+            NavigationRoute.Home
+        } else {
+            NavigationRoute.Error(errorType)
+        },
         modifier = modifier,
     ) {
-        composable<NavigationRoute.Splash> {
-
-            val navigateToError: (Throwable?) -> Unit = remember {
-                {
-                    navController.navigateToError(it)
-                }
-            }
-
-            val navigateToHome: (Throwable?) -> Unit = remember {
-                {
-                    navController.navigate(NavigationRoute.Home)
-                    it?.let {
-                        navController.navigateToError(it)
-                    }
-                }
-            }
-
-            SplashContainer(
-                onError = navigateToError,
-                navigateToHome = navigateToHome,
-            )
-        }
         composable<NavigationRoute.Home> {
             BackHandler {
                 context.activity?.moveTaskToBack(true)

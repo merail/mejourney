@@ -9,25 +9,32 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import merail.life.core.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
 import merail.life.navigation.domain.NavigationRoute
+import merail.life.navigation.domain.error.toType
 import merail.life.navigation.domain.getRouteIfExists
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
 
 @AndroidEntryPoint
 internal class MainActivity : ComponentActivity(), INotificationsPermissionRequester {
+
+    private val viewModel by viewModels<MainViewModel>()
 
     @delegate:RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val runtimePermissionRequester by runtimePermissionRequester(
@@ -43,6 +50,10 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
         )
 
+        installSplashScreen().setKeepOnScreenCondition {
+            viewModel.state.value is MainState.Loading
+        }
+
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -54,8 +65,11 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
                         mutableStateOf(intent.getRouteIfExists())
                     }
 
+                    val state by viewModel.state.collectAsState()
+
                     MejourneyApp(
                         intentRoute = intentRoute,
+                        errorType = (state as? MainState.Error)?.exception?.toType(),
                     )
 
                     // Only with this line system bars paddings work correctly everywhere :(

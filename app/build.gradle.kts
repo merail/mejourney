@@ -72,6 +72,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 
+    implementation(libs.androidx.core.splashscreen)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
@@ -90,8 +92,8 @@ dependencies {
     implementation(project(":design"))
     implementation(project(":navigation:graph"))
     implementation(project(":navigation:domain"))
+    implementation(project(":auth:api"))
     implementation(project(":data"))
-    implementation(project(":splash"))
     implementation(project(":home"))
     "baselineProfile"(project(":profiling"))
 }

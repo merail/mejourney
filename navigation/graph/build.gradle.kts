@@ -41,7 +41,6 @@ dependencies {
     implementation(project(":design"))
     implementation(project(":navigation:domain"))
     implementation(project(":data"))
-    implementation(project(":splash"))
     implementation(project(":home"))
     implementation(project(":auth:api"))
     implementation(project(":auth:impl"))

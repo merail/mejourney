@@ -30,8 +30,6 @@ include(":data")
 include(":data:database")
 include(":data:server")
 
-include(":splash")
-
 include(":core")
 
 include(":home")
