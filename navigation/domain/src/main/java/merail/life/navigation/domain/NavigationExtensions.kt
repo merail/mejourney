@@ -5,14 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
-import merail.life.navigation.domain.error.ErrorType
-import merail.life.navigation.domain.error.toType
-
-fun NavController.navigateToError(error: Throwable?) = navigate(
-    route = NavigationRoute.Error(error.toType()),
-) {
-    launchSingleTop = true
-}
+import merail.life.core.errors.ErrorType
 
 val NavBackStackEntry.errorType: ErrorType
     get() = if (destination.hasRoute(NavigationRoute.Error::class)) {

@@ -4,7 +4,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import merail.life.core.RequestResult
-import merail.life.core.UnauthorizedException
+import merail.life.core.errors.UnauthorizedException
 import merail.life.data.model.HomeElementModel
 import merail.life.home.model.HomeItem
 import merail.life.home.model.toHomeItems

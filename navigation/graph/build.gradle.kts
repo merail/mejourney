@@ -24,12 +24,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-    packaging {
-        resources {
-            pickFirsts += "/META-INF/{NOTICE.md,LICENSE.md}"
-        }
-    }
 }
 
 dependencies {
@@ -42,6 +36,7 @@ dependencies {
     implementation(project(":navigation:domain"))
     implementation(project(":data"))
     implementation(project(":home"))
+    implementation(project(":error"))
     implementation(project(":auth:api"))
     implementation(project(":auth:impl"))
 }

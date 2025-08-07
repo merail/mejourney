@@ -1,4 +1,4 @@
-package merail.life.navigation.domain.error
+package merail.life.error
 
 import android.view.Gravity
 import android.view.WindowManager
@@ -22,9 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
+import merail.life.core.errors.ErrorType
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
-import merail.life.navigation.domain.R
 
 @Composable
 fun ErrorDialog(
@@ -80,7 +80,7 @@ fun ErrorDialog(
                 }
 
                 Image(
-                    imageVector = ImageVector.vectorResource(merail.life.design.R.drawable.ic_cross),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.Top)

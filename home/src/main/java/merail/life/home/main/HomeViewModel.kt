@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val authRepository: IAuthRepository,
+    authRepository: IAuthRepository,
     private val dataRepository: IDataRepository,
 ) : ViewModel() {
 
@@ -26,8 +27,9 @@ internal class HomeViewModel @Inject constructor(
         private const val TAG = "HomeViewModel"
     }
 
-    var uiState = MutableStateFlow<HomeLoadingState>(HomeLoadingState.None)
-        private set
+    private val _state = MutableStateFlow<HomeLoadingState>(HomeLoadingState.None)
+
+    val state: StateFlow<HomeLoadingState> = _state
 
     val isSnowfallEnabled = authRepository.isSnowfallEnabled()
 
@@ -45,7 +47,7 @@ internal class HomeViewModel @Inject constructor(
                         is HomeLoadingState.None,
                         -> Unit
                     }
-                    uiState.value = it
+                    _state.value = it
                 }
             }
         }
@@ -58,7 +60,7 @@ internal class HomeViewModel @Inject constructor(
         dataRepository.getHomeElementsFromDatabase(
             tabFilter = filter.toModel(),
         ).map(RequestResult<List<HomeElementModel>>::toState).collect {
-            uiState.value = it
+            _state.value = it
         }
     }
 }

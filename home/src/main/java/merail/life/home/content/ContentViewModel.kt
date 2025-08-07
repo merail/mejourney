@@ -20,11 +20,14 @@ internal class ContentViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val contentId = checkNotNull(savedStateHandle.toRoute<NavigationRoute.Content>().contentId)
+    private val contentId = savedStateHandle.toRoute<NavigationRoute.Content>().contentId
 
-    var contentLoadingState = dataRepository
+    val contentLoadingState = dataRepository
         .getContent(contentId)
         .map(RequestResult<ContentModel>::toState)
-        .stateIn(viewModelScope, SharingStarted.Lazily, ContentLoadingState.Loading)
-        private set
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = ContentLoadingState.Loading,
+        )
 }

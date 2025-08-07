@@ -11,7 +11,7 @@ internal sealed class ContentLoadingState {
 
     data class Error(val exception: Throwable?): ContentLoadingState()
 
-    class Success(
+    data class Success(
         val item: ContentItem,
     ): ContentLoadingState()
 }

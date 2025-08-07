@@ -34,6 +34,8 @@ include(":core")
 
 include(":home")
 
+include(":error")
+
 include(":auth")
 include(":auth:api")
 include(":auth:impl")

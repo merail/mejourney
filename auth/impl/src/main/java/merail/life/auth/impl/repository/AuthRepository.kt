@@ -8,7 +8,6 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import merail.life.auth.api.IAuthRepository
 import merail.life.auth.impl.R
-import merail.life.core.extensions.toUnit
 import javax.inject.Inject
 
 internal class AuthRepository @Inject constructor(
@@ -28,8 +27,10 @@ internal class AuthRepository @Inject constructor(
         firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
     }
 
-    override suspend fun authorizeAnonymously() = withContext(Dispatchers.IO) {
-        firebaseAuth.signInAnonymously().await().toUnit()
+    override suspend fun authorizeAnonymously() {
+        withContext(Dispatchers.IO) {
+            firebaseAuth.signInAnonymously().await()
+        }
     }
 
     override fun isSnowfallEnabled() = firebaseRemoteConfig.getBoolean(SNOWFALL_STATE_KEY)

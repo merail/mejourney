@@ -4,12 +4,15 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import merail.life.api.data.model.FirestoreDto
 import merail.life.api.data.model.StorageDto
 import merail.life.api.data.model.toDto
-import merail.life.core.NoInternetConnectionException
-import merail.life.core.tryMapToUnauthorizedException
+import merail.life.core.errors.NoInternetConnectionException
+import merail.life.core.errors.tryMapToUnauthorizedException
+import merail.life.core.extensions.suspendableRunCatching
 import javax.inject.Inject
 
 class ServerRepository @Inject constructor(
@@ -26,28 +29,30 @@ class ServerRepository @Inject constructor(
 
     override suspend fun getFirestoreData(
         folderName: String,
-    ): FirestoreDto = runCatching {
-        firebaseFirestore.getCollectionFromPath(folderName).get().await()
-    }.onFailure { error ->
-        error.tryMapToUnauthorizedException()?.let {
-            throw it
-        }
-    }.onSuccess {
-        if (it.metadata.isFromCache) {
-            throw NoInternetConnectionException()
-        }
-    }.getOrThrow().toDto()
+    ): FirestoreDto = withContext(Dispatchers.IO) {
+        suspendableRunCatching {
+            firebaseFirestore.getCollectionFromPath(folderName).get().await()
+        }.onFailure { error ->
+            throw error.tryMapToUnauthorizedException()
+        }.onSuccess {
+            if (it.metadata.isFromCache) {
+                throw NoInternetConnectionException()
+            }
+        }.getOrThrow().toDto()
+    }
 
     override suspend fun getStorageData(
         folderName: String,
-    ): List<StorageDto> = firebaseStorage
-        .getReferenceFromUrl(BUCKET_REFERENCE)
-        .child("$STORAGE_ROOT/$folderName")
-        .listAll()
-        .await()
-        .items
-        .fetchFilesUris()
-        .toDto()
+    ): List<StorageDto> = withContext(Dispatchers.IO) {
+        firebaseStorage
+            .getReferenceFromUrl(BUCKET_REFERENCE)
+            .child("$STORAGE_ROOT/$folderName")
+            .listAll()
+            .await()
+            .items
+            .fetchFilesUris()
+            .toDto()
+    }
 
     private fun FirebaseFirestore.getCollectionFromPath(
         path: String,

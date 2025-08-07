@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,9 +43,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import merail.life.core.INotificationsPermissionRequester
 import merail.life.core.extensions.activity
 import merail.life.core.extensions.rerunApp
+import merail.life.core.permissions.INotificationsPermissionRequester
 import merail.life.data.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
 import merail.life.design.selectedTabColor
@@ -62,17 +63,6 @@ import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 
 @Composable
-fun HomeContainer(
-    onError: (Throwable?) -> Unit,
-    navigateToSelector: (SelectorFilterType) -> Unit,
-    navigateToContent: (String) -> Unit,
-) = HomeScreen(
-    onError = onError,
-    navigateToSelector = navigateToSelector,
-    navigateToContent = navigateToContent,
-)
-
-@Composable
 internal fun HomeScreen(
     onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilterType) -> Unit,
@@ -81,7 +71,7 @@ internal fun HomeScreen(
 ) {
     val context = LocalContext.current
 
-    val state = viewModel.uiState.collectAsState().value
+    val state = viewModel.state.collectAsState().value
 
     when (state) {
         is HomeLoadingState.UnauthorizedException -> LaunchedEffect(null) {
@@ -192,8 +182,8 @@ private fun HomeLoader(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .systemBarsPadding()
                     .padding(
-                        top = 32.dp,
                         bottom = 16.dp,
                     ),
             ) {

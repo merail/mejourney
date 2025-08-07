@@ -37,8 +37,6 @@ fun MejourneyTheme(content: @Composable () -> Unit) {
     }
 
     CompositionLocalProvider(
-        LocalMejourneyColors provides colors,
-        LocalMejourneyTypography provides typography,
         LocalShimmerTheme provides shimmerTheme,
     ) {
         MaterialTheme(

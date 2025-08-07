@@ -53,13 +53,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            pickFirsts += "/META-INF/{NOTICE.md,LICENSE.md}"
-        }
-    }
 }
 
 dependencies {

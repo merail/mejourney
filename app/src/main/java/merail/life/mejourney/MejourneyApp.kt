@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import merail.life.core.errors.ErrorType
 import merail.life.navigation.domain.NavigationRoute
-import merail.life.navigation.domain.error.ErrorType
 import merail.life.navigation.graph.MejourneyNavHost
 
 @Composable

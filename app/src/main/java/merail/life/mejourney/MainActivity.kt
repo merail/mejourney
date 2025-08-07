@@ -23,10 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import merail.life.core.INotificationsPermissionRequester
+import merail.life.core.errors.toType
+import merail.life.core.permissions.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
 import merail.life.navigation.domain.NavigationRoute
-import merail.life.navigation.domain.error.toType
 import merail.life.navigation.domain.getRouteIfExists
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
@@ -55,6 +55,8 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
         }
 
         super.onCreate(savedInstanceState)
+
+        actionBar?.hide()
 
         setContent {
             MejourneyTheme {

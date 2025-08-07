@@ -2,7 +2,7 @@ package merail.life.data
 
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -15,7 +15,6 @@ import merail.life.api.database.model.HomeElementEntity
 import merail.life.core.MergeStrategy
 import merail.life.core.RequestResponseMergeStrategy
 import merail.life.core.RequestResult
-import merail.life.core.extensions.catchWithResult
 import merail.life.core.extensions.flowWithResult
 import merail.life.core.toRequestResult
 import merail.life.data.dto.ImageDto
@@ -44,9 +43,11 @@ class DataRepository @Inject constructor(
 
     override fun getHomeElements(): Flow<RequestResult<List<HomeElementModel>>> {
         val mergeStrategy: MergeStrategy<RequestResult<List<HomeElementModel>>> = RequestResponseMergeStrategy()
-        val cachedAllArticles: Flow<RequestResult<List<HomeElementModel>>> = getHomeElementsFromDatabase()
-        val remoteArticles: Flow<RequestResult<List<HomeElementModel>>> = getHomeElementsFromServer()
-        return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
+
+        val cachedHomeElements = getHomeElementsFromDatabase()
+        val remoteHomeElements = getHomeElementsFromServer()
+
+        return cachedHomeElements.combine(remoteHomeElements, mergeStrategy::merge)
     }
 
     private fun getHomeElementsFromServer(): Flow<RequestResult<List<HomeElementModel>>> {
@@ -57,6 +58,7 @@ class DataRepository @Inject constructor(
             val storageData = serverRepository.getStorageData(
                 folderName = HOME_COVERS_PATH,
             ).map(StorageDto::toImageDto)
+
             firestoreData.zip(storageData).map { (info, file) ->
                 HomeElementModel(
                     id = info.id,
@@ -73,7 +75,9 @@ class DataRepository @Inject constructor(
                 saveHomeElementsToDatabase(it.getOrThrow())
             }
         }.map(Result<List<HomeElementModel>>::toRequestResult)
+
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
+
         return merge(result, start)
     }
 
@@ -82,25 +86,23 @@ class DataRepository @Inject constructor(
         selectorFilter: SelectorFilterType?,
     ): Flow<RequestResult<List<HomeElementModel>>> {
         val request = homeDatabase
-            .homeElementDao()::getAll
-            .asFlow()
-            .map<List<HomeElementEntity>, RequestResult<List<HomeElementModel>>> {
+            .homeElementDao()
+            .getAll()
+            .map {
                 val databaseList = it.map(HomeElementEntity::toModel)
                 when {
                     tabFilter != null -> RequestResult.Success(databaseList.filterByHomeTab(tabFilter))
                     selectorFilter != null -> RequestResult.Success(databaseList.filterBySelector(selectorFilter))
                     else -> RequestResult.Success(databaseList)
                 }
-            }.catchWithResult {
-                RequestResult.Error(error = it)
+            }.catch {
+                RequestResult.Error<RequestResult<List<HomeElementModel>>>(error = it)
             }
+
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
+
         return merge(start, request)
     }
-
-    private suspend fun saveHomeElementsToDatabase(
-        data: List<HomeElementModel>,
-    ) = homeDatabase.homeElementDao().insertAll(data.map(HomeElementModel::toEntity))
 
     override fun getContent(
         id: String,
@@ -112,15 +114,22 @@ class DataRepository @Inject constructor(
             val storageData = serverRepository.getStorageData(
                 folderName = "$CONTENT_PATH$id",
             ).map(StorageDto::toImageDto)
+
             ContentModel(
                 title = firestoreData.title,
                 text = firestoreData.text,
                 imagesUrls = storageData.map(ImageDto::reference).toImmutableList(),
             )
         }.map(Result<ContentModel>::toRequestResult)
+
         val start = flowOf<RequestResult<ContentModel>>(RequestResult.InProgress())
+
         return merge(result, start)
     }
+
+    private suspend fun saveHomeElementsToDatabase(
+        data: List<HomeElementModel>,
+    ) = homeDatabase.homeElementDao().insertAll(data.map(HomeElementModel::toEntity))
 
     private fun List<HomeElementModel>.filterByHomeTab(
         filter: HomeFilterType,

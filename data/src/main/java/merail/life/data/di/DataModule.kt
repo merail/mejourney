@@ -25,14 +25,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface DataModule {
 
-    @Singleton
     @Binds
+    @Singleton
     fun bindDataRepository(
         dataRepository: DataRepository,
     ): IDataRepository
 
-    @Singleton
     @Binds
+    @Singleton
     fun bindServerRepository(
         serverRepository: ServerRepository,
     ): IServerRepository
@@ -52,9 +52,9 @@ interface DataModule {
         fun provideHomeDatabase(
             @ApplicationContext context: Context,
         ): HomeDatabase = Room.databaseBuilder(
-            context,
-            HomeDatabase::class.java,
-            HOME_DATABASE_NAME,
+            context = context,
+            klass = HomeDatabase::class.java,
+            name = HOME_DATABASE_NAME,
         ).build()
     }
 }

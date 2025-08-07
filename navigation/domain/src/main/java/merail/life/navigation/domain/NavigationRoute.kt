@@ -1,14 +1,10 @@
 package merail.life.navigation.domain
 
 import kotlinx.serialization.Serializable
+import merail.life.core.errors.ErrorType
 import merail.life.data.model.SelectorFilterType
-import merail.life.navigation.domain.error.ErrorType
 
 sealed class NavigationRoute {
-
-    @Serializable
-    data object Splash : NavigationRoute()
-
     @Serializable
     data object Home : NavigationRoute()
 
@@ -19,7 +15,7 @@ sealed class NavigationRoute {
 
     @Serializable
     data class Content(
-        val contentId: String?,
+        val contentId: String,
     ) : NavigationRoute() {
         companion object {
             const val ROUTE_NAME = "content"
