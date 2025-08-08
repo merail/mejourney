@@ -2,7 +2,7 @@ package merail.life.navigation.domain
 
 import kotlinx.serialization.Serializable
 import merail.life.core.errors.ErrorType
-import merail.life.data.model.SelectorFilterType
+import merail.life.data.api.model.SelectorFilterType
 
 sealed class NavigationRoute {
     @Serializable

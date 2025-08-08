@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.data.model.HomeElementModel
+import merail.life.data.api.model.HomeElementModel
 
 internal class HomeItem(
     val id: String,

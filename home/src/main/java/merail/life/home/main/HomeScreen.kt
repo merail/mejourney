@@ -46,7 +46,7 @@ import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.extensions.activity
 import merail.life.core.extensions.rerunApp
 import merail.life.core.permissions.INotificationsPermissionRequester
-import merail.life.data.model.SelectorFilterType
+import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor

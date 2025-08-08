@@ -47,5 +47,5 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":navigation:domain"))
     implementation(project(":auth:api"))
-    implementation(project(":data"))
+    implementation(project(":data:api"))
 }

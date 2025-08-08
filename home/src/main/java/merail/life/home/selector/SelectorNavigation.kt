@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import merail.life.data.model.SelectorFilterType
+import merail.life.data.api.model.SelectorFilterType
 import merail.life.navigation.domain.NavigationRoute
 
 fun NavController.navigateToSelector(

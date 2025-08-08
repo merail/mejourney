@@ -27,8 +27,8 @@ include(":app")
 include(":design")
 
 include(":data")
-include(":data:database")
-include(":data:server")
+include(":data:api")
+include(":data:impl")
 
 include(":core")
 

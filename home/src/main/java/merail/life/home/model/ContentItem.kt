@@ -2,7 +2,7 @@ package merail.life.home.model
 
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.extensions.splitWithDelimiter
-import merail.life.data.model.ContentModel
+import merail.life.data.api.model.ContentModel
 
 internal class ContentItem(
     val title: String,

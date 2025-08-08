@@ -86,7 +86,9 @@ dependencies {
     implementation(project(":navigation:graph"))
     implementation(project(":navigation:domain"))
     implementation(project(":auth:api"))
-    implementation(project(":data"))
+    implementation(project(":auth:impl"))
+    implementation(project(":data:api"))
+    implementation(project(":data:impl"))
     implementation(project(":home"))
     "baselineProfile"(project(":profiling"))
 }

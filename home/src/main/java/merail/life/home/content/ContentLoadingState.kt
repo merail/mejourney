@@ -1,7 +1,7 @@
 package merail.life.home.content
 
-import merail.life.core.RequestResult
-import merail.life.data.model.ContentModel
+import merail.life.core.mappers.RequestResult
+import merail.life.data.api.model.ContentModel
 import merail.life.home.model.ContentItem
 import merail.life.home.model.toContentItem
 

@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.data.model.SelectorFilterType
+import merail.life.data.api.model.SelectorFilterType
 
 internal sealed class SelectorFilter {
 

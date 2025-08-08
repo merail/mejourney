@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
-import merail.life.core.RequestResult
-import merail.life.data.IDataRepository
-import merail.life.data.model.HomeElementModel
+import merail.life.core.mappers.RequestResult
+import merail.life.data.api.IDataRepository
+import merail.life.data.api.model.HomeElementModel
 import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 import javax.inject.Inject
