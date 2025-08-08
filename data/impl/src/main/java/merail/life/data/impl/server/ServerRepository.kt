@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import merail.life.core.errors.NoInternetConnectionException
 import merail.life.core.errors.tryMapToUnauthorizedException
+import merail.life.core.extensions.Slash
 import merail.life.core.extensions.suspendableRunCatching
 import merail.life.data.impl.BuildConfig
 import merail.life.data.impl.server.dto.FirestoreDto
@@ -58,7 +59,7 @@ internal class ServerRepository @Inject constructor(
     private fun FirebaseFirestore.getCollectionFromPath(
         path: String,
     ): CollectionReference {
-        val pathList = "$STORAGE_ROOT/$path".split("/")
+        val pathList = "$STORAGE_ROOT/$path".split(String.Slash)
         if (pathList.isNotEmpty()) {
             var collection = collection(pathList[0]).document("${pathList[0]}Document")
             for (i in 1 until pathList.size - 1) {

@@ -17,7 +17,6 @@ import merail.life.home.main.homeScreen
 import merail.life.home.selector.navigateToSelector
 import merail.life.home.selector.selectorScreen
 import merail.life.navigation.domain.NavigationRoute
-import merail.life.navigation.domain.addOnPushNotificationListener
 
 private const val TAG = "MejourneyNavHost"
 
@@ -28,13 +27,13 @@ fun MejourneyNavHost(
     errorType: ErrorType?,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Routing from push doesn't work without getting intentRouteValue here
     intentRoute?.value?.let {
         Log.d(TAG, "Route from push: $it")
+
+        navController.navigateFromPush(it)
+
+        intentRoute.value = null
     }
-    navController.addOnPushNotificationListener(
-        intentRoute = intentRoute,
-    )
 
     NavHost(
         navController = navController,

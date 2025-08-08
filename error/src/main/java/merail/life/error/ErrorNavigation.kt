@@ -4,9 +4,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.dialog
+import androidx.navigation.toRoute
 import merail.life.core.errors.toType
 import merail.life.navigation.domain.NavigationRoute
-import merail.life.navigation.domain.errorType
 
 fun NavController.navigateToError(error: Throwable?) = navigate(
     route = NavigationRoute.Error(error.toType()),
@@ -28,8 +28,10 @@ fun NavGraphBuilder.errorDialog(
             usePlatformDefaultWidth = false,
         ),
     ) {
+        val args = it.toRoute<NavigationRoute.Error>()
+
         ErrorDialog(
-            errorType = it.errorType,
+            errorType = args.errorType,
             onDismiss = onBack,
         )
     }

@@ -37,6 +37,4 @@ dependencies {
     implementation(project(":data:api"))
     implementation(project(":home"))
     implementation(project(":error"))
-    implementation(project(":auth:api"))
-    implementation(project(":auth:impl"))
 }

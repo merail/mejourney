@@ -26,9 +26,5 @@ sealed class NavigationRoute {
     @Serializable
     data class Error(
         val errorType: ErrorType,
-    ) : NavigationRoute() {
-        companion object {
-            const val ERROR_TYPE_KEY = "errorType"
-        }
-    }
+    ) : NavigationRoute()
 }

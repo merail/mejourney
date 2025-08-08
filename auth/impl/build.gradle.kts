@@ -22,11 +22,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
 }
 
 dependencies {
@@ -41,10 +36,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(project(":design"))
     implementation(project(":core"))
-    implementation(project(":navigation:domain"))
     implementation(project(":auth:api"))
 }

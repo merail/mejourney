@@ -19,7 +19,7 @@ class MejourneyMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         message.notification?.let {
-            Log.d(TAG, "Push notification was received: ${it.title} ${it.body} ${message.data}")
+            Log.d(TAG, "Push notification was received: ${message.data}")
             sendNotification(
                 messageTitle = it.title.orEmpty(),
                 messageBody = it.body.orEmpty(),

@@ -27,7 +27,7 @@ import merail.life.core.errors.toType
 import merail.life.core.permissions.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
 import merail.life.navigation.domain.NavigationRoute
-import merail.life.navigation.domain.getRouteIfExists
+import merail.life.navigation.graph.getRouteIfExists
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
 
