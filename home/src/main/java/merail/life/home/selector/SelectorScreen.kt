@@ -31,17 +31,6 @@ import merail.life.design.components.Loading
 import merail.life.home.model.HomeItem
 
 @Composable
-fun SelectorContainer(
-    onError: (Throwable?) -> Unit,
-    navigateToContent: (String) -> Unit,
-    navigateToContentImmediately: (String) -> Unit,
-) = SelectorScreen(
-    onError = onError,
-    navigateToContent = navigateToContent,
-    navigateToContentImmediately = navigateToContentImmediately,
-)
-
-@Composable
 internal fun SelectorScreen(
     onError: (Throwable?) -> Unit,
     navigateToContent: (String) -> Unit,

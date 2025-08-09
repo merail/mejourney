@@ -22,11 +22,14 @@ internal class SelectorViewModel @Inject constructor(
 
     private val selectorFilter = savedStateHandle.toRoute<NavigationRoute.Selector>()
 
-    var selectionState = dataRepository
+    val selectionState = dataRepository
         .getHomeElementsFromDatabase(
             selectorFilter = selectorFilter.selectorFilterType,
         )
         .map(RequestResult<List<HomeElementModel>>::toState)
-        .stateIn(viewModelScope, SharingStarted.Lazily, SelectionState.None)
-        private set
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = SelectionState.None,
+        )
 }

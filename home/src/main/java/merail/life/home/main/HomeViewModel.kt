@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.core.mappers.RequestResult
@@ -29,26 +30,16 @@ internal class HomeViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<HomeLoadingState>(HomeLoadingState.None)
 
-    val state: StateFlow<HomeLoadingState> = _state
+    val state = _state
 
     val isSnowfallEnabled = authRepository.isSnowfallEnabled()
 
-    private var _isInit: Boolean = true
-
     init {
         viewModelScope.launch {
-            dataRepository.getHomeElements().map(RequestResult<List<HomeElementModel>>::toState).collect {
-                if (_isInit) {
-                    when (it) {
-                        is HomeLoadingState.Loading -> Log.d(TAG, "Получение списка элементов. Старт")
-                        is HomeLoadingState.UnauthorizedException -> Log.w(TAG, "Получение списка элементов. Ошибка авторизации", it.exception)
-                        is HomeLoadingState.CommonError -> Log.w(TAG, "Получение списка элементов. Ошибка", it.exception)
-                        is HomeLoadingState.Success -> Log.d(TAG, "Получение списка элементов. Успех")
-                        is HomeLoadingState.None,
-                        -> Unit
-                    }
-                    _state.value = it
-                }
+            dataRepository.getHomeElements().onEach {
+                Log.d(TAG, "Получение списка элементов. $it")
+            }.map(RequestResult<List<HomeElementModel>>::toState).collect {
+                _state.update { it }
             }
         }
     }
@@ -56,11 +47,10 @@ internal class HomeViewModel @Inject constructor(
     fun getHomeItems(
         filter: TabFilter,
     ) = viewModelScope.launch {
-        _isInit = false
         dataRepository.getHomeElementsFromDatabase(
             tabFilter = filter.toModel(),
         ).map(RequestResult<List<HomeElementModel>>::toState).collect {
-            _state.value = it
+            _state.update { it }
         }
     }
 }

@@ -4,6 +4,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -48,7 +49,7 @@ internal class DataRepository @Inject constructor(
         val cachedHomeElements = getHomeElementsFromDatabase()
         val remoteHomeElements = getHomeElementsFromServer()
 
-        return cachedHomeElements.combine(remoteHomeElements, mergeStrategy::merge)
+        return cachedHomeElements.combine(remoteHomeElements, mergeStrategy::merge).distinctUntilChanged()
     }
 
     private fun getHomeElementsFromServer(): Flow<RequestResult<List<HomeElementModel>>> {

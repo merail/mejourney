@@ -35,14 +35,10 @@ internal class MainViewModel @Inject constructor(
             authRepository.authorizeAnonymously()
         }.onFailure { throwable ->
             Log.w(TAG, "Анонимная авторизация. Ошибка", throwable)
-            _state.update {
-                MainState.Error(throwable)
-            }
+            _state.update { MainState.Error(throwable) }
         }.onSuccess {
             Log.d(TAG, "Анонимная авторизация. Успех")
-            _state.update {
-                MainState.AuthSuccess
-            }
+            _state.update { MainState.AuthSuccess }
         }
     }
 }
