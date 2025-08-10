@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.androidTest)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -14,7 +16,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JvmTarget.JVM_17.target
     }
 
     defaultConfig {

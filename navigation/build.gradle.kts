@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "merail.life.navigation.graph"
+    namespace = "merail.life.navigation"
     compileSdk = 35
 
     defaultConfig {
@@ -33,7 +33,6 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":design"))
-    implementation(project(":navigation:domain"))
     implementation(project(":data:api"))
     implementation(project(":home"))
     implementation(project(":error"))

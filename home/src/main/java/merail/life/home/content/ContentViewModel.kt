@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.stateIn
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.ContentModel
-import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +19,7 @@ internal class ContentViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val contentId = savedStateHandle.toRoute<NavigationRoute.Content>().contentId
+    private val contentId = savedStateHandle.toRoute<ContentRoute>().contentId
 
     val contentLoadingState = dataRepository
         .getContent(contentId)

@@ -41,7 +41,3 @@ include(":auth:api")
 include(":auth:impl")
 
 include(":profiling")
-
-include(":navigation")
-include(":navigation:domain")
-include(":navigation:graph")

@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.android
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.androidLibrary)
@@ -19,14 +20,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JvmTarget.JVM_17.target
     }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-
-    implementation(libs.kotlinx.immutable.collections)
 
     implementation(project(":core"))
 }

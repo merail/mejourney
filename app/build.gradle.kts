@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -47,7 +49,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JvmTarget.JVM_17.target
     }
 
     buildFeatures {
@@ -83,12 +85,11 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":design"))
-    implementation(project(":navigation:graph"))
-    implementation(project(":navigation:domain"))
     implementation(project(":auth:api"))
     implementation(project(":auth:impl"))
     implementation(project(":data:api"))
     implementation(project(":data:impl"))
     implementation(project(":home"))
+    implementation(project(":error"))
     "baselineProfile"(project(":profiling"))
 }

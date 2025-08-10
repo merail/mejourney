@@ -4,14 +4,25 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import merail.life.navigation.domain.NavigationRoute
+import kotlinx.serialization.Serializable
+import merail.life.core.navigation.NavigationRoute
+
+@Serializable
+data class ContentRoute(
+    val contentId: String,
+) : NavigationRoute {
+    companion object {
+        const val ROUTE_NAME = "content"
+        const val CONTENT_ID_KEY = "contentId"
+    }
+}
 
 fun NavController.navigateToContent(
     contentId: String,
     navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
     navigate(
-        route = NavigationRoute.Content(contentId),
+        route = ContentRoute(contentId),
         builder = navOptions,
     )
 }
@@ -22,7 +33,7 @@ fun NavController.navigateToContentImmediately(
 ) {
     popBackStack()
     navigate(
-        route = NavigationRoute.Content(contentId),
+        route = ContentRoute(contentId),
         builder = navOptions,
     )
 }
@@ -30,7 +41,7 @@ fun NavController.navigateToContentImmediately(
 fun NavGraphBuilder.contentScreen(
     navigateToError: (Throwable?) -> Unit,
 ) {
-    composable<NavigationRoute.Content> {
+    composable<ContentRoute> {
         ContentScreen(
             navigateToError = navigateToError,
         )

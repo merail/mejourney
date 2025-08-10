@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.android
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -22,7 +23,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JvmTarget.JVM_17.target
     }
 
     buildFeatures {
@@ -65,8 +66,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
-
-    implementation(libs.kotlinx.immutable.collections)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

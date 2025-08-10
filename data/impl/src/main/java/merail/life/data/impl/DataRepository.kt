@@ -1,6 +1,5 @@
 package merail.life.data.impl
 
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -120,7 +119,7 @@ internal class DataRepository @Inject constructor(
             ContentModel(
                 title = firestoreData.title,
                 text = firestoreData.text,
-                imagesUrls = storageData.map(ImageDto::reference).toImmutableList(),
+                imagesUrls = storageData.map(ImageDto::reference),
             )
         }.map(Result<ContentModel>::toRequestResult)
 

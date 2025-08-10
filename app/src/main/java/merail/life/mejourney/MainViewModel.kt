@@ -21,9 +21,9 @@ internal class MainViewModel @Inject constructor(
         private const val TAG = "MainViewModel"
     }
 
-    private val _state = MutableStateFlow<MainState>(MainState.Loading)
+    private val _state = MutableStateFlow<MainAuthState>(MainAuthState.Loading)
 
-    val state: StateFlow<MainState> = _state
+    val state: StateFlow<MainAuthState> = _state
 
     init {
         authAnonymously()
@@ -35,10 +35,10 @@ internal class MainViewModel @Inject constructor(
             authRepository.authorizeAnonymously()
         }.onFailure { throwable ->
             Log.w(TAG, "Анонимная авторизация. Ошибка", throwable)
-            _state.update { MainState.Error(throwable) }
+            _state.update { MainAuthState.Error(throwable) }
         }.onSuccess {
             Log.d(TAG, "Анонимная авторизация. Успех")
-            _state.update { MainState.AuthSuccess }
+            _state.update { MainAuthState.AuthSuccess }
         }
     }
 }

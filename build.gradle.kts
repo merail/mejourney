@@ -9,6 +9,5 @@ plugins {
     alias(libs.plugins.hilt.gradle) apply false
     alias(libs.plugins.androidTest) apply false
     alias(libs.plugins.baselineprofile) apply false
-    alias(libs.plugins.androidx.navigation.safeargs) apply false
     alias(libs.plugins.ksp) apply false
 }

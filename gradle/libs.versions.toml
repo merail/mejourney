@@ -77,6 +77,5 @@ androidTest = { id = "com.android.test", version.ref = "agp" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-androidx-navigation-safeargs = { id = "androidx.navigation.safeargs", version.ref = "navigation" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

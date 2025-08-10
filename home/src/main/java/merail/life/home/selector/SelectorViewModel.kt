@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.stateIn
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeElementModel
-import merail.life.navigation.domain.NavigationRoute
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +19,7 @@ internal class SelectorViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val selectorFilter = savedStateHandle.toRoute<NavigationRoute.Selector>()
+    private val selectorFilter = savedStateHandle.toRoute<SelectorRoute>()
 
     val selectionState = dataRepository
         .getHomeElementsFromDatabase(

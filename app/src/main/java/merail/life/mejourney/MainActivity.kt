@@ -24,10 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import merail.life.core.errors.toType
+import merail.life.core.navigation.NavigationRoute
 import merail.life.core.permissions.INotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
-import merail.life.navigation.domain.NavigationRoute
-import merail.life.navigation.graph.getRouteIfExists
+import merail.life.mejourney.navigation.getRouteIfExists
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
 
@@ -51,7 +51,7 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
         )
 
         installSplashScreen().setKeepOnScreenCondition {
-            viewModel.state.value is MainState.Loading
+            viewModel.state.value is MainAuthState.Loading
         }
 
         super.onCreate(savedInstanceState)
@@ -71,7 +71,7 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
 
                     MejourneyApp(
                         intentRoute = intentRoute,
-                        errorType = (state as? MainState.Error)?.exception?.toType(),
+                        errorType = (state as? MainAuthState.Error)?.exception?.toType(),
                     )
 
                     // Only with this line system bars paddings work correctly everywhere :(

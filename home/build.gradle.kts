@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt.gradle)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
@@ -20,7 +23,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JvmTarget.JVM_17.target
     }
 
     buildFeatures {
@@ -36,6 +39,8 @@ dependencies {
 
     implementation(libs.kotlinx.immutable.collections)
 
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -45,7 +50,6 @@ dependencies {
 
     implementation(project(":design"))
     implementation(project(":core"))
-    implementation(project(":navigation:domain"))
     implementation(project(":auth:api"))
     implementation(project(":data:api"))
 }
