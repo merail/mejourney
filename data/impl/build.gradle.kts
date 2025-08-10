@@ -74,6 +74,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation(project(":core"))
-    implementation(project(":data:api"))
+    implementation(projects.core)
+    implementation(projects.data.api)
 }

@@ -39,6 +39,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(project(":core"))
-    implementation(project(":design"))
+    implementation(projects.core)
+    implementation(projects.design)
 }

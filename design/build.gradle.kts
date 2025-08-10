@@ -40,5 +40,5 @@ dependencies {
 
     implementation(libs.compose.shimmer)
 
-    implementation(project(":core"))
+    implementation(projects.core)
 }

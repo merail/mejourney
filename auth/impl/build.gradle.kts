@@ -33,6 +33,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    implementation(project(":core"))
-    implementation(project(":auth:api"))
+    implementation(projects.core)
+    implementation(projects.auth.api)
 }

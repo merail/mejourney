@@ -83,13 +83,14 @@ dependencies {
 
     implementation(libs.request.permissions.tool)
 
-    implementation(project(":core"))
-    implementation(project(":design"))
-    implementation(project(":auth:api"))
-    implementation(project(":auth:impl"))
-    implementation(project(":data:api"))
-    implementation(project(":data:impl"))
-    implementation(project(":home"))
-    implementation(project(":error"))
-    "baselineProfile"(project(":profiling"))
+    implementation(projects.core)
+    implementation(projects.design)
+    implementation(projects.auth.api)
+    implementation(projects.auth.impl)
+    implementation(projects.data.api)
+    implementation(projects.data.impl)
+    implementation(projects.home)
+    implementation(projects.error)
+
+    baselineProfile(projects.profiling)
 }

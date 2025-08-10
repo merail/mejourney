@@ -48,8 +48,8 @@ dependencies {
     implementation(libs.compose.shimmer)
     implementation(libs.snowfall)
 
-    implementation(project(":design"))
-    implementation(project(":core"))
-    implementation(project(":auth:api"))
-    implementation(project(":data:api"))
+    implementation(projects.core)
+    implementation(projects.design)
+    implementation(projects.auth.api)
+    implementation(projects.data.api)
 }
