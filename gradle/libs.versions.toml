@@ -32,28 +32,40 @@ permissionsTool = "1.1.2"
 snowfall = "0.9.10"
 
 [libraries]
+#<editor-fold desc="androidx">
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
+
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
+
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
+
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacro" }
-androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
 
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacro" }
+#</editor-fold>
+
+#<editor-fold desc="kotlinx">
 kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutableCollections" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+#</editor-fold>
 
+#<editor-fold desc="firebase">
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
@@ -62,16 +74,23 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+#</editor-fold>
 
+#<editor-fold desc="hilt">
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+#</editor-fold>
 
+#<editor-fold desc="coil">
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+#</editor-fold>
 
+#<editor-fold desc="other">
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "shimmer" }
 request-permissions-tool = { module = "com.github.merail:request-permissions-tool", version.ref = "permissionsTool" }
 snowfall = { group = "com.github.idapgroup", name = "Snowfall", version.ref = "snowfall" }
+#</editor-fold>
 
 [plugins]
 android-app = { id = "com.android.application", version.ref = "agp" }

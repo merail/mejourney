@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,6 +46,7 @@ import merail.life.core.extensions.rerunApp
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
@@ -139,6 +139,7 @@ private fun Content(
         TabsContent(
             tabFilter = tabFilter,
             items = state.items,
+            isLoading = state is HomeLoadingState.Loading,
             navigateToSelector = navigateToSelector,
             navigateToContent = navigateToContent,
         )
@@ -177,9 +178,9 @@ private fun HomeLoader(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .systemBarsPadding()
                     .padding(
-                        bottom = 16.dp,
+                        top = pureStatusBarHeight(),
+                        bottom = 12.dp,
                     ),
             ) {
                 CircularProgressIndicator(
@@ -196,6 +197,7 @@ private fun HomeLoader(
 private fun ColumnScope.TabsContent(
     tabFilter: TabFilter,
     items: ImmutableList<HomeItem>,
+    isLoading: Boolean,
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit,
 ) {
@@ -212,14 +214,17 @@ private fun ColumnScope.TabsContent(
     when (tabFilter) {
         TabFilter.YEAR -> YearsList(
             items = items,
+            isLoading = isLoading,
             navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.COUNTRY -> CountriesList(
             items = items,
+            isLoading = isLoading,
             navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.PLACE -> PlacesList(
             items = items,
+            isLoading = isLoading,
             navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.COMMON -> CommonList(

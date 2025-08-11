@@ -20,22 +20,29 @@ import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.HomeItem
 
 @Composable
 internal fun ColumnScope.CountriesList(
     items: ImmutableList<HomeItem>,
+    isLoading: Boolean,
     navigateToContent: (String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = Modifier
-            .weight(1f)
             .padding(
                 start = 4.dp,
-                top = 32.dp,
+                top = if (isLoading) {
+                    0.dp
+                } else {
+                    pureStatusBarHeight()
+                },
                 end = 4.dp,
-            ),
+                bottom = 4.dp,
+            )
+            .weight(1f),
     ) {
         items(
             items = items,

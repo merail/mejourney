@@ -11,9 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -49,8 +47,8 @@ internal class MainActivity : ComponentActivity(), NotificationsPermissionReques
     override fun onCreate(savedInstanceState: Bundle?) {
 
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
         )
 
         installSplashScreen().setKeepOnScreenCondition {
@@ -76,9 +74,6 @@ internal class MainActivity : ComponentActivity(), NotificationsPermissionReques
                         intentRoute = intentRoute,
                         errorType = (state as? MainAuthState.Error)?.exception?.toType(),
                     )
-
-                    // Only with this line system bars paddings work correctly everywhere :(
-                    WindowInsets.systemBars
                 }
             }
         }

@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +31,7 @@ import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
 import merail.life.design.components.Loading
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -85,9 +89,12 @@ private fun SelectorItem(
         modifier = Modifier
             .padding(
                 start = 4.dp,
-                top = 32.dp,
+                top = pureStatusBarHeight(),
                 end = 4.dp,
-                bottom = 20.dp,
+            )
+            .navigationBarsPadding()
+            .clip(
+                shape = RoundedCornerShape(12.dp),
             )
             .clickable {
                 navigateToContent(item.id)

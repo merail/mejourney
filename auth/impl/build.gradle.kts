@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "merail.life.auth.impl"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 30

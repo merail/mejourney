@@ -20,6 +20,7 @@ import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
 import merail.life.design.components.Loading
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.ContentItem
 import merail.life.home.model.IMAGE_DELIMITER
 import merail.life.home.model.splitWithImages
@@ -45,12 +46,12 @@ private fun Content(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .navigationBarsPadding()
             .padding(
                 start = 24.dp,
-                top = 24.dp,
+                top = pureStatusBarHeight(),
                 end = 24.dp,
             )
+            .navigationBarsPadding()
             .verticalScroll(rememberScrollState()),
     ) {
         Text(

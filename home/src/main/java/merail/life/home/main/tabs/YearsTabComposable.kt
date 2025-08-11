@@ -1,5 +1,6 @@
 package merail.life.home.main.tabs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
@@ -21,23 +22,30 @@ import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.R
 import merail.life.home.model.HomeItem
 
 @Composable
 internal fun ColumnScope.YearsList(
     items: ImmutableList<HomeItem>,
+    isLoading: Boolean,
     navigateToContent: (String) -> Unit,
 ) {
     LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(24.dp),
         modifier = Modifier
-            .weight(1f)
             .padding(
                 start = 4.dp,
-                top = 24.dp,
+                top = if (isLoading) {
+                    0.dp
+                } else {
+                    pureStatusBarHeight()
+                },
                 end = 4.dp,
                 bottom = 4.dp,
-            ),
+            )
+            .weight(1f),
     ) {
         items(
             items = items,
@@ -61,12 +69,7 @@ private fun YearItem(
     item: HomeItem,
     navigateToContent: (String) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(
-                vertical = 12.dp
-            ),
-    ) {
+    Column {
         var isImageLoaded by remember {
             mutableStateOf(false)
         }
@@ -93,10 +96,6 @@ private fun YearItem(
 
         Card(
             colors = MejourneyTheme.colors.cardColors,
-            modifier = Modifier
-                .padding(
-                    top = 12.dp,
-                ),
         ) {
             CoverImage(
                 id = item.id,
