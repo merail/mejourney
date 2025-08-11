@@ -25,14 +25,17 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import merail.life.core.errors.toType
 import merail.life.core.navigation.NavigationRoute
-import merail.life.core.permissions.INotificationsPermissionRequester
+import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
+import merail.life.mejourney.activity.MainAuthState
+import merail.life.mejourney.activity.MainViewModel
+import merail.life.mejourney.navigation.MejourneyNavHost
 import merail.life.mejourney.navigation.getRouteIfExists
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
 
 @AndroidEntryPoint
-internal class MainActivity : ComponentActivity(), INotificationsPermissionRequester {
+internal class MainActivity : ComponentActivity(), NotificationsPermissionRequester {
 
     private val viewModel by viewModels<MainViewModel>()
 
@@ -69,7 +72,7 @@ internal class MainActivity : ComponentActivity(), INotificationsPermissionReque
 
                     val state by viewModel.state.collectAsState()
 
-                    MejourneyApp(
+                    MejourneyNavHost(
                         intentRoute = intentRoute,
                         errorType = (state as? MainAuthState.Error)?.exception?.toType(),
                     )

@@ -1,5 +1,6 @@
 package merail.life.home.main
 
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -36,16 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import merail.life.core.extensions.activity
 import merail.life.core.extensions.rerunApp
-import merail.life.core.permissions.INotificationsPermissionRequester
+import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
 import merail.life.design.selectedTabColor
@@ -69,27 +68,23 @@ internal fun HomeScreen(
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
+    val activity = LocalActivity.current
 
     val state = viewModel.state.collectAsState().value
 
     when (state) {
         is HomeLoadingState.UnauthorizedException -> LaunchedEffect(null) {
-            context.rerunApp()
+            activity?.rerunApp()
         }
         is HomeLoadingState.CommonError -> LaunchedEffect(null) {
             onError(state.exception)
         }
         is HomeLoadingState.Success -> LaunchedEffect(null) {
-            (context.activity as? INotificationsPermissionRequester)?.requestPermission()
+            (activity as? NotificationsPermissionRequester)?.requestPermission()
         }
         is HomeLoadingState.None,
         is HomeLoadingState.Loading,
         -> Unit
-    }
-
-    if (state is HomeLoadingState.Success) {
-        (LocalContext.current.activity as? INotificationsPermissionRequester)?.requestPermission()
     }
 
     val onTabClick: (TabFilter) -> Unit = remember {

@@ -3,9 +3,9 @@ package merail.life.mejourney.navigation
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import merail.life.core.errors.ErrorType
 import merail.life.core.navigation.NavigationRoute
 import merail.life.error.ErrorRoute
@@ -24,10 +24,9 @@ private const val TAG = "MejourneyNavHost"
 
 @Composable
 fun MejourneyNavHost(
-    navController: NavHostController,
+    navController: NavHostController = rememberNavController(),
     intentRoute: MutableState<NavigationRoute?>?,
     errorType: ErrorType?,
-    modifier: Modifier = Modifier,
 ) {
     intentRoute?.value?.let {
         Log.d(TAG, "Route from push: $it")
@@ -44,7 +43,6 @@ fun MejourneyNavHost(
         } else {
             ErrorRoute(errorType)
         },
-        modifier = modifier,
     ) {
         homeScreen(
             onError = navController::navigateToError,

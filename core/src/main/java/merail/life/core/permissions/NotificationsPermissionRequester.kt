@@ -1,5 +1,5 @@
 package merail.life.core.permissions
 
-interface INotificationsPermissionRequester {
+interface NotificationsPermissionRequester {
     fun requestPermission()
 }
