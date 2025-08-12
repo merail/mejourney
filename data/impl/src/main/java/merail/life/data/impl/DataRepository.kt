@@ -29,6 +29,7 @@ import merail.life.data.impl.dto.toImageDto
 import merail.life.data.impl.server.IServerRepository
 import merail.life.data.impl.server.dto.StorageDto
 import javax.inject.Inject
+import kotlin.collections.map
 
 internal class DataRepository @Inject constructor(
     private val homeDatabase: HomeDatabase,
@@ -89,15 +90,11 @@ internal class DataRepository @Inject constructor(
         val request = homeDatabase
             .homeElementDao()
             .getAll()
-            .map {
-                val databaseList = it.map(HomeElementEntity::toModel)
-                when {
-                    tabFilter != null -> RequestResult.Success(databaseList.filterByHomeTab(tabFilter))
-                    selectorFilter != null -> RequestResult.Success(databaseList.filterBySelector(selectorFilter))
-                    else -> RequestResult.Success(databaseList)
-                }
-            }.catch {
-                RequestResult.Error<RequestResult<List<HomeElementModel>>>(error = it)
+            .toModel(tabFilter, selectorFilter)
+            .catch {
+                RequestResult.Error<RequestResult<List<HomeElementModel>>>(
+                    error = it,
+                )
             }
 
         val start = flowOf<RequestResult<List<HomeElementModel>>>(RequestResult.InProgress())
@@ -131,6 +128,18 @@ internal class DataRepository @Inject constructor(
     private suspend fun saveHomeElementsToDatabase(
         data: List<HomeElementModel>,
     ) = homeDatabase.homeElementDao().insertAll(data.map(HomeElementModel::toEntity))
+
+    private fun Flow<List<HomeElementEntity>>.toModel(
+        tabFilter: HomeFilterType?,
+        selectorFilter: SelectorFilterType?,
+    ) = map {
+        val databaseList = it.map(HomeElementEntity::toModel)
+        when {
+            tabFilter != null -> RequestResult.Success(databaseList.filterByHomeTab(tabFilter))
+            selectorFilter != null -> RequestResult.Success(databaseList.filterBySelector(selectorFilter))
+            else -> RequestResult.Success(databaseList)
+        }
+    }
 
     private fun List<HomeElementModel>.filterByHomeTab(
         filter: HomeFilterType,

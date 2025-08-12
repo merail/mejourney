@@ -74,12 +74,6 @@ private fun YearItem(
             mutableStateOf(false)
         }
 
-        val onLoadingSuccess = remember {
-            {
-                isImageLoaded = true
-            }
-        }
-
         if (isImageLoaded) {
             Text(
                 text = stringResource(
@@ -103,7 +97,9 @@ private fun YearItem(
                 loading = {
                     ImageLoading(Modifier.height(224.dp))
                 },
-                onLoadingSuccess = onLoadingSuccess,
+                onLoadingSuccess =  {
+                    isImageLoaded = true
+                },
                 navigateTo = navigateToContent,
                 modifier = Modifier
                     .height(224.dp),

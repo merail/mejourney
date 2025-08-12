@@ -54,17 +54,13 @@ internal fun ColumnScope.CommonList(
                     mutableStateOf(false)
                 }
 
-                val onLongClick = remember {
-                    {
-                        isImageLongClicked = isImageLongClicked.not()
-                    }
-                }
-
                 CoverImage(
                     id = it.id,
                     url = it.url,
                     navigateTo = navigateToContent,
-                    onLongClick = onLongClick,
+                    onLongClick = {
+                        isImageLongClicked = isImageLongClicked.not()
+                    },
                 )
 
                 AnimatedImageText(

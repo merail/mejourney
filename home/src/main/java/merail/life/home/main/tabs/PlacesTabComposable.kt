@@ -75,12 +75,6 @@ private fun PlaceItem(
             mutableStateOf(false)
         }
 
-        val onLoadingSuccess = remember {
-            {
-                isImageLoaded = true
-            }
-        }
-
         Card(
             colors = MejourneyTheme.colors.cardColors,
             border = BorderStroke(1.dp, MejourneyTheme.colors.borderPrimary),
@@ -92,7 +86,9 @@ private fun PlaceItem(
                 loading = {
                     ImageLoading(Modifier.height(512.dp))
                 },
-                onLoadingSuccess = onLoadingSuccess,
+                onLoadingSuccess =  {
+                    isImageLoaded = true
+                },
                 navigateTo = navigateToContent,
                 modifier = Modifier
                     .height(512.dp),

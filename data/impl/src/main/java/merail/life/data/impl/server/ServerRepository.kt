@@ -59,7 +59,7 @@ internal class ServerRepository @Inject constructor(
     private fun FirebaseFirestore.getCollectionFromPath(
         path: String,
     ): CollectionReference {
-        val pathList = "$STORAGE_ROOT/$path".split(String.Slash)
+        val pathList = "$STORAGE_ROOT${String.Slash}$path".split(String.Slash)
         if (pathList.isNotEmpty()) {
             var collection = collection(pathList[0]).document("${pathList[0]}Document")
             for (i in 1 until pathList.size - 1) {

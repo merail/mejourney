@@ -73,17 +73,12 @@ private fun CountryItem(
             var isImageLoaded by remember {
                 mutableStateOf(false)
             }
-
-            val onLoadingSuccess = remember {
-                {
-                    isImageLoaded = true
-                }
-            }
-
             CoverImage(
                 id = item.id,
                 url = item.url,
-                onLoadingSuccess = onLoadingSuccess,
+                onLoadingSuccess =  {
+                    isImageLoaded = true
+                },
                 navigateTo = navigateToContent,
                 modifier = Modifier
                     .height(256.dp),

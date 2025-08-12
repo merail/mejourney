@@ -29,7 +29,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -87,24 +86,14 @@ internal fun HomeScreen(
         -> Unit
     }
 
-    val onTabClick: (TabFilter) -> Unit = remember {
-        { tabFilter: TabFilter ->
-            viewModel.getHomeItems(tabFilter)
-        }
-    }
-
-    val onSelectorClick = remember {
-        { selectorFilter: SelectorFilter ->
-            navigateToSelector(selectorFilter.toModel())
-        }
-    }
-
     Content(
         state = state,
         isSnowfallEnabled = viewModel.isSnowfallEnabled,
-        navigateToSelector = onSelectorClick,
+        navigateToSelector = {
+            navigateToSelector(it.toModel())
+        },
         navigateToContent = navigateToContent,
-        onTabClick = onTabClick,
+        onTabClick = viewModel::getHomeItems,
     )
 }
 
@@ -144,15 +133,11 @@ private fun Content(
             navigateToContent = navigateToContent,
         )
 
-        val onTabClickInternal = remember {
-            { it: TabFilter ->
+        HomeTabs(
+            onTabClick = {
                 tabFilter = it
                 onTabClick(it)
-            }
-        }
-
-        HomeTabs(
-            onTabClick = onTabClickInternal,
+            },
         )
     }
 }
@@ -290,15 +275,6 @@ private fun Pair<TabFilter, Int>.HomeTab(
     index: Int,
     onTabClick: (TabFilter) -> Unit,
 ) {
-    val onTabClickInternal = remember {
-        {
-            if (selectedIndex.value != index) {
-                selectedIndex.value = index
-                onTabClick(first)
-            }
-        }
-    }
-
     Box(
         modifier = Modifier
             .height(40.dp)
@@ -307,7 +283,12 @@ private fun Pair<TabFilter, Int>.HomeTab(
         val isSelected = selectedIndex.value == index
         Tab(
             selected = isSelected,
-            onClick = onTabClickInternal,
+            onClick = {
+                if (selectedIndex.value != index) {
+                    selectedIndex.value = index
+                    onTabClick(first)
+                }
+            },
             text = {
                 HomeTabText(
                     textRes = second,
