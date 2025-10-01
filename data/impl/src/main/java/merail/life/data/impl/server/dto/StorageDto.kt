@@ -2,8 +2,7 @@ package merail.life.data.impl.server.dto
 
 import android.net.Uri
 
-@JvmInline
-internal value class StorageDto(
+internal data class StorageDto(
     val reference: Uri,
 )
 

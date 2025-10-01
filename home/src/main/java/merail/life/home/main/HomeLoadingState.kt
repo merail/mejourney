@@ -12,10 +12,8 @@ import merail.life.home.model.toHomeItems
 internal sealed class HomeLoadingState(
     open val items: ImmutableList<HomeItem>,
 ) {
-    data object None : HomeLoadingState(persistentListOf())
-
     data class Loading(
-        override val items: ImmutableList<HomeItem>,
+        override val items: ImmutableList<HomeItem> = persistentListOf(),
     ) : HomeLoadingState(items)
 
     data class UnauthorizedException(

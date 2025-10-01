@@ -81,7 +81,6 @@ internal fun HomeScreen(
         is HomeLoadingState.Success -> LaunchedEffect(null) {
             (activity as? NotificationsPermissionRequester)?.requestPermission()
         }
-        is HomeLoadingState.None,
         is HomeLoadingState.Loading,
         -> Unit
     }

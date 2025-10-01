@@ -5,7 +5,7 @@ import kotlinx.collections.immutable.toImmutableList
 import merail.life.core.extensions.splitWithDelimiter
 import merail.life.data.api.model.ContentModel
 
-internal class ContentItem(
+internal data class ContentItem(
     val title: String,
     val text: String,
     val imagesUrls: ImmutableList<String>,

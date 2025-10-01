@@ -21,6 +21,7 @@ import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
 import merail.life.design.components.Loading
 import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.home.content.state.ContentLoadingState
 import merail.life.home.model.ContentItem
 import merail.life.home.model.IMAGE_DELIMITER
 import merail.life.home.model.splitWithImages

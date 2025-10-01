@@ -27,7 +27,7 @@ internal class AuthRepository @Inject constructor(
         firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
     }
 
-    override suspend fun authorizeAnonymously() {
+    override suspend fun authorize() {
         withContext(Dispatchers.IO) {
             firebaseAuth.signInAnonymously().await()
         }

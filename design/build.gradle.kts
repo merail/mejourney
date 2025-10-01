@@ -36,6 +36,8 @@ dependencies {
     implementation(libs.androidx.material3)
     debugImplementation(libs.androidx.ui.tooling)
 
+    implementation(libs.androidx.core.splashscreen)
+
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
 

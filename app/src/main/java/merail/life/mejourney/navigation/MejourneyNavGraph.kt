@@ -12,13 +12,13 @@ import merail.life.error.ErrorRoute
 import merail.life.error.closeAndNavigateToError
 import merail.life.error.errorDialog
 import merail.life.error.navigateToError
-import merail.life.home.content.contentScreen
-import merail.life.home.content.navigateToContent
-import merail.life.home.content.navigateToContentImmediately
-import merail.life.home.main.HomeRoute
-import merail.life.home.main.homeScreen
-import merail.life.home.selector.navigateToSelector
-import merail.life.home.selector.selectorScreen
+import merail.life.home.content.navigation.contentScreen
+import merail.life.home.content.navigation.navigateToContent
+import merail.life.home.content.navigation.navigateToContentImmediately
+import merail.life.home.main.navigation.HomeRoute
+import merail.life.home.main.navigation.homeScreen
+import merail.life.home.selector.navigation.navigateToSelector
+import merail.life.home.selector.navigation.selectorScreen
 
 private const val TAG = "MejourneyNavHost"
 

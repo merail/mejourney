@@ -25,15 +25,13 @@ import merail.life.core.errors.toType
 import merail.life.core.navigation.NavigationRoute
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
-import merail.life.mejourney.activity.MainAuthState
-import merail.life.mejourney.activity.MainViewModel
 import merail.life.mejourney.navigation.MejourneyNavHost
 import merail.life.mejourney.navigation.getRouteIfExists
+import merail.life.mejourney.state.MainAuthState
 import merail.tools.permissions.runtime.runtimePermissionRequester
 
-
 @AndroidEntryPoint
-internal class MainActivity : ComponentActivity(), NotificationsPermissionRequester {
+class MainActivity : ComponentActivity(), NotificationsPermissionRequester {
 
     private val viewModel by viewModels<MainViewModel>()
 

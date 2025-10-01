@@ -4,11 +4,11 @@ import merail.life.data.api.model.SelectorFilterType
 
 internal sealed class SelectorFilter {
 
-    class Year(val year: Long): SelectorFilter()
+    data class Year(val year: Long): SelectorFilter()
 
-    class Country(val country: String): SelectorFilter()
+    data class Country(val country: String): SelectorFilter()
 
-    class Place(val place: String): SelectorFilter()
+    data class Place(val place: String): SelectorFilter()
 }
 
 internal fun SelectorFilter.toModel() = when (this) {

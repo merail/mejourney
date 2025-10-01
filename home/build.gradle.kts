@@ -15,6 +15,8 @@ android {
 
     defaultConfig {
         minSdk = 30
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -29,10 +31,19 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{LICENSE.md,LICENSE-notice.md}"
+        }
+    }
 }
 
 dependencies {
     implementation(libs.androidx.activity)
+
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui.tooling.preview)

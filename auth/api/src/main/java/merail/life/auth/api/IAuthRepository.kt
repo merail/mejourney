@@ -1,7 +1,7 @@
 package merail.life.auth.api
 
 interface IAuthRepository {
-    suspend fun authorizeAnonymously()
+    suspend fun authorize()
 
     fun isSnowfallEnabled(): Boolean
 }

@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.stateIn
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.ContentModel
+import merail.life.home.content.navigation.ContentRoute
+import merail.life.home.content.state.ContentLoadingState
+import merail.life.home.content.state.toState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +29,7 @@ internal class ContentViewModel @Inject constructor(
         .map(RequestResult<ContentModel>::toState)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            started = SharingStarted.Eagerly,
             initialValue = ContentLoadingState.Loading,
         )
 }

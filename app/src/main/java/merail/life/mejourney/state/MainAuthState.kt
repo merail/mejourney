@@ -1,4 +1,4 @@
-package merail.life.mejourney.activity
+package merail.life.mejourney.state
 
 internal sealed class MainAuthState {
 

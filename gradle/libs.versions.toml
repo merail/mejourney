@@ -20,10 +20,17 @@ benchmarkMacro = "1.4.0"
 room = "2.7.2"
 profileinstaller = "1.4.1"
 
+composeJunit = "1.8.3"
+uiautomator = "2.3.0"
+mockk = "1.13.12"
+
 immutableCollections = "0.3.7"
 serialization = "1.8.0"
+coroutinesTest = "1.10.2"
 
 firebase = "34.1.0"
+
+hiltTest = "2.48"
 
 coil = "2.7.0"
 
@@ -60,9 +67,19 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacro" }
 #</editor-fold>
 
+#<editor-fold desc="test">
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeJunit" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+#</editor-fold>
+
 #<editor-fold desc="kotlinx">
 kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutableCollections" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 #</editor-fold>
 
 #<editor-fold desc="firebase">
@@ -79,6 +96,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 #<editor-fold desc="hilt">
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltTest" }
 #</editor-fold>
 
 #<editor-fold desc="coil">

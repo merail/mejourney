@@ -1,4 +1,4 @@
-package merail.life.home.content
+package merail.life.home.content.state
 
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.model.ContentModel

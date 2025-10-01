@@ -1,4 +1,4 @@
-package merail.life.home.main
+package merail.life.home.main.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import merail.life.core.navigation.NavigationRoute
 import merail.life.data.api.model.SelectorFilterType
+import merail.life.home.main.HomeScreen
 
 @Serializable
 data object HomeRoute : NavigationRoute

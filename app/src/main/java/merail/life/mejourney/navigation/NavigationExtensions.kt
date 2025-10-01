@@ -5,11 +5,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import merail.life.core.extensions.Slash
 import merail.life.core.navigation.NavigationRoute
-import merail.life.home.content.ContentRoute
-import merail.life.home.main.HomeRoute
-import merail.life.home.selector.SelectorRoute
+import merail.life.home.content.navigation.ContentRoute
+import merail.life.home.main.navigation.HomeRoute
+import merail.life.home.selector.navigation.SelectorRoute
 
-private const val CATEGORY_KEY = "category"
+internal const val CATEGORY_KEY = "category"
 
 fun Intent.getRouteIfExists(): NavigationRoute? {
     val category = extras?.getString(CATEGORY_KEY)
