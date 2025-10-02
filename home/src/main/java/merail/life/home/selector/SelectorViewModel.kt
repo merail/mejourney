@@ -12,7 +12,7 @@ import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeElementModel
 import merail.life.home.selector.navigation.SelectorRoute
-import merail.life.home.selector.state.SelectionState
+import merail.life.home.selector.state.SelectionLoadingState
 import merail.life.home.selector.state.toState
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ internal class SelectorViewModel @Inject constructor(
 
     private val selectorFilter = savedStateHandle.toRoute<SelectorRoute>()
 
-    val selectionState = dataRepository
+    val selectionLoadingState = dataRepository
         .getHomeElementsFromDatabase(
             selectorFilter = selectorFilter.selectorFilterType,
         )
@@ -32,6 +32,6 @@ internal class SelectorViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = SelectionState.Loading,
+            initialValue = SelectionLoadingState.Loading,
         )
 }

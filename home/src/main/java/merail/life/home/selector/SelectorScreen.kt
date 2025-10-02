@@ -32,7 +32,7 @@ import merail.life.design.components.ImageLoading
 import merail.life.design.components.Loading
 import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.HomeItem
-import merail.life.home.selector.state.SelectionState
+import merail.life.home.selector.state.SelectionLoadingState
 
 @Composable
 internal fun SelectorScreen(
@@ -41,12 +41,12 @@ internal fun SelectorScreen(
     navigateToContentImmediately: (String) -> Unit,
     viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
 ) {
-    when (val uiState = viewModel.selectionState.collectAsState().value) {
-        is SelectionState.Loading -> Loading()
-        is SelectionState.Error -> LaunchedEffect(null) {
+    when (val uiState = viewModel.selectionLoadingState.collectAsState().value) {
+        is SelectionLoadingState.Loading -> Loading()
+        is SelectionLoadingState.Error -> LaunchedEffect(null) {
             onError(uiState.exception)
         }
-        is SelectionState.Success -> if (uiState.items.isSingle) {
+        is SelectionLoadingState.Success -> if (uiState.items.isSingle) {
             navigateToContentImmediately(uiState.items.first().id)
         } else {
             Content(

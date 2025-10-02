@@ -1,7 +1,7 @@
 package merail.life.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,8 +17,9 @@ import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeElementModel
 import merail.life.data.api.model.SelectorFilterType
+import merail.life.home.model.toHomeItems
 import merail.life.home.selector.SelectorViewModel
-import merail.life.home.selector.state.SelectionState
+import merail.life.home.selector.state.SelectionLoadingState
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -36,7 +37,7 @@ class SelectorViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    private lateinit var repository: IDataRepository
+    private lateinit var dataRepository: IDataRepository
     private lateinit var savedStateHandle: SavedStateHandle
 
     private val selectorFilterType = SelectorFilterType.COUNTRY.apply {
@@ -77,7 +78,7 @@ class SelectorViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
-        repository = mockk()
+        dataRepository = mockk()
         savedStateHandle = SavedStateHandle(
             initialState = mapOf(SELECTOR_FILTER_TYPE_KEY to selectorFilterType),
         )
@@ -89,9 +90,9 @@ class SelectorViewModelTest {
     }
 
     @Test
-    fun `SelectorViewModel loads content successfully`() = runTest {
-        coEvery {
-            repository.getHomeElementsFromDatabase(
+    fun `SelectorViewModel loads selection successfully`() = runTest {
+        every {
+            dataRepository.getHomeElementsFromDatabase(
                 tabFilter = null,
                 selectorFilter = selectorFilterType,
             )
@@ -102,18 +103,18 @@ class SelectorViewModelTest {
 
         val viewModel = SelectorViewModel(
             savedStateHandle = savedStateHandle,
-            dataRepository = repository,
+            dataRepository = dataRepository,
         )
 
-        val result = viewModel.selectionState.take(2).toList()
+        val result = viewModel.selectionLoadingState.take(2).toList()
 
         val resultLoading = result[0]
 
-        assertTrue(resultLoading is SelectionState.Loading)
+        assertTrue(resultLoading is SelectionLoadingState.Loading)
 
-        val state = viewModel.selectionState.value
+        val state = viewModel.selectionLoadingState.value
 
-        assert(state is SelectionState.Success)
-        assertEquals(TestHomeElements.ID_1, state.items.first().id)
+        assert(state is SelectionLoadingState.Success)
+        assertEquals(elements.toHomeItems(), state.items)
     }
 }

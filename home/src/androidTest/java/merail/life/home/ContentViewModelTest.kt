@@ -19,6 +19,7 @@ import merail.life.data.api.model.ContentModel
 import merail.life.home.content.ContentViewModel
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.home.content.state.ContentLoadingState
+import merail.life.home.model.toContentItem
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -36,20 +37,24 @@ class ContentViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    private lateinit var repository: IDataRepository
+    private lateinit var dataRepository: IDataRepository
     private lateinit var savedStateHandle: SavedStateHandle
 
-    private val imageUrls = listOf(
-        TestHomeElements.URL_1,
-        TestHomeElements.URL_2,
-        TestHomeElements.URL_3,
+    private val model = ContentModel(
+        title = TestHomeElements.CONTENT_TITLE,
+        text = TestHomeElements.CONTENT_TEXT,
+        imagesUrls = listOf(
+            TestHomeElements.URL_1,
+            TestHomeElements.URL_2,
+            TestHomeElements.URL_3,
+        ),
     )
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
-        repository = mockk()
+        dataRepository = mockk()
         savedStateHandle = SavedStateHandle(
             initialState = mapOf(ContentRoute.CONTENT_ID_KEY to CONTENT_ID),
         )
@@ -62,19 +67,14 @@ class ContentViewModelTest {
 
     @Test
     fun `ContentViewModel loads content successfully`() = runTest {
-        val model = ContentModel(
-            title = TestHomeElements.CONTENT_TITLE,
-            text = TestHomeElements.CONTENT_TEXT,
-            imagesUrls = imageUrls,
-        )
-        every { repository.getContent(CONTENT_ID) } returns flowOf(
+        every { dataRepository.getContent(CONTENT_ID) } returns flowOf(
             RequestResult.InProgress(),
             RequestResult.Success(model),
         )
 
         val viewModel = ContentViewModel(
             savedStateHandle = savedStateHandle,
-            dataRepository = repository,
+            dataRepository = dataRepository,
         )
 
         val result = viewModel.contentLoadingState.take(2).toList()
@@ -86,9 +86,6 @@ class ContentViewModelTest {
         val state = viewModel.contentLoadingState.value
 
         assertTrue(state is ContentLoadingState.Success)
-        val item = (state as ContentLoadingState.Success).item
-        assertEquals(TestHomeElements.CONTENT_TITLE, item.title)
-        assertEquals(TestHomeElements.CONTENT_TEXT, item.text)
-        assertEquals(imageUrls, item.imagesUrls)
+        assertEquals(model.toContentItem(), (state as ContentLoadingState.Success).item)
     }
 }

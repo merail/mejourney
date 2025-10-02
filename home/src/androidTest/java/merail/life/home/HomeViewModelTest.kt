@@ -6,11 +6,10 @@ import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
@@ -22,12 +21,16 @@ import kotlinx.coroutines.test.setMain
 import merail.life.auth.api.IAuthRepository
 import merail.life.core.constants.TestHomeElements
 import merail.life.core.errors.UnauthorizedException
+import merail.life.core.mappers.RequestResult
+import merail.life.data.api.IDataRepository
+import merail.life.data.api.model.HomeElementModel
 import merail.life.home.main.HomeLoadingState
 import merail.life.home.main.HomeViewModel
 import merail.life.home.main.useCases.LoadHomeElementsByTabUseCase
 import merail.life.home.main.useCases.LoadHomeElementsUseCase
-import merail.life.home.model.HomeItem
 import merail.life.home.model.TabFilter
+import merail.life.home.model.toHomeItems
+import merail.life.home.model.toModel
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -39,12 +42,13 @@ class HomeViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
+    private lateinit var dataRepository: IDataRepository
     private lateinit var authRepository: IAuthRepository
     private lateinit var loadHomeElementsUseCase: LoadHomeElementsUseCase
     private lateinit var loadHomeElementsByTabUseCase: LoadHomeElementsByTabUseCase
 
-    private val items = listOf(
-        HomeItem(
+    private val elements = listOf(
+        HomeElementModel(
             id = TestHomeElements.ID_1,
             year = TestHomeElements.YEAR_23,
             country = TestHomeElements.COUNTRY_RUSSIA,
@@ -53,7 +57,7 @@ class HomeViewModelTest {
             description = TestHomeElements.DESCRIPTION_1,
             url = TestHomeElements.URL_1,
         ),
-        HomeItem(
+        HomeElementModel(
             id = TestHomeElements.ID_2,
             year = TestHomeElements.YEAR_23,
             country = TestHomeElements.COUNTRY_RUSSIA,
@@ -62,15 +66,22 @@ class HomeViewModelTest {
             description = TestHomeElements.DESCRIPTION_2,
             url = TestHomeElements.URL_2,
         ),
-    ).toImmutableList()
+    )
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
+        dataRepository = mockk()
         authRepository = mockk()
-        loadHomeElementsUseCase = mockk()
-        loadHomeElementsByTabUseCase = mockk()
+        loadHomeElementsUseCase = LoadHomeElementsUseCase(
+            dataRepository = dataRepository,
+            logger = mockk(relaxed = true),
+        )
+        loadHomeElementsByTabUseCase = LoadHomeElementsByTabUseCase(
+            dataRepository = dataRepository,
+            logger = mockk(relaxed = true),
+        )
 
         every { authRepository.isSnowfallEnabled() } returns false
     }
@@ -81,11 +92,16 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `HomeViewModel loads content successfully`() = runTest {
-        coEvery { loadHomeElementsUseCase() } returns flowOf(
-            HomeLoadingState.Loading(persistentListOf()),
-            HomeLoadingState.Success(items),
-        )
+    fun `HomeViewModel init loads successfully`() = runTest {
+        every {
+            dataRepository.getHomeElements()
+        } returns flow {
+            emit(RequestResult.InProgress())
+            delay(1_000)
+            emit(RequestResult.InProgress(elements))
+            delay(1_000)
+            emit(RequestResult.Success(elements))
+        }
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
@@ -93,28 +109,37 @@ class HomeViewModelTest {
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
         )
 
-        val result = viewModel.state.take(2).toList()
+        val result = viewModel.state.take(3).toList()
 
-        val resultLoading = result[0]
+        val resultLoading1 = result[0]
 
-        assertTrue(resultLoading is HomeLoadingState.Loading)
+        assertTrue(resultLoading1 is HomeLoadingState.Loading)
+        assertTrue(resultLoading1.items.isEmpty())
 
-        val state = viewModel.state.value
+        val resultLoading2 = result[1]
 
-        assertTrue(state is HomeLoadingState.Success)
-        assertEquals(items, state.items)
+        assertTrue(resultLoading2 is HomeLoadingState.Loading)
+        assertEquals(elements.toHomeItems(), resultLoading2.items)
+
+        val resultLoading3 = result[2]
+
+        assertTrue(resultLoading3 is HomeLoadingState.Success)
+        assertEquals(resultLoading3, viewModel.state.value)
+        assertEquals(elements.toHomeItems(), resultLoading3.items)
     }
 
     @Test
-    fun `HomeViewModel returns CommonError correctly`() = runTest {
+    fun `HomeViewModel init returns CommonError correctly`() = runTest {
         val throwable = RuntimeException("fail")
-        coEvery { loadHomeElementsUseCase() } returns flowOf(
-            HomeLoadingState.Loading(persistentListOf()),
-            HomeLoadingState.CommonError(
-                exception = throwable,
-                items = persistentListOf(),
-            )
-        )
+        every {
+            dataRepository.getHomeElements()
+        } returns flow {
+            emit(RequestResult.InProgress())
+            delay(1_000)
+            emit(RequestResult.InProgress(elements))
+            delay(1_000)
+            emit(RequestResult.Error(elements, throwable))
+        }
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
@@ -122,11 +147,7 @@ class HomeViewModelTest {
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
         )
 
-        val result = viewModel.state.take(2).toList()
-
-        val resultLoading = result[0]
-
-        assertTrue(resultLoading is HomeLoadingState.Loading)
+        advanceUntilIdle()
 
         val state = viewModel.state.value
 
@@ -135,15 +156,17 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `HomeViewModel returns UnauthorizedException correctly`() = runTest {
+    fun `HomeViewModel init returns UnauthorizedException correctly`() = runTest {
         val throwable = UnauthorizedException()
-        coEvery { loadHomeElementsUseCase() } returns flowOf(
-            HomeLoadingState.Loading(persistentListOf()),
-            HomeLoadingState.UnauthorizedException(
-                exception = throwable,
-                items = persistentListOf(),
-            )
-        )
+        every {
+            dataRepository.getHomeElements()
+        } returns flow {
+            emit(RequestResult.InProgress())
+            delay(1_000)
+            emit(RequestResult.InProgress(elements))
+            delay(1_000)
+            emit(RequestResult.Error(elements, throwable))
+        }
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
@@ -151,11 +174,7 @@ class HomeViewModelTest {
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
         )
 
-        val result = viewModel.state.take(2).toList()
-
-        val resultLoading = result[0]
-
-        assertTrue(resultLoading is HomeLoadingState.Loading)
+        advanceUntilIdle()
 
         val state = viewModel.state.value
 
@@ -164,12 +183,24 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `getHomeItems returns Success correctly`() = runTest {
-        val tabFilter = TabFilter.COMMON
-
-        coEvery { loadHomeElementsUseCase() } returns emptyFlow()
-        coEvery { loadHomeElementsByTabUseCase(tabFilter) } returns flowOf(
-            value = HomeLoadingState.Success(items),
+    fun `getHomeItems loads successfully`() = runTest {
+        coEvery {
+            dataRepository.getHomeElements().collect(any())
+        } returns mockk()
+        val tabFilter = TabFilter.COUNTRY
+        val filteredData = elements.groupBy {
+            it.country
+        }.values.map {
+            it[0]
+        }
+        every {
+            dataRepository.getHomeElementsFromDatabase(
+                tabFilter = tabFilter.toModel(),
+                selectorFilter = null,
+            )
+        } returns flowOf(
+            RequestResult.InProgress(),
+            RequestResult.Success(filteredData),
         )
 
         val viewModel = HomeViewModel(
@@ -185,6 +216,6 @@ class HomeViewModelTest {
         val state = viewModel.state.value
 
         assertTrue(state is HomeLoadingState.Success)
-        assertEquals(TestHomeElements.ID_1, state.items.first().id)
+        assertEquals(filteredData.toHomeItems(), state.items)
     }
 }
