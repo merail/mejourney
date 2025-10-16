@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
+import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeFilterType
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.data.impl.database.HomeDatabase
@@ -31,7 +32,7 @@ class DataRepositoryTest {
 
     private lateinit var homeDatabase: HomeDatabase
     private lateinit var homeElementDao: HomeElementDao
-    private lateinit var repository: DataRepository
+    private lateinit var dataRepository: IDataRepository
 
     private val entities = listOf(
         HomeElementEntity(
@@ -73,7 +74,7 @@ class DataRepositoryTest {
         }
         every { homeElementDao.getAll() } returns flowOf(entities)
 
-        repository = DataRepository(
+        dataRepository = DataRepository(
             homeDatabase = homeDatabase,
             serverRepository = mockk(),
         )
@@ -86,7 +87,7 @@ class DataRepositoryTest {
 
     @Test
     fun `getHomeElementsFromDatabase returns InProgress then Result`() = runTest {
-        val result = repository.getHomeElementsFromDatabase(
+        val result = dataRepository.getHomeElementsFromDatabase(
             tabFilter = HomeFilterType.COUNTRY,
             selectorFilter = null,
         ).toList()
@@ -107,7 +108,7 @@ class DataRepositoryTest {
 
     @Test
     fun `getHomeElementsFromDatabase filters by tabFilter`() = runTest {
-        val result = repository.getHomeElementsFromDatabase(
+        val result = dataRepository.getHomeElementsFromDatabase(
             tabFilter = HomeFilterType.COUNTRY,
             selectorFilter = null,
         ).filter {
@@ -123,7 +124,7 @@ class DataRepositoryTest {
 
     @Test
     fun `getHomeElementsFromDatabase filters by selectorFilter`() = runTest {
-        val result = repository.getHomeElementsFromDatabase(
+        val result = dataRepository.getHomeElementsFromDatabase(
             tabFilter = null,
             selectorFilter = SelectorFilterType.PLACE.apply { value =
                 TestHomeElements.PLACE_MOSCOW

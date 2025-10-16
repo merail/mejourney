@@ -19,6 +19,6 @@ internal class LoadHomeElementsByTabUseCase @Inject constructor(
     operator fun invoke(filter: TabFilter) = dataRepository.getHomeElementsFromDatabase(
         tabFilter = filter.toModel(),
     ).onEach {
-        logger.d(TAG, "Получение списка элементов в $filter. $it")
+        logger.d(TAG, "Getting home elements list by $filter. $it")
     }.map(RequestResult<List<HomeElementModel>>::toState)
 }

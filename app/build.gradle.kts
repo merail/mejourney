@@ -72,6 +72,9 @@ dependencies {
 
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.uiautomator)
+    androidTestImplementation(platform(libs.firebase.bom))
+    androidTestImplementation(libs.firebase.auth)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

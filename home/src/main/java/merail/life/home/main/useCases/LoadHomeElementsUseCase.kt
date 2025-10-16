@@ -15,6 +15,6 @@ internal class LoadHomeElementsUseCase @Inject constructor(
     private val logger: IMejourneyLogger,
 ) {
     operator fun invoke() = dataRepository.getHomeElements().onEach {
-        logger.d(TAG, "Получение списка элементов. $it")
+        logger.d(TAG, "Getting home elements list. $it")
     }.map(RequestResult<List<HomeElementModel>>::toState)
 }

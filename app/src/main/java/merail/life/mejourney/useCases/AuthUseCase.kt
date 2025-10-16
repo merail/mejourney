@@ -12,15 +12,15 @@ internal class AuthUseCase @Inject constructor(
     private val logger: IMejourneyLogger,
 ) {
     suspend operator fun invoke() = suspendableRunCatching {
-        logger.d(TAG, "Авторизация. Старт")
+        logger.d(TAG, "Auth. Start")
         authRepository.authorize()
     }.fold(
         onSuccess = {
-            logger.d(TAG, "Авторизация. Успех")
+            logger.d(TAG, "Auth. Success")
             MainAuthState.AuthSuccess
         },
         onFailure = { throwable ->
-            logger.w(TAG, "Авторизация. Ошибка", throwable)
+            logger.w(TAG, "Auth. Failure", throwable)
             MainAuthState.Error(throwable)
         },
     )
