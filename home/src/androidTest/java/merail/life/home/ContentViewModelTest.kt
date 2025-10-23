@@ -41,12 +41,12 @@ class ContentViewModelTest {
     private lateinit var savedStateHandle: SavedStateHandle
 
     private val model = ContentModel(
-        title = TestHomeElements.CONTENT_TITLE,
-        text = TestHomeElements.CONTENT_TEXT,
+        title = TestHomeElements.MOSCOW_CONTENT_TITLE,
+        text = TestHomeElements.MOSCOW_CONTENT_TEXT,
         imagesUrls = listOf(
             TestHomeElements.URL_1,
             TestHomeElements.URL_2,
-            TestHomeElements.URL_3,
+            TestHomeElements.URL_7,
         ),
     )
 

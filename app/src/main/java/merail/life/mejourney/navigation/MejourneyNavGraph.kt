@@ -2,6 +2,7 @@ package merail.life.mejourney.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,12 +29,15 @@ fun MejourneyNavHost(
     intentRoute: MutableState<NavigationRoute?>?,
     errorType: ErrorType?,
 ) {
-    intentRoute?.value?.let {
-        Log.d(TAG, "Route from push: $it")
+    LaunchedEffect(intentRoute?.value, navController.currentBackStackEntry) {
+        val route = intentRoute?.value ?: return@LaunchedEffect
+        if (navController.currentBackStackEntry != null) {
+            Log.d(TAG, "Route from push: $route")
 
-        navController.navigateFromPush(it)
+            navController.navigateFromPush(route)
 
-        intentRoute.value = null
+            intentRoute.value = null
+        }
     }
 
     NavHost(

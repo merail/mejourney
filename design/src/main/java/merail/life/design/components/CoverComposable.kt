@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import merail.life.core.constants.TestTags
 import merail.life.design.extensions.createMediaRequest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,6 +47,7 @@ fun CoverImage(
                 onClick = {
                     navigateTo(id)
                 },
-            ),
+            )
+            .testTag("${TestTags.COVER_IMAGE}_$id"),
     )
 }

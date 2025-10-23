@@ -25,7 +25,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "merail.life.mejourney.HiltTestRunner"
     }
 
     buildTypes {
@@ -71,8 +71,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.uiautomator)
+    androidTestImplementation(libs.hilt.android.testing)
     androidTestImplementation(platform(libs.firebase.bom))
     androidTestImplementation(libs.firebase.auth)
 

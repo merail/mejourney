@@ -20,6 +20,7 @@ benchmarkMacro = "1.4.0"
 room = "2.7.2"
 profileinstaller = "1.4.1"
 
+runner = "1.7.0"
 composeJunit = "1.8.3"
 uiautomator = "2.3.0"
 mockk = "1.13.12"
@@ -73,9 +74,10 @@ androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchm
 #</editor-fold>
 
 #<editor-fold desc="test">
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeJunit" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeJunit" }
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
-androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }

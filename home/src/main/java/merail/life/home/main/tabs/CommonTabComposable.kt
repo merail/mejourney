@@ -18,8 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.CoverImage
 import merail.life.home.model.HomeItem
@@ -35,7 +37,8 @@ internal fun ColumnScope.CommonList(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .weight(1f)
-            .padding(4.dp),
+            .padding(4.dp)
+            .testTag(TestTags.COMMON_LIST),
     ) {
         items(
             items = items,

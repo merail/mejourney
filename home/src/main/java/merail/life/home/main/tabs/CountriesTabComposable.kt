@@ -15,8 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
@@ -42,7 +44,8 @@ internal fun ColumnScope.CountriesList(
                 end = 4.dp,
                 bottom = 4.dp,
             )
-            .weight(1f),
+            .weight(1f)
+            .testTag(TestTags.COUNTRIES_LIST),
     ) {
         items(
             items = items,

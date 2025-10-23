@@ -45,22 +45,22 @@ class DataRepositoryTest {
             url = TestHomeElements.URL_1,
         ),
         HomeElementEntity(
-            id = TestHomeElements.ID_3,
+            id = TestHomeElements.ID_7,
             year = TestHomeElements.YEAR_23,
             country = TestHomeElements.COUNTRY_TURKEY,
             place = TestHomeElements.PLACE_CAPPADOCIA,
-            title = TestHomeElements.TITLE_3,
-            description = TestHomeElements.DESCRIPTION_3,
-            url = TestHomeElements.URL_3,
+            title = TestHomeElements.TITLE_7,
+            description = TestHomeElements.DESCRIPTION_7,
+            url = TestHomeElements.URL_7,
         ),
         HomeElementEntity(
-            id = TestHomeElements.ID_5,
+            id = TestHomeElements.ID_9,
             year = TestHomeElements.YEAR_24,
             country = TestHomeElements.COUNTRY_RUSSIA,
             place = TestHomeElements.PLACE_MOSCOW,
-            title = TestHomeElements.TITLE_5,
-            description = TestHomeElements.DESCRIPTION_5,
-            url = TestHomeElements.URL_5,
+            title = TestHomeElements.TITLE_9,
+            description = TestHomeElements.DESCRIPTION_9,
+            url = TestHomeElements.URL_9,
         ),
     )
 
@@ -103,7 +103,7 @@ class DataRepositoryTest {
         val resultData = resultSuccess.data.orEmpty()
         assertEquals(2, resultData.size)
         assertEquals(TestHomeElements.ID_1, resultData[0].id)
-        assertEquals(TestHomeElements.ID_3, resultData[1].id)
+        assertEquals(TestHomeElements.ID_7, resultData[1].id)
     }
 
     @Test
@@ -119,7 +119,7 @@ class DataRepositoryTest {
 
         assertEquals(2, resultList.size)
         assertEquals(TestHomeElements.ID_1, resultList[0].id)
-        assertEquals(TestHomeElements.ID_3, resultList[1].id)
+        assertEquals(TestHomeElements.ID_7, resultList[1].id)
     }
 
     @Test
@@ -137,6 +137,6 @@ class DataRepositoryTest {
 
         assertEquals(2, resultList.size)
         assertEquals(TestHomeElements.ID_1, resultList[0].id)
-        assertEquals(TestHomeElements.ID_5, resultList[1].id)
+        assertEquals(TestHomeElements.ID_9, resultList[1].id)
     }
 }
