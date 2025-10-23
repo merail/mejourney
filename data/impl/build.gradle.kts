@@ -1,32 +1,14 @@
 
 import org.gradle.kotlin.dsl.android
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.lib)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.library.plugin)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
 }
 
 android {
-    namespace = "merail.life.data.impl"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 30
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JvmTarget.JVM_17.target
-    }
-
     buildFeatures {
         buildConfig = true
     }

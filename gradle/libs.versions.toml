@@ -39,6 +39,11 @@ permissionsTool = "1.1.2"
 snowfall = "0.9.10"
 
 [libraries]
+#<editor-fold desc="plugins">
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+#</editor-fold>
+
 #<editor-fold desc="androidx">
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -125,3 +130,5 @@ devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
+
+library-plugin = { id = "convention.library.plugin" }

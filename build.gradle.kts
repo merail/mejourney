@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.devtools.ksp) apply false
     alias(libs.plugins.dagger.hilt) apply false
     alias(libs.plugins.androidx.baselineprofile) apply false
+    alias(libs.plugins.library.plugin) apply false
 }

@@ -1,28 +1,7 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.lib)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.library.plugin)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
-}
-
-android {
-    namespace = "merail.life.auth.impl"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 30
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JvmTarget.JVM_17.target
-    }
 }
 
 dependencies {

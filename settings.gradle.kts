@@ -1,4 +1,6 @@
 pluginManagement {
+    includeBuild("plugin")
+
     repositories {
         google {
             content {
