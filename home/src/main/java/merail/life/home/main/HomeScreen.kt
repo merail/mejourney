@@ -2,6 +2,7 @@ package merail.life.home.main
 
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -42,10 +43,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import merail.life.core.constants.TestTags
 import merail.life.core.extensions.rerunApp
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
+import merail.life.design.components.Loading
 import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
@@ -86,7 +89,7 @@ internal fun HomeScreen(
         -> Unit
     }
 
-    Content(
+    HomeContent(
         state = state,
         isSnowfallEnabled = viewModel.isSnowfallEnabled,
         navigateToSelector = {
@@ -97,8 +100,9 @@ internal fun HomeScreen(
     )
 }
 
+@VisibleForTesting
 @Composable
-private fun Content(
+internal fun HomeContent(
     state: HomeLoadingState,
     isSnowfallEnabled: Boolean,
     navigateToSelector: (SelectorFilter) -> Unit,
@@ -118,7 +122,7 @@ private fun Content(
                     this
                 }
             }
-            .testTag("HomeScreenContainer"),
+            .testTag(TestTags.HOME_SCREEN_CONTAINER),
     ) {
         HomeLoader(state)
 
@@ -148,17 +152,14 @@ private fun HomeLoader(
     state: HomeLoadingState,
 ) {
     if (state.items.isEmpty()) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            CircularProgressIndicator()
-        }
+        Loading()
     } else {
         AnimatedVisibility(
             visible = state is HomeLoadingState.Loading,
             enter = expandVertically(),
             exit = shrinkVertically(),
+            modifier = Modifier
+                .testTag(TestTags.TOP_LOADER),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -308,7 +309,8 @@ private fun Pair<TabFilter, Int>.HomeTab(
                     } else {
                         MejourneyTheme.colors.unselectedTabColor
                     },
-                ),
+                )
+                .testTag("${TestTags.HOME_TAB}_$index"),
         )
     }
 }

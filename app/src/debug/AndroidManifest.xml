@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:theme="@style/Theme.Mejourney"
         tools:ignore="MissingApplicationIcon">
         <activity
             android:name=".HiltTestActivity"

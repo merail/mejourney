@@ -52,7 +52,7 @@ internal fun SelectorScreen(
             navigateToContentImmediately(uiState.items.first().id)
         } else {
             Content(
-                items =uiState.items,
+                items = uiState.items,
                 navigateToContent = navigateToContent,
             )
         }

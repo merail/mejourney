@@ -36,8 +36,6 @@ class MejourneyNavGraphTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    private val countriesTabName = context.getString(merail.life.home.R.string.main_tab_countries_name)
-
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
@@ -106,10 +104,10 @@ class MejourneyNavGraphTest {
         }
 
         composeTestRule.waitUntil(WAITING_TIME) {
-            composeTestRule.onNodeWithText(countriesTabName).isDisplayed()
+            composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
 
-        composeTestRule.onNodeWithText(countriesTabName).performClick()
+        composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_7}").isDisplayed()
@@ -188,10 +186,10 @@ class MejourneyNavGraphTest {
         }
 
         composeTestRule.waitUntil(WAITING_TIME) {
-            composeTestRule.onNodeWithText(countriesTabName).isDisplayed()
+            composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
 
-        composeTestRule.onNodeWithText(countriesTabName).performClick()
+        composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
@@ -234,10 +232,10 @@ class MejourneyNavGraphTest {
         }
 
         composeTestRule.waitUntil(WAITING_TIME) {
-            composeTestRule.onNodeWithText(countriesTabName).isDisplayed()
+            composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
 
-        composeTestRule.onNodeWithText(countriesTabName).performClick()
+        composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
@@ -286,10 +284,10 @@ class MejourneyNavGraphTest {
         }
 
         composeTestRule.waitUntil(WAITING_TIME) {
-            composeTestRule.onNodeWithText(countriesTabName).isDisplayed()
+            composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
 
-        composeTestRule.onNodeWithText(countriesTabName).performClick()
+        composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
