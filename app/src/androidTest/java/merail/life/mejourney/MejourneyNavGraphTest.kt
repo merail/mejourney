@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -12,77 +11,37 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import merail.life.core.constants.TestHomeElements
 import merail.life.core.constants.TestTags
-import merail.life.core.errors.ErrorType
 import merail.life.core.navigation.NavigationRoute
+import merail.life.data.test.di.TestDataModule
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.mejourney.navigation.MejourneyNavHost
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
+/**
+ * Instrumented tests for [MejourneyNavHost] navigation graph, verifying
+ * the behavior of navigation across HomeScreen, SelectorScreen, and ContentScreen.
+ *
+ * The tests use ComposeTestRule and Hilt for dependency injection.
+ */
 @HiltAndroidTest
-@RunWith(AndroidJUnit4::class)
-class MejourneyNavGraphTest {
+@UninstallModules(TestDataModule::class)
+internal class MejourneyNavGraphTest {
 
     companion object {
-        private const val WAITING_TIME = 5_000L
+        internal const val WAITING_TIME = 5_000L
     }
-
-    private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
-
-    /**
-     * Verifies that when the app initializes with an internet connection error,
-     * the corresponding error dialog is displayed,
-     * and the HomeScreen content is not visible.
-     */
-    @Test
-    fun `when init loading internet connection error dismiss box appears`() {
-        composeTestRule.setContent {
-            MejourneyNavHost(
-                intentRoute = null,
-                errorType = ErrorType.INTERNET_CONNECTION,
-            )
-        }
-
-        composeTestRule.onNodeWithText(
-            text = context.getString(merail.life.error.R.string.error_internet_connection_subtitle),
-        ).assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag(TestTags.HOME_SCREEN_CONTAINER).assertIsNotDisplayed()
-    }
-
-    /**
-     * Ensures that when the app initializes with a common (non-network) error,
-     * the corresponding error dialog is shown,
-     * and the HomeScreen content remains hidden.
-     */
-    @Test
-    fun `when init loading common error dismiss box appears`() {
-        composeTestRule.setContent {
-            MejourneyNavHost(
-                intentRoute = null,
-                errorType = ErrorType.OTHER,
-            )
-        }
-
-        composeTestRule.onNodeWithText(
-            text = context.getString(merail.life.error.R.string.error_common_subtitle),
-        ).assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag(TestTags.HOME_SCREEN_CONTAINER).assertIsNotDisplayed()
-    }
 
     /**
      * Verifies that when the SelectorScreen contains only one available element,
@@ -106,13 +65,11 @@ class MejourneyNavGraphTest {
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_7}").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_7}").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
@@ -188,13 +145,11 @@ class MejourneyNavGraphTest {
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").performClick()
 
         intentRoute.value = ContentRoute(TestHomeElements.ID_2)
@@ -234,19 +189,16 @@ class MejourneyNavGraphTest {
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").performClick()
 
         intentRoute.value = ContentRoute(TestHomeElements.ID_2)
@@ -286,19 +238,16 @@ class MejourneyNavGraphTest {
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.HOME_TAB}_1").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").performClick()
 
         composeTestRule.waitUntil(WAITING_TIME) {
             composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").isDisplayed()
         }
-
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").performClick()
 
         intentRoute.value = ContentRoute(TestHomeElements.ID_1)

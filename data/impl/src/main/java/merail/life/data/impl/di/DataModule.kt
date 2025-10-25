@@ -23,17 +23,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal interface DataModule {
+abstract class DataModule {
 
     @Binds
     @Singleton
-    fun bindDataRepository(
+    internal abstract fun bindDataRepository(
         dataRepository: DataRepository,
     ): IDataRepository
 
     @Binds
     @Singleton
-    fun bindServerRepository(
+    internal abstract fun bindServerRepository(
         serverRepository: ServerRepository,
     ): IServerRepository
 
@@ -41,15 +41,15 @@ internal interface DataModule {
 
         @Provides
         @Singleton
-        fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
+        internal fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
 
         @Provides
         @Singleton
-        fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
+        internal fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
 
         @Provides
         @Singleton
-        fun provideHomeDatabase(
+        internal fun provideHomeDatabase(
             @ApplicationContext context: Context,
         ): HomeDatabase = Room.databaseBuilder(
             context = context,

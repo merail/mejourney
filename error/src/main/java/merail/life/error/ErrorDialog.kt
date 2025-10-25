@@ -18,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
+import merail.life.core.constants.TestTags
 import merail.life.core.errors.ErrorType
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
@@ -50,6 +52,8 @@ fun ErrorDialog(
     SwipeToDismissBox(
         state = state,
         backgroundContent = {},
+        modifier = Modifier
+            .testTag(TestTags.ERROR_DIALOG_CONTAINER),
     ) {
         Card(
             colors = MejourneyTheme.colors.cardColors.copy(

@@ -10,8 +10,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class LoggingModule {
+abstract class LoggingModule {
     @Binds
     @Singleton
-    abstract fun bindLogger(logger: MejourneyLogger): IMejourneyLogger
+    internal abstract fun bindLogger(logger: MejourneyLogger): IMejourneyLogger
 }

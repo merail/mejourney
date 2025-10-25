@@ -34,6 +34,7 @@ include(":design")
 include(":data")
 include(":data:api")
 include(":data:impl")
+include(":data:test")
 
 include(":core")
 

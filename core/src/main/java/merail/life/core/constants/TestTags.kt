@@ -1,6 +1,8 @@
 package merail.life.core.constants
 
 object TestTags {
+    const val ERROR_DIALOG_CONTAINER = "ErrorDialogContainer"
+
     const val HOME_SCREEN_CONTAINER = "HomeScreenContainer"
 
     const val GLOBAL_LOADER = "GlobalLoader"
@@ -14,6 +16,8 @@ object TestTags {
     const val YEARS_LIST = "YearsList"
 
     const val SELECTOR_SCREEN_CONTAINER = "SelectorScreenContainer"
+
+    const val CONTENT_SCREEN_CONTAINER = "ContentScreenContainer"
 
     const val COVER_IMAGE = "CoverImage"
 }

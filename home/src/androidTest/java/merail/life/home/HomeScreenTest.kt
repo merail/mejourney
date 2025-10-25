@@ -27,7 +27,7 @@ class HomeScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val elements = listOf(
+    private val items = listOf(
         HomeElementModel(
             id = TestHomeElements.ID_1,
             year = TestHomeElements.YEAR_23,
@@ -53,7 +53,7 @@ class HomeScreenTest {
 
         composeTestRule.onNodeWithTag(TestTags.GLOBAL_LOADER).assertIsDisplayed()
 
-        state.value = HomeLoadingState.Success(elements)
+        state.value = HomeLoadingState.Success(items)
 
         composeTestRule.onNodeWithTag(TestTags.GLOBAL_LOADER).assertIsNotDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).assertIsNotDisplayed()
@@ -63,7 +63,7 @@ class HomeScreenTest {
     @Test
     fun `top loader is visible when not first launch`() {
         var state = mutableStateOf<HomeLoadingState>(
-            value = HomeLoadingState.Loading(elements),
+            value = HomeLoadingState.Loading(items),
         )
 
         composeTestRule.setContent {
@@ -78,7 +78,7 @@ class HomeScreenTest {
         composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).assertIsDisplayed()
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").assertIsDisplayed()
 
-        state.value = HomeLoadingState.Success(elements)
+        state.value = HomeLoadingState.Success(items)
 
         composeTestRule.onNodeWithTag(TestTags.GLOBAL_LOADER).assertIsNotDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).assertIsNotDisplayed()
@@ -88,7 +88,7 @@ class HomeScreenTest {
     @Test
     fun `additional info is shown when long click on element`() {
         var state = mutableStateOf<HomeLoadingState>(
-            value = HomeLoadingState.Success(elements),
+            value = HomeLoadingState.Success(items),
         )
 
         composeTestRule.setContent {
@@ -111,9 +111,7 @@ class HomeScreenTest {
 
     @Test
     fun `home content changes by click on tab`() {
-        val state = mutableStateOf<HomeLoadingState>(
-            value = HomeLoadingState.Success(elements),
-        )
+        val state = mutableStateOf(HomeLoadingState.Success(items))
 
         composeTestRule.setContent {
             HomeContent(

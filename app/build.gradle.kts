@@ -75,8 +75,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.uiautomator)
     androidTestImplementation(libs.hilt.android.testing)
-    androidTestImplementation(platform(libs.firebase.bom))
-    androidTestImplementation(libs.firebase.auth)
+    androidTestImplementation(projects.data.test)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

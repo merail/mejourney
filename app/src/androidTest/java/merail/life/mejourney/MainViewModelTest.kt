@@ -1,6 +1,5 @@
 package merail.life.mejourney
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.just
@@ -19,11 +18,13 @@ import merail.life.mejourney.useCases.AuthUseCase
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
+/**
+ * Unit tests for [MainViewModel], verifying its initialization behavior
+ * and state transitions related to the authentication flow.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(AndroidJUnit4::class)
-class MainViewModelTest {
+internal class MainViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -46,6 +47,10 @@ class MainViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies that when the [MainViewModel] is initialized and authorization succeeds,
+     * it correctly updates its state to [MainAuthState.AuthSuccess].
+     */
     @Test
     fun `MainViewModel init loads successfully`() = runTest {
         coEvery {

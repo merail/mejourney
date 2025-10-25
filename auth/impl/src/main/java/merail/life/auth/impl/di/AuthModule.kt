@@ -16,20 +16,20 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal interface AuthModule {
+abstract class AuthModule {
     @Singleton
     @Binds
-    fun bindAuthRepository(
+    internal abstract fun bindAuthRepository(
         authRepository: AuthRepository,
     ): IAuthRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
+        internal fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
 
         @Provides
         @Singleton
-        fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig = Firebase.remoteConfig
+        internal fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig = Firebase.remoteConfig
     }
 }

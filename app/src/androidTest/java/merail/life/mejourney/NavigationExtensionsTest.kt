@@ -5,10 +5,10 @@ import android.os.Bundle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import merail.life.core.constants.TestHomeElements
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.home.main.navigation.HomeRoute
 import merail.life.home.selector.navigation.SelectorRoute
@@ -18,16 +18,17 @@ import merail.life.mejourney.navigation.navigateFromPush
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class NavigationExtensionsTest {
+/**
+ * Unit tests for navigation extension functions in the app, verifying
+ * intent parsing and conditional navigation logic in Compose Navigation.
+ */
+internal class NavigationExtensionsTest {
 
-    companion object {
-        private const val CONTENT_ID = "42"
-        private const val DIFFERENT_CONTENT_ID = "123"
-    }
-
+    /**
+     * Ensures that [Intent.getRouteIfExists] returns null
+     * when no category extra is present in the intent.
+     */
     @Test
     fun `getRouteIfExists returns null when category is missing`() {
         val intent = Intent()
@@ -37,6 +38,10 @@ class NavigationExtensionsTest {
         assertEquals(null, route)
     }
 
+    /**
+     * Ensures that [Intent.getRouteIfExists] returns null
+     * when the category is present but content ID is missing.
+     */
     @Test
     fun `getRouteIfExists returns null when content id is missing`() {
         val intent = Intent().apply {
@@ -48,19 +53,27 @@ class NavigationExtensionsTest {
         assertEquals(null, route)
     }
 
+    /**
+     * Verifies that [Intent.getRouteIfExists] correctly returns a [ContentRoute]
+     * when both category and content ID extras are present.
+     */
     @Test
     fun `getRouteIfExists returns ContentRoute when category and contentId match`() {
         val intent = Intent().apply {
             putExtra(CATEGORY_KEY, ContentRoute.ROUTE_NAME)
-            putExtra(ContentRoute.CONTENT_ID_KEY, CONTENT_ID)
+            putExtra(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
         }
 
         val route = intent.getRouteIfExists()
 
         assertTrue(route is ContentRoute)
-        assertEquals(CONTENT_ID, (route as ContentRoute).contentId)
+        assertEquals(TestHomeElements.ID_1, (route as ContentRoute).contentId)
     }
 
+    /**
+     * Verifies that [NavController.navigateFromPush] navigates
+     * correctly when the current destination is HomeScreen.
+     */
     @Test
     fun `navigateFromPush navigates from Home`() {
         val navController = mockk<NavController>(relaxed = true)
@@ -72,13 +85,17 @@ class NavigationExtensionsTest {
         every { backStackEntry.arguments } returns Bundle()
         every { destination.route } returns HomeRoute::class.qualifiedName
 
-        val intentRoute = ContentRoute(CONTENT_ID)
+        val intentRoute = ContentRoute(TestHomeElements.ID_1)
 
         navController.navigateFromPush(intentRoute)
 
         verify { navController.navigate(intentRoute) }
     }
 
+    /**
+     * Verifies that [NavController.navigateFromPush] navigates
+     * correctly when the current destination is SelectorScreen.
+     */
     @Test
     fun `navigateFromPush navigates from Selector`() {
         val navController = mockk<NavController>(relaxed = true)
@@ -90,20 +107,25 @@ class NavigationExtensionsTest {
         every { backStackEntry.arguments } returns Bundle()
         every { destination.route } returns SelectorRoute::class.qualifiedName
 
-        val intentRoute = ContentRoute(CONTENT_ID)
+        val intentRoute = ContentRoute(TestHomeElements.ID_1)
 
         navController.navigateFromPush(intentRoute)
 
         verify { navController.navigate(intentRoute) }
     }
 
+    /**
+     * Ensures that [NavController.navigateFromPush] does not navigate
+     * when the current destination is ContentScreen and the content ID
+     * matches the push intent.
+     */
     @Test
     fun `navigateFromPush does not navigates when same Content`() {
         val navController = mockk<NavController>(relaxed = true)
         val backStackEntry = mockk<NavBackStackEntry>()
         val destination = mockk<NavDestination>()
         val args = Bundle().apply {
-            putString(ContentRoute.CONTENT_ID_KEY, CONTENT_ID)
+            putString(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
         }
 
         every { navController.currentBackStackEntry } returns backStackEntry
@@ -111,20 +133,25 @@ class NavigationExtensionsTest {
         every { backStackEntry.arguments } returns args
         every { destination.route } returns ContentRoute::class.qualifiedName
 
-        val intentRoute = ContentRoute(CONTENT_ID)
+        val intentRoute = ContentRoute(TestHomeElements.ID_1)
 
         navController.navigateFromPush(intentRoute)
 
         verify(exactly = 0) { navController.navigate(any<ContentRoute>()) }
     }
 
+    /**
+     * Ensures that [NavController.navigateFromPush] navigates
+     * when the current destination is ContentScreen but the content ID
+     * differs from the push intent.
+     */
     @Test
     fun `navigateFromPush does not navigates when different Content`() {
         val navController = mockk<NavController>(relaxed = true)
         val backStackEntry = mockk<NavBackStackEntry>()
         val destination = mockk<NavDestination>()
         val args = Bundle().apply {
-            putString(ContentRoute.CONTENT_ID_KEY, CONTENT_ID)
+            putString(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
         }
 
         every { navController.currentBackStackEntry } returns backStackEntry
@@ -132,7 +159,7 @@ class NavigationExtensionsTest {
         every { backStackEntry.arguments } returns args
         every { destination.route } returns ContentRoute::class.qualifiedName
 
-        val intentRoute = ContentRoute(DIFFERENT_CONTENT_ID)
+        val intentRoute = ContentRoute(TestHomeElements.ID_2)
 
         navController.navigateFromPush(intentRoute)
 
