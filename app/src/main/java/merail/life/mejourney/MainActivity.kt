@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import merail.life.core.errors.toType
+import merail.life.core.log.IMejourneyLogger
 import merail.life.core.navigation.NavigationRoute
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.design.MejourneyTheme
@@ -29,9 +30,13 @@ import merail.life.mejourney.navigation.MejourneyNavHost
 import merail.life.mejourney.navigation.getRouteIfExists
 import merail.life.mejourney.state.MainAuthState
 import merail.tools.permissions.runtime.runtimePermissionRequester
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), NotificationsPermissionRequester {
+
+    @Inject
+    lateinit var logger: IMejourneyLogger
 
     private val viewModel by viewModels<MainViewModel>()
 
@@ -69,6 +74,7 @@ class MainActivity : ComponentActivity(), NotificationsPermissionRequester {
                     val state by viewModel.state.collectAsState()
 
                     MejourneyNavHost(
+                        logger = logger,
                         intentRoute = intentRoute,
                         errorType = (state as? MainAuthState.Error)?.exception?.toType(),
                     )

@@ -16,12 +16,15 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import merail.life.core.constants.TestHomeElements
 import merail.life.core.constants.TestTags
+import merail.life.core.log.IMejourneyLogger
 import merail.life.core.navigation.NavigationRoute
 import merail.life.data.test.di.TestDataModule
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.mejourney.navigation.MejourneyNavHost
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
 /**
  * Instrumented tests for [MejourneyNavHost] navigation graph, verifying
@@ -43,6 +46,14 @@ internal class MejourneyNavGraphTest {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
 
+    @Inject
+    lateinit var logger: IMejourneyLogger
+
+    @Before
+    fun setUp() {
+        hiltRule.inject()
+    }
+
     /**
      * Verifies that when the SelectorScreen contains only one available element,
      * selecting it immediately opens the corresponding ContentScreen
@@ -57,6 +68,7 @@ internal class MejourneyNavGraphTest {
 
             MejourneyNavHost(
                 navController = navController,
+                logger = logger,
                 intentRoute = null,
                 errorType = null,
             )
@@ -85,6 +97,7 @@ internal class MejourneyNavGraphTest {
     fun `navigate from push to ContentRoute when app is closed`() {
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = remember {
                     mutableStateOf(ContentRoute(TestHomeElements.ID_2))
                 },
@@ -109,6 +122,7 @@ internal class MejourneyNavGraphTest {
             }
 
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = intentRoute,
                 errorType = null,
             )
@@ -137,6 +151,7 @@ internal class MejourneyNavGraphTest {
 
             MejourneyNavHost(
                 navController = navController,
+                logger = logger,
                 intentRoute = intentRoute,
                 errorType = null,
             )
@@ -181,6 +196,7 @@ internal class MejourneyNavGraphTest {
 
             MejourneyNavHost(
                 navController = navController,
+                logger = logger,
                 intentRoute = intentRoute,
                 errorType = null,
             )
@@ -230,6 +246,7 @@ internal class MejourneyNavGraphTest {
 
             MejourneyNavHost(
                 navController = navController,
+                logger = logger,
                 intentRoute = intentRoute,
                 errorType = null,
             )

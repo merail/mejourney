@@ -12,6 +12,7 @@ import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.runBlocking
 import merail.life.auth.api.IAuthRepository
 import merail.life.data.test.di.TestDataModule
+import merail.life.mejourney.MejourneyNavGraphTest.Companion.WAITING_TIME
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -31,8 +32,6 @@ internal class MainActivityTest {
     companion object {
         private const val ENGLISH_ALLOW_WORD = "ALLOW"
         private const val RUSSIAN_ALLOW_WORD = "РАЗРЕШИТЬ"
-
-        private const val WAITING_TIME = 5_000L
     }
 
     @get:Rule

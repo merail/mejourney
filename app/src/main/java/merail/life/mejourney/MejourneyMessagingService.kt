@@ -6,10 +6,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import dagger.hilt.android.EntryPointAccessors
+import merail.life.mejourney.di.MessagingServiceDependencies
 
 class MejourneyMessagingService : FirebaseMessagingService() {
 
@@ -17,9 +18,16 @@ class MejourneyMessagingService : FirebaseMessagingService() {
         private const val TAG = "MejourneyMessagingService"
     }
 
+    private val logger by lazy {
+        EntryPointAccessors.fromApplication(
+            applicationContext,
+            MessagingServiceDependencies::class.java,
+        ).logger()
+    }
+
     override fun onMessageReceived(message: RemoteMessage) {
         message.notification?.let {
-            Log.d(TAG, "Push notification was received: ${message.data}")
+            logger.d(TAG, "Push notification was received: ${message.data}")
             sendNotification(
                 messageTitle = it.title.orEmpty(),
                 messageBody = it.body.orEmpty(),
@@ -29,7 +37,7 @@ class MejourneyMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        Log.d(TAG, "Refreshed token: $token")
+        logger.d(TAG, "Refreshed token: $token")
     }
 
     private fun sendNotification(

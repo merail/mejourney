@@ -13,6 +13,7 @@ import dagger.hilt.android.testing.UninstallModules
 import merail.life.core.constants.TestHomeElements
 import merail.life.core.constants.TestTags
 import merail.life.core.errors.ErrorType
+import merail.life.core.log.IMejourneyLogger
 import merail.life.data.impl.di.DataModule
 import merail.life.data.test.repository.TestDataRepository
 import merail.life.mejourney.navigation.MejourneyNavHost
@@ -40,6 +41,9 @@ internal class ErrorsHandlingTest {
     val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
 
     @Inject
+    lateinit var logger: IMejourneyLogger
+
+    @Inject
     lateinit var testDataRepository: TestDataRepository
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -58,6 +62,7 @@ internal class ErrorsHandlingTest {
     fun `when init loading internet connection error dismiss box appears`() {
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = null,
                 errorType = ErrorType.INTERNET_CONNECTION,
             )
@@ -78,6 +83,7 @@ internal class ErrorsHandlingTest {
     fun `when init loading common error dismiss box appears`() {
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = null,
                 errorType = ErrorType.OTHER,
             )
@@ -99,6 +105,7 @@ internal class ErrorsHandlingTest {
 
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = null,
                 errorType = null,
             )
@@ -116,6 +123,7 @@ internal class ErrorsHandlingTest {
     fun `when ContentScreen init loading error dismiss box appears`() {
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = null,
                 errorType = null,
             )
@@ -137,6 +145,7 @@ internal class ErrorsHandlingTest {
 
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = null,
                 errorType = null,
             )
@@ -155,6 +164,7 @@ internal class ErrorsHandlingTest {
     fun `when SelectorScreen init loading error dismiss box appears`() {
         composeTestRule.setContent {
             MejourneyNavHost(
+                logger = logger,
                 intentRoute = null,
                 errorType = null,
             )
