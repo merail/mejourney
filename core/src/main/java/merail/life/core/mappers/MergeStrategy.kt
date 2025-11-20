@@ -16,18 +16,16 @@ class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResult<T>> {
     override fun merge(
         right: RequestResult<T>,
         left: RequestResult<T>
-    ): RequestResult<T> {
-        return when {
-            right is InProgress && left is InProgress -> merge(right, left)
-            right is Success && left is InProgress -> merge(right, left)
-            right is InProgress && left is Success -> merge(right, left)
-            right is Success && left is Success -> merge(right, left)
-            right is Success && left is Error -> merge(right, left)
-            right is InProgress && left is Error -> merge(right, left)
-            right is Error && left is InProgress -> merge(right, left)
-            right is Error && left is Success -> merge(right, left)
-            else -> error("Unimplemented branch right=$right & left=$left")
-        }
+    ) = when {
+        right is InProgress && left is InProgress -> merge(right, left)
+        right is Success && left is InProgress -> merge(right, left)
+        right is InProgress && left is Success -> merge(right, left)
+        right is Success && left is Success -> merge(right, left)
+        right is Success && left is Error -> merge(right, left)
+        right is InProgress && left is Error -> merge(right, left)
+        right is Error && left is InProgress -> merge(right, left)
+        right is Error && left is Success -> merge(right, left)
+        else -> error("Unimplemented branch right=$right & left=$left")
     }
 
     private fun merge(

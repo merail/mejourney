@@ -67,7 +67,7 @@ internal class ServerRepository @Inject constructor(
             }
             return collection.collection(pathList.last())
         }
-        throw IllegalStateException("Empty path in Firestore database!")
+        error("Empty path in Firestore database!")
     }
 
     private suspend fun List<StorageReference>.fetchFilesUris() = map { reference ->

@@ -6,7 +6,7 @@ object TestHomeElements {
     const val ID_2 = "home_cover_2"
     const val ID_7 = "home_cover_7"
     const val ID_8 = "home_cover_8"
-    const val ID_9 = "home_cover_5"
+    const val ID_9 = "home_cover_9"
 
     const val YEAR_23 = 2023L
     const val YEAR_24 = 2024L

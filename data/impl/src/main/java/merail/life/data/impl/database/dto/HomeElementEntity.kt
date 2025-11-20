@@ -3,17 +3,18 @@ package merail.life.data.impl.database.dto
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import merail.life.core.constants.HomeElementsFields
 import merail.life.data.api.model.HomeElementModel
 
 @Entity
 internal data class HomeElementEntity(
     @PrimaryKey val id: String,
-    @ColumnInfo(name = "year") val year: Long,
-    @ColumnInfo(name = "country") val country: String,
-    @ColumnInfo(name = "place") val place: String,
-    @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "url") val url: String,
+    @ColumnInfo(name = HomeElementsFields.YEAR) val year: Long,
+    @ColumnInfo(name = HomeElementsFields.COUNTRY) val country: String,
+    @ColumnInfo(name = HomeElementsFields.PLACE) val place: String,
+    @ColumnInfo(name = HomeElementsFields.TITLE) val title: String,
+    @ColumnInfo(name = HomeElementsFields.DESCRIPTION) val description: String,
+    @ColumnInfo(name = HomeElementsFields.URL) val url: String,
 )
 
 internal fun HomeElementEntity.toModel() = HomeElementModel(

@@ -32,7 +32,7 @@ import org.junit.runner.RunWith
 class ContentViewModelTest {
 
     companion object {
-        private const val CONTENT_ID = "home_cover_9"
+        private const val CONTENT_ID = TestHomeElements.ID_9
     }
 
     private val testDispatcher = StandardTestDispatcher()

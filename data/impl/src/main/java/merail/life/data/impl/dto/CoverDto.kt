@@ -1,5 +1,6 @@
 package merail.life.data.impl.dto
 
+import merail.life.core.constants.HomeElementsFields
 import merail.life.data.impl.server.dto.FirestoreDto
 
 internal class CoverDto(
@@ -15,11 +16,11 @@ internal fun FirestoreDto.toCoverDto() = snapshot.map {
     runCatching {
         CoverDto(
             id = it.id,
-            year = it.data["year"] as Long,
-            country = it.data["country"] as String,
-            place = it.data["place"] as String,
-            title = it.data["title"] as String,
-            description = it.data["description"] as String,
+            year = it.data[HomeElementsFields.YEAR] as Long,
+            country = it.data[HomeElementsFields.COUNTRY] as String,
+            place = it.data[HomeElementsFields.PLACE] as String,
+            title = it.data[HomeElementsFields.TITLE] as String,
+            description = it.data[HomeElementsFields.DESCRIPTION] as String,
         )
     }.onFailure {
         it.printStackTrace()
