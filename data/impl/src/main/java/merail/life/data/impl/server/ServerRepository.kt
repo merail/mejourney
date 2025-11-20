@@ -24,9 +24,9 @@ internal class ServerRepository @Inject constructor(
 
     companion object {
 
-        private const val STORAGE_ROOT = BuildConfig.FIREBASE_REPOSITORY_PATH
+        private val STORAGE_ROOT by lazy { BuildConfig.FIREBASE_REPOSITORY_PATH }
 
-        private const val BUCKET_REFERENCE = BuildConfig.FIREBASE_STORAGE_BUCKET
+        private val BUCKET_REFERENCE by lazy { BuildConfig.FIREBASE_STORAGE_BUCKET }
     }
 
     override suspend fun getFirestoreData(
