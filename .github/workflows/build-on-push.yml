@@ -30,6 +30,10 @@ jobs:
           echo "prodFirebaseRepositoryPath=${{ secrets.PROD_FIREBASE_REPOSITORY_PATH }}" >> local.properties
           echo "prodFirebaseStorageBucket=${{ secrets.PROD_FIREBASE_STORAGE_BUCKET }}" >> local.properties
 
+      - name: Create google-services.json
+        run: |
+          echo '${{ secrets.DEV_GOOGLE_SERVICES_JSON }}' > app/src/debug/google-services.json
+
       - name: Run Unit Tests
         run: ./gradlew test --stacktrace
 
