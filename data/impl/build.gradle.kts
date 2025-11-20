@@ -21,12 +21,12 @@ android {
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_REPOSITORY_PATH",
-                value = properties.getProperty("devFirebaseRepositoryPath"),
+                value = "\"${properties.getProperty("devFirebaseRepositoryPath")}\"",
             )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
-                value = properties.getProperty("devFirebaseStorageBucket"),
+                value = "\"${properties.getProperty("devFirebaseStorageBucket")}\"",
             )
         }
 
@@ -34,12 +34,12 @@ android {
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_REPOSITORY_PATH",
-                value = properties.getProperty("prodFirebaseRepositoryPath"),
+                value = "\"${properties.getProperty("prodFirebaseRepositoryPath")}\"",
             )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
-                value = properties.getProperty("prodFirebaseStorageBucket"),
+                value = "\"${properties.getProperty("prodFirebaseStorageBucket")}\"",
             )
         }
     }
