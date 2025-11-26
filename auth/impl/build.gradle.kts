@@ -5,6 +5,10 @@ plugins {
 }
 
 dependencies {
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.config)

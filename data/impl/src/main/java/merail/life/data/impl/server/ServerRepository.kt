@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import merail.life.core.errors.NoInternetConnectionException
-import merail.life.core.errors.tryMapToUnauthorizedException
 import merail.life.core.extensions.Slash
 import merail.life.core.extensions.suspendableRunCatching
 import merail.life.data.impl.BuildConfig
@@ -34,8 +33,6 @@ internal class ServerRepository @Inject constructor(
     ): FirestoreDto = withContext(Dispatchers.IO) {
         suspendableRunCatching {
             firebaseFirestore.getCollectionFromPath(folderName).get().await()
-        }.onFailure { error ->
-            throw error.tryMapToUnauthorizedException()
         }.onSuccess {
             if (it.metadata.isFromCache) {
                 throw NoInternetConnectionException()

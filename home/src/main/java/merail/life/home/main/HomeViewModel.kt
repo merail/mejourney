@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.home.main.useCases.LoadHomeElementsByTabUseCase
 import merail.life.home.main.useCases.LoadHomeElementsUseCase
+import merail.life.home.main.useCases.LoadSnowfallStateUseCase
 import merail.life.home.model.TabFilter
 import javax.inject.Inject
 
@@ -17,6 +19,7 @@ import javax.inject.Inject
 internal class HomeViewModel @Inject constructor(
     authRepository: IAuthRepository,
     private val loadHomeElementsUseCase: LoadHomeElementsUseCase,
+    private val loadSnowfallStateUseCase: LoadSnowfallStateUseCase,
     private val loadHomeElementsByTabUseCase: LoadHomeElementsByTabUseCase,
 ) : ViewModel() {
 
@@ -28,13 +31,23 @@ internal class HomeViewModel @Inject constructor(
 
     val state: StateFlow<HomeLoadingState> = _state
 
-    val isSnowfallEnabled = authRepository.isSnowfallEnabled()
+    private val _isSnowfallEnabledState = MutableStateFlow(false)
+
+    val isSnowfallEnabledState: StateFlow<Boolean> = _isSnowfallEnabledState
 
     init {
         viewModelScope.launch {
-            loadHomeElementsUseCase().collect { state ->
-                _state.update { state }
+            authRepository.isAuthorized().filter {
+                it
+            }.collect {
+                loadHomeElementsUseCase().collect { state ->
+                    _state.update { state }
+                }
             }
+        }
+
+        viewModelScope.launch {
+            _isSnowfallEnabledState.value = loadSnowfallStateUseCase()
         }
     }
 

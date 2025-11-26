@@ -3,7 +3,6 @@ package merail.life.home.main
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import merail.life.core.errors.UnauthorizedException
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.model.HomeElementModel
 import merail.life.home.model.HomeItem
@@ -16,12 +15,7 @@ internal sealed class HomeLoadingState(
         override val items: ImmutableList<HomeItem> = persistentListOf(),
     ) : HomeLoadingState(items)
 
-    data class UnauthorizedException(
-        val exception: Throwable?,
-        override val items: ImmutableList<HomeItem>,
-    ) : HomeLoadingState(items)
-
-    data class CommonError(
+    data class Error(
         val exception: Throwable?,
         override val items: ImmutableList<HomeItem>,
     ) : HomeLoadingState(items)
@@ -32,17 +26,11 @@ internal sealed class HomeLoadingState(
 }
 
 internal fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
-    is RequestResult.Error -> when {
-        error is UnauthorizedException -> HomeLoadingState.UnauthorizedException(
-            exception = error,
-            items = data?.toHomeItems().orEmpty().toImmutableList(),
-        )
-        else -> HomeLoadingState.CommonError(
-            exception = error,
-            items = data?.toHomeItems().orEmpty().toImmutableList(),
-        )
-    }
     is RequestResult.InProgress -> HomeLoadingState.Loading(
+        items = data?.toHomeItems().orEmpty().toImmutableList(),
+    )
+    is RequestResult.Error -> HomeLoadingState.Error(
+        exception = error,
         items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
     is RequestResult.Success -> HomeLoadingState.Success(

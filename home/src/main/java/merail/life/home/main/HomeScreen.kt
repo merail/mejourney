@@ -44,7 +44,6 @@ import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.constants.TestTags
-import merail.life.core.extensions.rerunApp
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
@@ -76,10 +75,7 @@ internal fun HomeScreen(
     val state = viewModel.state.collectAsState().value
 
     when (state) {
-        is HomeLoadingState.UnauthorizedException -> LaunchedEffect(null) {
-            activity?.rerunApp()
-        }
-        is HomeLoadingState.CommonError -> LaunchedEffect(null) {
+        is HomeLoadingState.Error -> LaunchedEffect(null) {
             onError(state.exception)
         }
         is HomeLoadingState.Success -> LaunchedEffect(null) {
@@ -89,9 +85,11 @@ internal fun HomeScreen(
         -> Unit
     }
 
+    val isSnowfallEnabled = viewModel.isSnowfallEnabledState.collectAsState().value
+
     HomeContent(
         state = state,
-        isSnowfallEnabled = viewModel.isSnowfallEnabled,
+        isSnowfallEnabled = isSnowfallEnabled,
         navigateToSelector = {
             navigateToSelector(it.toModel())
         },
