@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
 import merail.life.home.main.useCases.LoadHomeElementsByTabUseCase
@@ -40,8 +39,8 @@ internal class HomeViewModel @Inject constructor(
             authRepository.isAuthorized().filter {
                 it
             }.collect {
-                loadHomeElementsUseCase().collect { state ->
-                    _state.update { state }
+                loadHomeElementsUseCase().collect {
+                    _state.value = it
                 }
             }
         }
@@ -54,8 +53,8 @@ internal class HomeViewModel @Inject constructor(
     fun getHomeItems(
         filter: TabFilter,
     ) = viewModelScope.launch {
-        loadHomeElementsByTabUseCase(filter).collect { state ->
-            _state.update { state }
+        loadHomeElementsByTabUseCase(filter).collect {
+            _state.value = it
         }
     }
 }
