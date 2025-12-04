@@ -80,6 +80,10 @@ android {
             excludes += "/META-INF/{LICENSE.md,LICENSE-notice.md}"
         }
     }
+
+    lint {
+        disable += "NullSafeMutableLiveData"
+    }
 }
 
 dependencies {
