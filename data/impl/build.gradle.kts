@@ -1,6 +1,6 @@
 
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.gradle.kotlin.dsl.android
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.library.plugin)
@@ -13,20 +13,19 @@ android {
         buildConfig = true
     }
 
-    val properties = Properties()
-    properties.load(project.rootProject.file("local.properties").inputStream())
+    val localProperties = gradleLocalProperties(rootDir, providers)
 
     buildTypes {
         debug {
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_REPOSITORY_PATH",
-                value = "\"${properties.getProperty("devFirebaseRepositoryPath")}\"",
+                value = "\"${localProperties.getProperty("devFirebaseRepositoryPath")}\"",
             )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
-                value = "\"${properties.getProperty("devFirebaseStorageBucket")}\"",
+                value = "\"${localProperties.getProperty("devFirebaseStorageBucket")}\"",
             )
         }
 
@@ -34,12 +33,12 @@ android {
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_REPOSITORY_PATH",
-                value = "\"${properties.getProperty("prodFirebaseRepositoryPath")}\"",
+                value = "\"${localProperties.getProperty("prodFirebaseRepositoryPath")}\"",
             )
             buildConfigField(
                 type = "String",
                 name = "FIREBASE_STORAGE_BUCKET",
-                value = "\"${properties.getProperty("prodFirebaseStorageBucket")}\"",
+                value = "\"${localProperties.getProperty("prodFirebaseStorageBucket")}\"",
             )
         }
     }

@@ -1,4 +1,5 @@
 
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.gradle.kotlin.dsl.android
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -31,13 +32,20 @@ android {
     signingConfigs {
         create("release") {
             val keystorePath = System.getenv("RELEASE_KEYSTORE_FILE")
+
             if (keystorePath != null) {
                 storeFile = file(keystorePath)
-            }
+                storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+                keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+            } else {
+                val localProperties = gradleLocalProperties(rootDir, providers)
 
-            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
-            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+                storeFile = file("keystore.keystore")
+                storePassword = localProperties.getProperty("releaseKeystorePassword")
+                keyAlias = localProperties.getProperty("releaseKeystoreAlias")
+                keyPassword = localProperties.getProperty("releaseKeyPassword")
+            }
         }
     }
 
