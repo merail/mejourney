@@ -20,11 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject version
-        run: |
-          echo "VERSION_CODE=${{ github.event.inputs.versionCode }}" >> gradle.properties
-          echo "VERSION_NAME=${{ github.event.inputs.versionName }}" >> gradle.properties
-
       - name: Prepare safe version name
         run: |
           SAFE_VERSION_NAME="${{ github.event.inputs.versionName }}"
@@ -63,10 +58,15 @@ jobs:
           echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Run Unit Tests
-        run: ./gradlew test --stacktrace
+        run: ./gradlew test --stacktrace \
+          -PVERSION_CODE=${{ github.event.inputs.versionCode }} \
+          -PVERSION_NAME='${{ github.event.inputs.versionName }}'
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease --stacktrace -PreleaseKeystoreFile=$RELEASE_KEYSTORE_FILE
+        run: ./gradlew assembleRelease --stacktrace \
+          -PVERSION_CODE=${{ github.event.inputs.versionCode }} \
+          -PVERSION_NAME='${{ github.event.inputs.versionName }}' \
+          -PreleaseKeystoreFile=$RELEASE_KEYSTORE_FILE
 
       - name: Rename APK
         run: |
