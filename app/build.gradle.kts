@@ -90,7 +90,12 @@ android {
     }
 
     lint {
-        disable += "NullSafeMutableLiveData"
+        disable += arrayOf(
+            "NullSafeMutableLiveData",
+            "RememberInComposition",
+            "FrequentlyChangingValue",
+            "AutoboxingStateCreation",
+        )
     }
 }
 

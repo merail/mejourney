@@ -23,7 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.constants.TestTags
 import merail.life.core.extensions.isSingle
@@ -41,7 +41,7 @@ internal fun SelectorScreen(
     onError: (Throwable?) -> Unit,
     navigateToContent: (String) -> Unit,
     navigateToContentImmediately: (String) -> Unit,
-    viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
+    viewModel: SelectorViewModel = hiltViewModel(),
 ) {
     when (val uiState = viewModel.selectionLoadingState.collectAsState().value) {
         is SelectionLoadingState.Loading -> Loading()

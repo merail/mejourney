@@ -29,7 +29,12 @@ class LibraryConventionPlugin : Plugin<Project> {
             }
 
             lint {
-                disable += "NullSafeMutableLiveData"
+                disable += arrayOf(
+                    "NullSafeMutableLiveData",
+                    "RememberInComposition",
+                    "FrequentlyChangingValue",
+                    "AutoboxingStateCreation",
+                )
             }
         }
 

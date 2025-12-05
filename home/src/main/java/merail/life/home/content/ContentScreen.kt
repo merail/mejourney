@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
@@ -31,7 +31,7 @@ import merail.life.home.model.splitWithImages
 @Composable
 internal fun ContentScreen(
     navigateToError: (Throwable?) -> Unit,
-    viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
+    viewModel: ContentViewModel = hiltViewModel(),
 ) {
     when (val uiState = viewModel.contentLoadingState.collectAsState().value) {
         is ContentLoadingState.Loading -> Loading()
