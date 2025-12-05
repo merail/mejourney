@@ -58,15 +58,19 @@ jobs:
           echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Run Unit Tests
-        run: ./gradlew test --stacktrace \
-          -PVERSION_CODE=${{ github.event.inputs.versionCode }} \
-          -PVERSION_NAME='${{ github.event.inputs.versionName }}'
+        run: |
+          ./gradlew test \
+            -PVERSION_CODE=${{ github.event.inputs.versionCode }} \
+            -PVERSION_NAME='${{ github.event.inputs.versionName }}' \
+            --stacktrace
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease --stacktrace \
-          -PVERSION_CODE=${{ github.event.inputs.versionCode }} \
-          -PVERSION_NAME='${{ github.event.inputs.versionName }}' \
-          -PreleaseKeystoreFile=$RELEASE_KEYSTORE_FILE
+        run: |
+          ./gradlew assembleRelease \
+            -PVERSION_CODE=${{ github.event.inputs.versionCode }} \
+            -PVERSION_NAME='${{ github.event.inputs.versionName }}' \
+            -PreleaseKeystoreFile=$RELEASE_KEYSTORE_FILE \
+            --stacktrace
 
       - name: Rename APK
         run: |
