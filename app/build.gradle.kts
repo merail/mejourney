@@ -1,38 +1,51 @@
+
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.gradle.kotlin.dsl.android
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.googleServices)
-    alias(libs.plugins.firebaseCrashlytics)
-    alias(libs.plugins.hilt.gradle)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.android.app)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.androidx.baselineprofile)
 }
 
 android {
     namespace = "merail.life.mejourney"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "merail.life.mejourney"
+
         minSdk = 30
-        targetSdk = 35
+        targetSdk = 36
         versionCode = (project.findProperty("VERSION_CODE") as String?)?.toIntOrNull() ?: 1
         versionName = project.findProperty("VERSION_NAME") as String? ?: "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "merail.life.mejourney.HiltTestRunner"
     }
 
     signingConfigs {
         create("release") {
             val keystorePath = System.getenv("RELEASE_KEYSTORE_FILE")
+
             if (keystorePath != null) {
                 storeFile = file(keystorePath)
-            }
+                storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+                keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+            } else {
+                val localProperties = gradleLocalProperties(rootDir, providers)
 
-            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
-            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+                storeFile = file("keystore.keystore")
+                storePassword = localProperties.getProperty("releaseKeystorePassword")
+                keyAlias = localProperties.getProperty("releaseKeystoreAlias")
+                keyPassword = localProperties.getProperty("releaseKeyPassword")
+            }
         }
     }
 
@@ -63,7 +76,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JvmTarget.JVM_17.target
     }
 
     buildFeatures {
@@ -72,21 +85,38 @@ android {
 
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            pickFirsts += "/META-INF/{NOTICE.md,LICENSE.md}"
+            excludes += "/META-INF/{LICENSE.md,LICENSE-notice.md}"
         }
+    }
+
+    lint {
+        disable += arrayOf(
+            "NullSafeMutableLiveData",
+            "RememberInComposition",
+            "FrequentlyChangingValue",
+            "AutoboxingStateCreation",
+        )
     }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.uiautomator)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(projects.data.test)
+
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
+
+    implementation(libs.androidx.core.splashscreen)
+
     implementation(libs.androidx.profileinstaller)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
@@ -102,16 +132,14 @@ dependencies {
 
     implementation(libs.request.permissions.tool)
 
-    implementation(project(":core"))
-    implementation(project(":design"))
-    implementation(project(":navigation:graph"))
-    implementation(project(":navigation:domain"))
-    implementation(project(":data"))
-    implementation(project(":splash"))
-    implementation(project(":home"))
-    implementation(project(":auth:api"))
-    implementation(project(":auth:impl"))
-    implementation(project(":store:api"))
-    implementation(project(":store:impl"))
-    "baselineProfile"(project(":profiling"))
+    implementation(projects.core)
+    implementation(projects.design)
+    implementation(projects.auth.api)
+    implementation(projects.auth.impl)
+    implementation(projects.data.api)
+    implementation(projects.data.impl)
+    implementation(projects.home)
+    implementation(projects.error)
+
+    baselineProfile(projects.profiling)
 }

@@ -15,27 +15,37 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.HomeItem
 
 @Composable
 internal fun ColumnScope.CountriesList(
     items: ImmutableList<HomeItem>,
+    isLoading: Boolean,
     navigateToContent: (String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = Modifier
-            .weight(1f)
             .padding(
                 start = 4.dp,
-                top = 32.dp,
+                top = if (isLoading) {
+                    0.dp
+                } else {
+                    pureStatusBarHeight()
+                },
                 end = 4.dp,
-            ),
+                bottom = 4.dp,
+            )
+            .weight(1f)
+            .testTag(TestTags.COUNTRIES_LIST),
     ) {
         items(
             items = items,
@@ -66,17 +76,12 @@ private fun CountryItem(
             var isImageLoaded by remember {
                 mutableStateOf(false)
             }
-
-            val onLoadingSuccess = remember {
-                {
-                    isImageLoaded = true
-                }
-            }
-
             CoverImage(
                 id = item.id,
                 url = item.url,
-                onLoadingSuccess = onLoadingSuccess,
+                onLoadingSuccess =  {
+                    isImageLoaded = true
+                },
                 navigateTo = navigateToContent,
                 modifier = Modifier
                     .height(256.dp),

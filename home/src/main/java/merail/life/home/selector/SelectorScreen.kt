@@ -8,55 +8,47 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.core.extensions.isNavigationBarEnabled
+import merail.life.core.constants.TestTags
 import merail.life.core.extensions.isSingle
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
 import merail.life.design.components.Loading
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.HomeItem
-
-@Composable
-fun SelectorContainer(
-    onError: (Throwable?) -> Unit,
-    navigateToContent: (String) -> Unit,
-    navigateToContentImmediately: (String) -> Unit,
-) = SelectorScreen(
-    onError = onError,
-    navigateToContent = navigateToContent,
-    navigateToContentImmediately = navigateToContentImmediately,
-)
+import merail.life.home.selector.state.SelectionLoadingState
 
 @Composable
 internal fun SelectorScreen(
     onError: (Throwable?) -> Unit,
     navigateToContent: (String) -> Unit,
     navigateToContentImmediately: (String) -> Unit,
-    viewModel: SelectorViewModel = hiltViewModel<SelectorViewModel>(),
+    viewModel: SelectorViewModel = hiltViewModel(),
 ) {
-    when (val uiState = viewModel.selectionState.collectAsState().value) {
-        is SelectionState.None -> Unit
-        is SelectionState.Loading -> Loading()
-        is SelectionState.Error -> LaunchedEffect(null) {
+    when (val uiState = viewModel.selectionLoadingState.collectAsState().value) {
+        is SelectionLoadingState.Loading -> Loading()
+        is SelectionLoadingState.Error -> LaunchedEffect(null) {
             onError(uiState.exception)
         }
-        is SelectionState.Success -> if (uiState.items.isSingle) {
+        is SelectionLoadingState.Success -> if (uiState.items.isSingle) {
             navigateToContentImmediately(uiState.items.first().id)
         } else {
             Content(
@@ -80,6 +72,8 @@ private fun Content(
     HorizontalPager(
         state = pagerState,
         contentPadding = PaddingValues(10.dp),
+        modifier = Modifier
+            .testTag(TestTags.SELECTOR_SCREEN_CONTAINER),
     ) { page ->
         SelectorItem(
             item = items[page],
@@ -98,9 +92,12 @@ private fun SelectorItem(
         modifier = Modifier
             .padding(
                 start = 4.dp,
-                top = 32.dp,
+                top = pureStatusBarHeight(),
                 end = 4.dp,
-                bottom = 20.dp,
+            )
+            .navigationBarsPadding()
+            .clip(
+                shape = RoundedCornerShape(12.dp),
             )
             .clickable {
                 navigateToContent(item.id)
@@ -112,15 +109,12 @@ private fun SelectorItem(
                 .fillMaxWidth()
                 .weight(1f),
         ) {
-            val onClick: (String) -> Unit = remember {
-                {
-                    navigateToContent(it)
-                }
-            }
             CoverImage(
                 id = item.id,
                 url = item.url,
-                navigateTo = onClick,
+                navigateTo =  {
+                    navigateToContent(it)
+                },
                 contentScale = ContentScale.Crop,
                 loading = {
                     ImageLoading(Modifier.height(640.dp))
@@ -133,11 +127,7 @@ private fun SelectorItem(
         Column(
             modifier = Modifier
                 .fillMaxHeight(
-                    fraction = if (LocalContext.current.isNavigationBarEnabled){
-                        0.24f
-                    } else {
-                        0.18f
-                    },
+                    fraction = 0.24f,
                 ),
         ) {
             Text(

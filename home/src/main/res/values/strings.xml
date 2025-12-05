@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Mejourney</string>
-
     <string name="main_tab_years_name">Годы</string>
     <string name="main_tab_countries_name">Страны</string>
     <string name="main_tab_places_name">Места</string>

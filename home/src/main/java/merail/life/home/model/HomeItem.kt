@@ -1,8 +1,8 @@
 package merail.life.home.model
 
-import merail.life.data.model.HomeElementModel
+import merail.life.data.api.model.HomeElementModel
 
-internal class HomeItem(
+internal data class HomeItem(
     val id: String,
     val year: Long,
     val country: String,

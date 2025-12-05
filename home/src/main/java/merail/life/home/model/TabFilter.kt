@@ -1,6 +1,6 @@
 package merail.life.home.model
 
-import merail.life.data.model.HomeFilterType
+import merail.life.data.api.model.HomeFilterType
 
 internal enum class TabFilter {
     YEAR,

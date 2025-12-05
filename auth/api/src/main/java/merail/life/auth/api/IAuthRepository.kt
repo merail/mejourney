@@ -1,32 +1,11 @@
 package merail.life.auth.api
 
-import merail.life.auth.api.model.UserAuthorizationState
+import kotlinx.coroutines.flow.Flow
 
 interface IAuthRepository {
+    suspend fun authorize()
 
-    suspend fun getUserAuthorizationState(): UserAuthorizationState
+    fun isAuthorized(): Flow<Boolean>
 
-    suspend fun isUserExist(
-        email: String,
-    ): Boolean
-
-    suspend fun sendOtp(
-        email: String,
-    )
-
-    fun getCurrentOtp(): Int
-
-    suspend fun createUser(
-        email: String,
-        password: String,
-    )
-
-    suspend fun authorizeAnonymously()
-
-    suspend fun authorizeWithEmail(
-        email: String,
-        password: String,
-    )
-
-    fun isSnowfallEnabled(): Boolean
+    suspend fun isSnowfallEnabled(): Boolean
 }

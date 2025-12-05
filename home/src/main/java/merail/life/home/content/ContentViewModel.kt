@@ -8,10 +8,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import merail.life.core.RequestResult
-import merail.life.data.IDataRepository
-import merail.life.data.model.ContentModel
-import merail.life.navigation.domain.NavigationRoute
+import merail.life.core.mappers.RequestResult
+import merail.life.data.api.IDataRepository
+import merail.life.data.api.model.ContentModel
+import merail.life.home.content.navigation.ContentRoute
+import merail.life.home.content.state.ContentLoadingState
+import merail.life.home.content.state.toState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,11 +22,14 @@ internal class ContentViewModel @Inject constructor(
     dataRepository: IDataRepository,
 ) : ViewModel() {
 
-    private val contentId = checkNotNull(savedStateHandle.toRoute<NavigationRoute.Content>().contentId)
+    private val contentId = savedStateHandle.toRoute<ContentRoute>().contentId
 
-    var contentLoadingState = dataRepository
+    val contentLoadingState = dataRepository
         .getContent(contentId)
         .map(RequestResult<ContentModel>::toState)
-        .stateIn(viewModelScope, SharingStarted.Lazily, ContentLoadingState.Loading)
-        private set
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = ContentLoadingState.Loading,
+        )
 }

@@ -79,7 +79,6 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
-auth/impl/src/main/res/xml/remote_config_defaults.xml
 
 # Version control
 vcs.xml

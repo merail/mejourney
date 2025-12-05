@@ -1,64 +1,60 @@
 package merail.life.home.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import merail.life.auth.api.IAuthRepository
-import merail.life.core.RequestResult
-import merail.life.data.IDataRepository
-import merail.life.data.model.HomeElementModel
+import merail.life.home.main.useCases.LoadHomeElementsByTabUseCase
+import merail.life.home.main.useCases.LoadHomeElementsUseCase
+import merail.life.home.main.useCases.LoadSnowfallStateUseCase
 import merail.life.home.model.TabFilter
-import merail.life.home.model.toModel
 import javax.inject.Inject
-
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val authRepository: IAuthRepository,
-    private val dataRepository: IDataRepository,
+    authRepository: IAuthRepository,
+    private val loadHomeElementsUseCase: LoadHomeElementsUseCase,
+    private val loadSnowfallStateUseCase: LoadSnowfallStateUseCase,
+    private val loadHomeElementsByTabUseCase: LoadHomeElementsByTabUseCase,
 ) : ViewModel() {
 
     companion object {
-        private const val TAG = "HomeViewModel"
+        internal const val TAG = "HomeViewModel"
     }
 
-    var uiState = MutableStateFlow<HomeLoadingState>(HomeLoadingState.None)
-        private set
+    private val _state = MutableStateFlow<HomeLoadingState>(HomeLoadingState.Loading())
 
-    val isSnowfallEnabled = authRepository.isSnowfallEnabled()
+    val state: StateFlow<HomeLoadingState> = _state
 
-    private var _isInit: Boolean = true
+    private val _isSnowfallEnabledState = MutableStateFlow(false)
+
+    val isSnowfallEnabledState: StateFlow<Boolean> = _isSnowfallEnabledState
 
     init {
         viewModelScope.launch {
-            dataRepository.getHomeElements().map(RequestResult<List<HomeElementModel>>::toState).collect {
-                if (_isInit) {
-                    when (it) {
-                        is HomeLoadingState.Loading -> Log.d(TAG, "Получение списка элементов. Старт")
-                        is HomeLoadingState.UnauthorizedException -> Log.w(TAG, "Получение списка элементов. Ошибка авторизации", it.exception)
-                        is HomeLoadingState.CommonError -> Log.w(TAG, "Получение списка элементов. Ошибка", it.exception)
-                        is HomeLoadingState.Success -> Log.d(TAG, "Получение списка элементов. Успех")
-                        is HomeLoadingState.None,
-                        -> Unit
-                    }
-                    uiState.value = it
+            authRepository.isAuthorized().filter {
+                it
+            }.collect {
+                loadHomeElementsUseCase().collect {
+                    _state.value = it
                 }
             }
+        }
+
+        viewModelScope.launch {
+            _isSnowfallEnabledState.value = loadSnowfallStateUseCase()
         }
     }
 
     fun getHomeItems(
         filter: TabFilter,
     ) = viewModelScope.launch {
-        _isInit = false
-        dataRepository.getHomeElementsFromDatabase(
-            tabFilter = filter.toModel(),
-        ).map(RequestResult<List<HomeElementModel>>::toState).collect {
-            uiState.value = it
+        loadHomeElementsByTabUseCase(filter).collect {
+            _state.value = it
         }
     }
 }

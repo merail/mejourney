@@ -18,29 +18,38 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.home.model.HomeItem
 
 @Composable
 internal fun ColumnScope.PlacesList(
     items: ImmutableList<HomeItem>,
+    isLoading: Boolean,
     navigateToContent: (String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
-            .weight(1f)
             .padding(
                 start = 4.dp,
-                top = 24.dp,
+                top = if (isLoading) {
+                    0.dp
+                } else {
+                    pureStatusBarHeight()
+                },
                 end = 4.dp,
                 bottom = 4.dp,
-            ),
+            )
+            .weight(1f)
+            .testTag(TestTags.PLACES_LIST),
     ) {
         items(
             items = items,
@@ -69,19 +78,9 @@ private fun PlaceItem(
             mutableStateOf(false)
         }
 
-        val onLoadingSuccess = remember {
-            {
-                isImageLoaded = true
-            }
-        }
-
         Card(
             colors = MejourneyTheme.colors.cardColors,
             border = BorderStroke(1.dp, MejourneyTheme.colors.borderPrimary),
-            modifier = Modifier
-                .padding(
-                    top = 12.dp,
-                ),
         ) {
             CoverImage(
                 id = item.id,
@@ -90,7 +89,9 @@ private fun PlaceItem(
                 loading = {
                     ImageLoading(Modifier.height(512.dp))
                 },
-                onLoadingSuccess = onLoadingSuccess,
+                onLoadingSuccess =  {
+                    isImageLoaded = true
+                },
                 navigateTo = navigateToContent,
                 modifier = Modifier
                     .height(512.dp),

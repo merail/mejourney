@@ -2,6 +2,7 @@ package merail.life.home.content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -13,29 +14,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import merail.life.core.extensions.isNavigationBarEnabled
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
 import merail.life.design.components.Loading
+import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.home.content.state.ContentLoadingState
 import merail.life.home.model.ContentItem
 import merail.life.home.model.IMAGE_DELIMITER
 import merail.life.home.model.splitWithImages
 
 @Composable
-fun ContentContainer(
-    navigateToError: (Throwable?) -> Unit,
-) = ContentScreen(
-    navigateToError = navigateToError,
-)
-
-@Composable
 internal fun ContentScreen(
     navigateToError: (Throwable?) -> Unit,
-    viewModel: ContentViewModel = hiltViewModel<ContentViewModel>(),
+    viewModel: ContentViewModel = hiltViewModel(),
 ) {
     when (val uiState = viewModel.contentLoadingState.collectAsState().value) {
         is ContentLoadingState.Loading -> Loading()
@@ -55,15 +51,12 @@ private fun Content(
             .fillMaxSize()
             .padding(
                 start = 24.dp,
-                top = 24.dp,
+                top = pureStatusBarHeight(),
                 end = 24.dp,
-                bottom = if (LocalContext.current.isNavigationBarEnabled) {
-                    56.dp
-                } else {
-                    24.dp
-                },
             )
-            .verticalScroll(rememberScrollState()),
+            .navigationBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .testTag(TestTags.CONTENT_SCREEN_CONTAINER),
     ) {
         Text(
             text = item.title,

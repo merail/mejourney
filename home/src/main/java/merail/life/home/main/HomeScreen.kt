@@ -1,6 +1,8 @@
 package merail.life.home.main
 
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -12,13 +14,14 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,26 +30,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import merail.life.core.INotificationsPermissionRequester
-import merail.life.core.extensions.activity
-import merail.life.core.extensions.isNavigationBarEnabled
-import merail.life.core.extensions.rerunApp
-import merail.life.data.model.SelectorFilterType
+import merail.life.core.constants.TestTags
+import merail.life.core.permissions.NotificationsPermissionRequester
+import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
+import merail.life.design.components.Loading
+import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
@@ -62,69 +64,43 @@ import merail.life.home.model.TabFilter
 import merail.life.home.model.toModel
 
 @Composable
-fun HomeContainer(
-    onError: (Throwable?) -> Unit,
-    navigateToSelector: (SelectorFilterType) -> Unit,
-    navigateToContent: (String) -> Unit,
-) = HomeScreen(
-    onError = onError,
-    navigateToSelector = navigateToSelector,
-    navigateToContent = navigateToContent,
-)
-
-@Composable
 internal fun HomeScreen(
     onError: (Throwable?) -> Unit,
     navigateToSelector: (SelectorFilterType) -> Unit,
     navigateToContent: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
+    val activity = LocalActivity.current
 
-    val state = viewModel.uiState.collectAsState().value
+    val state = viewModel.state.collectAsState().value
 
     when (state) {
-        is HomeLoadingState.UnauthorizedException -> LaunchedEffect(null) {
-            context.rerunApp()
-        }
-        is HomeLoadingState.CommonError -> LaunchedEffect(null) {
+        is HomeLoadingState.Error -> LaunchedEffect(null) {
             onError(state.exception)
         }
         is HomeLoadingState.Success -> LaunchedEffect(null) {
-            (context.activity as? INotificationsPermissionRequester)?.requestPermission()
+            (activity as? NotificationsPermissionRequester)?.requestPermission()
         }
-        is HomeLoadingState.None,
         is HomeLoadingState.Loading,
         -> Unit
     }
 
-    if (state is HomeLoadingState.Success) {
-        (LocalContext.current.activity as? INotificationsPermissionRequester)?.requestPermission()
-    }
+    val isSnowfallEnabled = viewModel.isSnowfallEnabledState.collectAsState().value
 
-    val onTabClick: (TabFilter) -> Unit = remember {
-        { tabFilter: TabFilter ->
-            viewModel.getHomeItems(tabFilter)
-        }
-    }
-
-    val onSelectorClick = remember {
-        { selectorFilter: SelectorFilter ->
-            navigateToSelector(selectorFilter.toModel())
-        }
-    }
-
-    Content(
+    HomeContent(
         state = state,
-        isSnowfallEnabled = viewModel.isSnowfallEnabled,
-        navigateToSelector = onSelectorClick,
+        isSnowfallEnabled = isSnowfallEnabled,
+        navigateToSelector = {
+            navigateToSelector(it.toModel())
+        },
         navigateToContent = navigateToContent,
-        onTabClick = onTabClick,
+        onTabClick = viewModel::getHomeItems,
     )
 }
 
+@VisibleForTesting
 @Composable
-private fun Content(
+internal fun HomeContent(
     state: HomeLoadingState,
     isSnowfallEnabled: Boolean,
     navigateToSelector: (SelectorFilter) -> Unit,
@@ -143,7 +119,8 @@ private fun Content(
                 } else {
                     this
                 }
-            },
+            }
+            .testTag(TestTags.HOME_SCREEN_CONTAINER),
     ) {
         HomeLoader(state)
 
@@ -154,19 +131,16 @@ private fun Content(
         TabsContent(
             tabFilter = tabFilter,
             items = state.items,
+            isLoading = state is HomeLoadingState.Loading,
             navigateToSelector = navigateToSelector,
             navigateToContent = navigateToContent,
         )
 
-        val onTabClickInternal = remember {
-            { it: TabFilter ->
+        HomeTabs(
+            onTabClick = {
                 tabFilter = it
                 onTabClick(it)
-            }
-        }
-
-        HomeTabs(
-            onTabClick = onTabClickInternal,
+            },
         )
     }
 }
@@ -176,25 +150,22 @@ private fun HomeLoader(
     state: HomeLoadingState,
 ) {
     if (state.items.isEmpty()) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            CircularProgressIndicator()
-        }
+        Loading()
     } else {
         AnimatedVisibility(
             visible = state is HomeLoadingState.Loading,
             enter = expandVertically(),
             exit = shrinkVertically(),
+            modifier = Modifier
+                .testTag(TestTags.TOP_LOADER),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = 32.dp,
-                        bottom = 16.dp,
+                        top = pureStatusBarHeight(),
+                        bottom = 12.dp,
                     ),
             ) {
                 CircularProgressIndicator(
@@ -211,6 +182,7 @@ private fun HomeLoader(
 private fun ColumnScope.TabsContent(
     tabFilter: TabFilter,
     items: ImmutableList<HomeItem>,
+    isLoading: Boolean,
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit,
 ) {
@@ -227,14 +199,17 @@ private fun ColumnScope.TabsContent(
     when (tabFilter) {
         TabFilter.YEAR -> YearsList(
             items = items,
+            isLoading = isLoading,
             navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.COUNTRY -> CountriesList(
             items = items,
+            isLoading = isLoading,
             navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.PLACE -> PlacesList(
             items = items,
+            isLoading = isLoading,
             navigateToContent = navigateToSelectorInternal,
         )
         TabFilter.COMMON -> CommonList(
@@ -268,7 +243,7 @@ private fun HomeTabs(
     val selectedIndex = rememberSaveable {
         mutableIntStateOf(list.size - 1)
     }
-    TabRow(
+    SecondaryTabRow(
         selectedTabIndex = selectedIndex.intValue,
         containerColor = MejourneyTheme.colors.tabsContainerColor,
         indicator = {},
@@ -278,12 +253,8 @@ private fun HomeTabs(
                 start = 24.dp,
                 top = 8.dp,
                 end = 24.dp,
-                bottom = if (LocalContext.current.isNavigationBarEnabled) {
-                    56.dp
-                } else {
-                    24.dp
-                },
             )
+            .navigationBarsPadding()
             .clip(RoundedCornerShape(64)),
     ) {
         list.forEachIndexed { index, tabElement ->
@@ -304,15 +275,6 @@ private fun Pair<TabFilter, Int>.HomeTab(
     index: Int,
     onTabClick: (TabFilter) -> Unit,
 ) {
-    val onTabClickInternal = remember {
-        {
-            if (selectedIndex.value != index) {
-                selectedIndex.value = index
-                onTabClick(first)
-            }
-        }
-    }
-
     Box(
         modifier = Modifier
             .height(40.dp)
@@ -321,7 +283,12 @@ private fun Pair<TabFilter, Int>.HomeTab(
         val isSelected = selectedIndex.value == index
         Tab(
             selected = isSelected,
-            onClick = onTabClickInternal,
+            onClick = {
+                if (selectedIndex.value != index) {
+                    selectedIndex.value = index
+                    onTabClick(first)
+                }
+            },
             text = {
                 HomeTabText(
                     textRes = second,
@@ -340,7 +307,8 @@ private fun Pair<TabFilter, Int>.HomeTab(
                     } else {
                         MejourneyTheme.colors.unselectedTabColor
                     },
-                ),
+                )
+                .testTag("${TestTags.HOME_TAB}_$index"),
         )
     }
 }
