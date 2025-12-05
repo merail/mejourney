@@ -76,5 +76,5 @@ jobs:
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: mejourney_release_${SAFE_VERSION_NAME}
-          path: app/build/outputs/apk/release/mejourney_release_${SAFE_VERSION_NAME}.apk
+          name: mejourney_release_${{ env.SAFE_VERSION_NAME }}
+          path: app/build/outputs/apk/release/mejourney_release_${{ env.SAFE_VERSION_NAME }}.apk
