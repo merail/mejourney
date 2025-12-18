@@ -14,6 +14,7 @@ import merail.life.core.mappers.RequestResponseMergeStrategy
 import merail.life.core.mappers.RequestResult
 import merail.life.core.mappers.toRequestResult
 import merail.life.data.api.IDataRepository
+import merail.life.data.api.IServerRepository
 import merail.life.data.api.model.ContentModel
 import merail.life.data.api.model.HomeElementModel
 import merail.life.data.api.model.HomeFilterType
@@ -22,12 +23,6 @@ import merail.life.data.impl.database.HomeDatabase
 import merail.life.data.impl.database.dto.HomeElementEntity
 import merail.life.data.impl.database.dto.toEntity
 import merail.life.data.impl.database.dto.toModel
-import merail.life.data.impl.dto.ImageDto
-import merail.life.data.impl.dto.toContentDto
-import merail.life.data.impl.dto.toCoverDto
-import merail.life.data.impl.dto.toImageDto
-import merail.life.data.impl.server.IServerRepository
-import merail.life.data.impl.server.dto.StorageDto
 import javax.inject.Inject
 import kotlin.collections.map
 
@@ -35,13 +30,6 @@ internal class DataRepository @Inject constructor(
     private val homeDatabase: HomeDatabase,
     private val serverRepository: IServerRepository,
 ) : IDataRepository {
-
-    companion object {
-
-        private const val HOME_COVERS_PATH = "home_covers"
-
-        private const val CONTENT_PATH = ""
-    }
 
     override fun getHomeElements(): Flow<RequestResult<List<HomeElementModel>>> {
         val mergeStrategy: MergeStrategy<RequestResult<List<HomeElementModel>>> = RequestResponseMergeStrategy()
@@ -54,24 +42,7 @@ internal class DataRepository @Inject constructor(
 
     private fun getHomeElementsFromServer(): Flow<RequestResult<List<HomeElementModel>>> {
         val result = flowWithResult {
-            val firestoreData = serverRepository.getFirestoreData(
-                folderName = HOME_COVERS_PATH,
-            ).toCoverDto()
-            val storageData = serverRepository.getStorageData(
-                folderName = HOME_COVERS_PATH,
-            ).map(StorageDto::toImageDto)
-
-            firestoreData.zip(storageData).map { (info, file) ->
-                HomeElementModel(
-                    id = info.id,
-                    year = info.year,
-                    country = info.country,
-                    place = info.place,
-                    title = info.title,
-                    description = info.description,
-                    url = file.reference,
-                )
-            }
+            serverRepository.loadCovers()
         }.onEach {
             if (it.isSuccess) {
                 saveHomeElementsToDatabase(it.getOrThrow())
@@ -106,18 +77,7 @@ internal class DataRepository @Inject constructor(
         id: String,
     ): Flow<RequestResult<ContentModel>> {
         val result = flowWithResult {
-            val firestoreData = serverRepository.getFirestoreData(
-                folderName = "$CONTENT_PATH$id",
-            ).toContentDto()
-            val storageData = serverRepository.getStorageData(
-                folderName = "$CONTENT_PATH$id",
-            ).map(StorageDto::toImageDto)
-
-            ContentModel(
-                title = firestoreData.title,
-                text = firestoreData.text,
-                imagesUrls = storageData.map(ImageDto::reference),
-            )
+            serverRepository.loadContent(id)
         }.map(Result<ContentModel>::toRequestResult)
 
         val start = flowOf<RequestResult<ContentModel>>(RequestResult.InProgress())

@@ -25,10 +25,7 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "devFirebaseRepositoryPath=${{ secrets.DEV_FIREBASE_REPOSITORY_PATH }}" >> local.properties
-          echo "devFirebaseStorageBucket=${{ secrets.DEV_FIREBASE_STORAGE_BUCKET }}" >> local.properties
-          echo "prodFirebaseRepositoryPath=${{ secrets.PROD_FIREBASE_REPOSITORY_PATH }}" >> local.properties
-          echo "prodFirebaseStorageBucket=${{ secrets.PROD_FIREBASE_STORAGE_BUCKET }}" >> local.properties
+          echo "domainUrl=${{ secrets.DOMAIN_URL }}" >> local.properties
 
       - name: Create google-services.json
         run: |

@@ -1,73 +1,37 @@
 package merail.life.data.impl.server
 
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import merail.life.core.errors.NoInternetConnectionException
-import merail.life.core.extensions.Slash
-import merail.life.core.extensions.suspendableRunCatching
+import merail.life.data.api.IServerRepository
+import merail.life.data.api.model.ContentModel
+import merail.life.data.api.model.HomeElementModel
 import merail.life.data.impl.BuildConfig
-import merail.life.data.impl.server.dto.FirestoreDto
-import merail.life.data.impl.server.dto.StorageDto
-import merail.life.data.impl.server.dto.toDto
 import javax.inject.Inject
 
 internal class ServerRepository @Inject constructor(
-    private val firebaseStorage: FirebaseStorage,
-    private val firebaseFirestore: FirebaseFirestore,
+    private val serverApi: ServerApi,
 ) : IServerRepository {
 
-    companion object {
-
-        private val STORAGE_ROOT by lazy { BuildConfig.FIREBASE_REPOSITORY_PATH }
-
-        private val BUCKET_REFERENCE by lazy { BuildConfig.FIREBASE_STORAGE_BUCKET }
+    override suspend fun loadCovers() = serverApi.getCovers().map {
+        HomeElementModel(
+            id = it.id,
+            year = it.year,
+            country = it.country,
+            place = it.place,
+            title = it.title,
+            description = it.description,
+            url = BuildConfig.DOMAIN_URL + it.imageUrl,
+        )
     }
 
-    override suspend fun getFirestoreData(
-        folderName: String,
-    ): FirestoreDto = withContext(Dispatchers.IO) {
-        suspendableRunCatching {
-            firebaseFirestore.getCollectionFromPath(folderName).get().await()
-        }.onSuccess {
-            if (it.metadata.isFromCache) {
-                throw NoInternetConnectionException()
-            }
-        }.getOrThrow().toDto()
-    }
-
-    override suspend fun getStorageData(
-        folderName: String,
-    ): List<StorageDto> = withContext(Dispatchers.IO) {
-        firebaseStorage
-            .getReferenceFromUrl(BUCKET_REFERENCE)
-            .child("$STORAGE_ROOT/$folderName")
-            .listAll()
-            .await()
-            .items
-            .fetchFilesUris()
-            .toDto()
-    }
-
-    private fun FirebaseFirestore.getCollectionFromPath(
-        path: String,
-    ): CollectionReference {
-        val pathList = "$STORAGE_ROOT${String.Slash}$path".split(String.Slash)
-        if (pathList.isNotEmpty()) {
-            var collection = collection(pathList[0]).document("${pathList[0]}Document")
-            for (i in 1 until pathList.size - 1) {
-                collection = collection(pathList[i]).document("${pathList[i]}Document")
-            }
-            return collection.collection(pathList.last())
-        }
-        error("Empty path in Firestore database!")
-    }
-
-    private suspend fun List<StorageReference>.fetchFilesUris() = map { reference ->
-        reference.downloadUrl.await()
+    override suspend fun loadContent(
+        coverId: String,
+    ) = serverApi.getContent(coverId).let {
+        ContentModel(
+            id = it.id,
+            title = it.title,
+            text = it.body,
+            imagesUrls = it.imagesUrls.map {
+                BuildConfig.DOMAIN_URL + it
+            },
+        )
     }
 }

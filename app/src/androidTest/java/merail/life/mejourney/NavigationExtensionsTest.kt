@@ -61,7 +61,7 @@ internal class NavigationExtensionsTest {
     fun `getRouteIfExists returns ContentRoute when category and contentId match`() {
         val intent = Intent().apply {
             putExtra(CATEGORY_KEY, ContentRoute.ROUTE_NAME)
-            putExtra(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
+            putExtra(ContentRoute.CONTENT_FOREIGN_ID_KEY, TestHomeElements.ID_1)
         }
 
         val route = intent.getRouteIfExists()
@@ -125,7 +125,7 @@ internal class NavigationExtensionsTest {
         val backStackEntry = mockk<NavBackStackEntry>()
         val destination = mockk<NavDestination>()
         val args = Bundle().apply {
-            putString(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
+            putString(ContentRoute.CONTENT_FOREIGN_ID_KEY, TestHomeElements.ID_1)
         }
 
         every { navController.currentBackStackEntry } returns backStackEntry
@@ -151,7 +151,7 @@ internal class NavigationExtensionsTest {
         val backStackEntry = mockk<NavBackStackEntry>()
         val destination = mockk<NavDestination>()
         val args = Bundle().apply {
-            putString(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
+            putString(ContentRoute.CONTENT_FOREIGN_ID_KEY, TestHomeElements.ID_1)
         }
 
         every { navController.currentBackStackEntry } returns backStackEntry
