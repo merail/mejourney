@@ -38,6 +38,7 @@ jobs:
       - name: Create local.properties
         run: |
           echo "domainUrl=${{ secrets.DOMAIN_URL }}" >> local.properties
+          echo "accessToken=${{ secrets.ACCESS_TOKEN }}" >> local.properties
 
       - name: Create google-services.json
         run: |
