@@ -23,6 +23,12 @@ android {
                 name = "DOMAIN_URL",
                 value = "\"${localProperties.getProperty("domainUrl")}\"",
             )
+
+            buildConfigField(
+                type = "String",
+                name = "ACCESS_TOKEN",
+                value = "\"${localProperties.getProperty("accessToken")}\"",
+            )
         }
 
         release {
@@ -30,6 +36,12 @@ android {
                 type = "String",
                 name = "DOMAIN_URL",
                 value = "\"${localProperties.getProperty("domainUrl")}\"",
+            )
+
+            buildConfigField(
+                type = "String",
+                name = "ACCESS_TOKEN",
+                value = "\"${localProperties.getProperty("accessToken")}\"",
             )
         }
     }

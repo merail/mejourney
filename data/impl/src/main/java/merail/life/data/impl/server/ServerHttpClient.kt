@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import merail.life.data.impl.BuildConfig
@@ -23,6 +24,8 @@ internal class ServerHttpClient @Inject constructor() {
         }
 
         defaultRequest {
+            header("X-Mejourney-Token", BuildConfig.ACCESS_TOKEN)
+
             url(BuildConfig.DOMAIN_URL)
         }
     }
