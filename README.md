@@ -18,40 +18,66 @@ Primary language used across the entire codebase for expressive, safe, and maint
 ### 2. Jetpack Compose  
 Modern declarative UI toolkit powering all interface components and animations.
 
-### 3. Firebase Services  
-A robust backend foundation leveraging multiple Firebase products:  
-- Cloud Firestore – scalable, real-time database  
-- Firebase Storage – secure storage for media assets  
+### 3. Custom Backend (Ktor)
+Mejourney uses a **custom backend built with Ktor**.
+
+The backend is responsible for:
+- Providing travel posts and metadata
+- Serving media content (covers, images)
+- Centralized API logic and access control
+
+The server is fully open-source and available here:  
+👉 **https://github.com/merail/mejourney-server**
+
+### 4. Firebase Services  
+A robust backend foundation leveraging multiple Firebase products:
 - Firebase Messaging – push notifications  
 - Firebase Crashlytics – real-time crash reporting  
 - Firebase Remote Config – remote feature configuration  
 - Firebase Auth – secure authentication
 
-### 4. Hilt  
+### 5. Hilt  
 Dependency injection framework simplifying component wiring and improving testability.
 
-### 5. Jetpack Navigation (2.8+)  
+### 6. Jetpack Navigation (2.8+)  
 Modern navigation framework enabling type-safe routes and structured app flows.
 
-### 6. Room  
+### 7. Room  
 Local persistence layer providing a type-safe abstraction over SQLite for caching and offline-first functionality.
 
-### 7. Baseline Profiles  
+### 8. Baseline Profiles  
 Optimizes app startup and runtime performance on Android devices.
 
-### 8. Unit & Instrumentation Tests  
+### 9. Unit & Instrumentation Tests  
 - MockK for unit-test mocking  
 - Full instrumentation test suite to validate UI and runtime behavior
 
-### 9. Coil  
+### 10. Coil  
 Lightweight, modern image loading library optimized for Compose.
 
-### 10. Gradle Convention Plugins  
+### 11. Gradle Convention Plugins  
 Custom Gradle plugins centralizing build logic for cleaner, maintainable module configuration.
 
-### 11. SplashScreen API  
+### 12. SplashScreen API  
 Native Android API providing a smooth, consistent launch experience across devices.
 
+---
 
+## Architecture Overview
 
+- **Android App**
+  - Clean, modular architecture
+  - Offline-first approach using Room
+  - Declarative UI with Compose
 
+- **Backend**
+  - Ktor-based REST API
+  - Self-hosted
+  - Public GitHub repository
+
+---
+
+## Links
+
+- 📱 **Android App:** https://www.rustore.ru/catalog/app/merail.life.mejourney
+- 🖥️ **Backend (Ktor):** https://github.com/merail/mejourney-server
