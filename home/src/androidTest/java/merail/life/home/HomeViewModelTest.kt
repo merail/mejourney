@@ -19,10 +19,10 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import merail.life.auth.api.IAuthRepository
-import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeElementModel
+import merail.life.domain.TestHomeElements
 import merail.life.home.main.HomeLoadingState
 import merail.life.home.main.HomeViewModel
 import merail.life.home.main.useCases.LoadHomeElementsByTabUseCase

@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.LibraryExtension
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,12 +16,30 @@ class LibraryConventionPlugin : Plugin<Project> {
         pluginManager.apply("com.android.library")
         pluginManager.apply("org.jetbrains.kotlin.android")
 
+        val localProperties = gradleLocalProperties(rootDir, providers)
+
         extensions.configure<LibraryExtension> {
+            buildFeatures {
+                buildConfig = true
+            }
+
             namespace = "$NAMESPACE_PREFIX.${project.path.removePrefix(":").replace(":", ".")}"
             compileSdk = 36
 
             defaultConfig {
                 minSdk = 30
+
+                buildConfigField(
+                    type = "String",
+                    name = "DOMAIN_URL",
+                    value = "\"${localProperties.getProperty("domainUrl")}\"",
+                )
+
+                buildConfigField(
+                    type = "String",
+                    name = "ACCESS_TOKEN",
+                    value = "\"${localProperties.getProperty("accessToken")}\"",
+                )
             }
 
             compileOptions {

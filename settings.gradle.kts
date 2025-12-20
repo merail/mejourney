@@ -29,14 +29,16 @@ rootProject.name = "Mejourney"
 
 include(":app")
 
+include(":core")
+
+include(":domain")
+
 include(":design")
 
 include(":data")
 include(":data:api")
 include(":data:impl")
 include(":data:test")
-
-include(":core")
 
 include(":home")
 

@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import merail.life.core.constants.TestTags
 import merail.life.design.extensions.createMediaRequest
+import merail.life.domain.TestTags
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

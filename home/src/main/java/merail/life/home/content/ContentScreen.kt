@@ -1,7 +1,10 @@
 package merail.life.home.content
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -17,12 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
 import merail.life.design.components.Loading
 import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.domain.TestTags
 import merail.life.home.content.state.ContentLoadingState
 import merail.life.home.model.ContentItem
 import merail.life.home.model.IMAGE_DELIMITER
@@ -63,7 +66,15 @@ private fun Content(
             style = MejourneyTheme.typography.titleLarge,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(12.dp),
+                .padding(
+                    horizontal = 12.dp,
+                ),
+        )
+
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp),
         )
 
         var index = 0

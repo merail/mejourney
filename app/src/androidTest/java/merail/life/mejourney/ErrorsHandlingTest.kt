@@ -10,12 +10,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import merail.life.core.constants.TestHomeElements
-import merail.life.core.constants.TestTags
 import merail.life.core.errors.ErrorType
 import merail.life.core.log.IMejourneyLogger
 import merail.life.data.impl.di.DataModule
 import merail.life.data.test.repository.TestDataRepository
+import merail.life.domain.TestHomeElements
+import merail.life.domain.TestTags
 import merail.life.mejourney.navigation.MejourneyNavHost
 import org.junit.Before
 import org.junit.Rule

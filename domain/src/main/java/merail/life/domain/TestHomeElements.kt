@@ -1,4 +1,4 @@
-package merail.life.core.constants
+package merail.life.domain
 
 object TestHomeElements {
 
@@ -37,6 +37,7 @@ object TestHomeElements {
     const val URL_8 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPO0juzPua7J4yrwctDmC8bzE8fx8ABeSxcg&s"
     const val URL_9 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMIBNV078zAVpC3nlPi8jDlbKQUtSGsMaY6w&s"
 
+    const val CONTENT_ID_1 = "content_1"
     const val MOSCOW_CONTENT_TITLE = "Москва"
     const val MOSCOW_CONTENT_TEXT = "Второе путешествие в Москву – но далеко не последнее. Первым делом обновил аватарку в Телеграме на старом месте (это очень важно)<image>Посетили Москвариум и ВДНХ, любимые места<image>Побывали в Макларен'с Паб – заведении по мотивам сериала \"Как я встретил вашу маму\"!<image>В целом посетили много разных интересных заведений. Например, кафе с птичками – Freya. Советую!"
     const val KARELIA_CONTENT_TITLE = "Карелия"

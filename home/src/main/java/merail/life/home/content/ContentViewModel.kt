@@ -7,7 +7,9 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import merail.life.core.log.IMejourneyLogger
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.ContentModel
@@ -20,12 +22,24 @@ import javax.inject.Inject
 internal class ContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     dataRepository: IDataRepository,
+    logger: IMejourneyLogger,
 ) : ViewModel() {
+
+    companion object {
+        private const val TAG = "ContentViewModel"
+    }
 
     private val contentId = savedStateHandle.toRoute<ContentRoute>().contentId
 
     val contentLoadingState = dataRepository
         .getContent(contentId)
+        .onEach {
+            when (it) {
+                is RequestResult.InProgress -> logger.d(TAG, "Getting content with id = $contentId. Start")
+                is RequestResult.Error -> logger.w(TAG, "Getting content with id = $contentId. Failure", it.error)
+                is RequestResult.Success -> logger.d(TAG, "Getting content with id = $contentId. Success")
+            }
+        }
         .map(RequestResult<ContentModel>::toState)
         .stateIn(
             scope = viewModelScope,

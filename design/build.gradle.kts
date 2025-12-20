@@ -19,4 +19,5 @@ dependencies {
     implementation(libs.compose.shimmer)
 
     implementation(projects.core)
+    implementation(projects.domain)
 }

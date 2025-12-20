@@ -14,7 +14,7 @@ data class ContentRoute(
 ) : NavigationRoute {
     companion object {
         const val ROUTE_NAME = "content"
-        const val CONTENT_ID_KEY = "contentId"
+        const val CONTENT_FOREIGN_ID_KEY = "contentForeignId"
     }
 }
 

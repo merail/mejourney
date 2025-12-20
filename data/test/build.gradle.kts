@@ -10,6 +10,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(projects.core)
+    implementation(projects.domain)
     implementation(projects.data.api)
     implementation(projects.data.impl)
 }

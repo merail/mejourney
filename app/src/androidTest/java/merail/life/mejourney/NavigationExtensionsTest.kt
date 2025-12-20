@@ -8,7 +8,7 @@ import androidx.navigation.NavDestination
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import merail.life.core.constants.TestHomeElements
+import merail.life.domain.TestHomeElements
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.home.main.navigation.HomeRoute
 import merail.life.home.selector.navigation.SelectorRoute
@@ -61,7 +61,7 @@ internal class NavigationExtensionsTest {
     fun `getRouteIfExists returns ContentRoute when category and contentId match`() {
         val intent = Intent().apply {
             putExtra(CATEGORY_KEY, ContentRoute.ROUTE_NAME)
-            putExtra(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
+            putExtra(ContentRoute.CONTENT_FOREIGN_ID_KEY, TestHomeElements.ID_1)
         }
 
         val route = intent.getRouteIfExists()
@@ -125,7 +125,7 @@ internal class NavigationExtensionsTest {
         val backStackEntry = mockk<NavBackStackEntry>()
         val destination = mockk<NavDestination>()
         val args = Bundle().apply {
-            putString(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
+            putString(ContentRoute.CONTENT_FOREIGN_ID_KEY, TestHomeElements.ID_1)
         }
 
         every { navController.currentBackStackEntry } returns backStackEntry
@@ -151,7 +151,7 @@ internal class NavigationExtensionsTest {
         val backStackEntry = mockk<NavBackStackEntry>()
         val destination = mockk<NavDestination>()
         val args = Bundle().apply {
-            putString(ContentRoute.CONTENT_ID_KEY, TestHomeElements.ID_1)
+            putString(ContentRoute.CONTENT_FOREIGN_ID_KEY, TestHomeElements.ID_1)
         }
 
         every { navController.currentBackStackEntry } returns backStackEntry

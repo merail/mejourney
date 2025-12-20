@@ -1,4 +1,4 @@
-package merail.life.core.constants
+package merail.life.domain
 
 object HomeElementsFields {
 

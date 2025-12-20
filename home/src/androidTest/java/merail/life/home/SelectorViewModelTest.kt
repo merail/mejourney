@@ -12,11 +12,11 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeElementModel
 import merail.life.data.api.model.SelectorFilterType
+import merail.life.domain.TestHomeElements
 import merail.life.home.model.toHomeItems
 import merail.life.home.selector.SelectorViewModel
 import merail.life.home.selector.state.SelectionLoadingState

@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import merail.life.core.constants.TestTags
+import merail.life.domain.TestTags
 
 @Composable
 fun Loading() {

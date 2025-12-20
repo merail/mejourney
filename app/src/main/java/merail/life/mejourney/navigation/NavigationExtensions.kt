@@ -15,7 +15,7 @@ fun Intent.getRouteIfExists(): NavigationRoute? {
     val category = extras?.getString(CATEGORY_KEY)
     return when (category) {
         ContentRoute.ROUTE_NAME -> {
-            val contentId = extras?.getString(ContentRoute.CONTENT_ID_KEY) ?: return null
+            val contentId = extras?.getString(ContentRoute.CONTENT_FOREIGN_ID_KEY) ?: return null
             ContentRoute(contentId)
         }
         else -> null
@@ -30,7 +30,7 @@ fun NavController.navigateFromPush(
 ) {
     val currentEntry = currentBackStackEntry ?: return
 
-    val currentContentId = currentEntry.arguments?.getString(ContentRoute.CONTENT_ID_KEY).orEmpty()
+    val currentContentId = currentEntry.arguments?.getString(ContentRoute.CONTENT_FOREIGN_ID_KEY).orEmpty()
 
     when (currentEntry.destination.routeQualifiedName) {
         HomeRoute::class.qualifiedName -> {

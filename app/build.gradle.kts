@@ -133,6 +133,7 @@ dependencies {
     implementation(libs.request.permissions.tool)
 
     implementation(projects.core)
+    implementation(projects.domain)
     implementation(projects.design)
     implementation(projects.auth.api)
     implementation(projects.auth.impl)

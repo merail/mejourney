@@ -3,8 +3,8 @@ package merail.life.data.impl.database.dto
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import merail.life.core.constants.HomeElementsFields
 import merail.life.data.api.model.HomeElementModel
+import merail.life.domain.HomeElementsFields
 
 @Entity
 internal data class HomeElementEntity(

@@ -12,10 +12,10 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.ContentModel
+import merail.life.domain.TestHomeElements
 import merail.life.home.content.ContentViewModel
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.home.content.state.ContentLoadingState
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith
 class ContentViewModelTest {
 
     companion object {
-        private const val CONTENT_ID = TestHomeElements.ID_9
+        private const val CONTENT_FOREIGN_ID = TestHomeElements.ID_9
     }
 
     private val testDispatcher = StandardTestDispatcher()
@@ -41,6 +41,7 @@ class ContentViewModelTest {
     private lateinit var savedStateHandle: SavedStateHandle
 
     private val model = ContentModel(
+        id = TestHomeElements.CONTENT_ID_1,
         title = TestHomeElements.MOSCOW_CONTENT_TITLE,
         text = TestHomeElements.MOSCOW_CONTENT_TEXT,
         imagesUrls = listOf(
@@ -56,7 +57,7 @@ class ContentViewModelTest {
 
         dataRepository = mockk()
         savedStateHandle = SavedStateHandle(
-            initialState = mapOf(ContentRoute.CONTENT_ID_KEY to CONTENT_ID),
+            initialState = mapOf(ContentRoute.CONTENT_FOREIGN_ID_KEY to CONTENT_FOREIGN_ID),
         )
     }
 
@@ -67,7 +68,7 @@ class ContentViewModelTest {
 
     @Test
     fun `ContentViewModel loads content successfully`() = runTest {
-        every { dataRepository.getContent(CONTENT_ID) } returns flowOf(
+        every { dataRepository.getContent(CONTENT_FOREIGN_ID) } returns flowOf(
             RequestResult.InProgress(),
             RequestResult.Success(model),
         )
@@ -75,6 +76,7 @@ class ContentViewModelTest {
         val viewModel = ContentViewModel(
             savedStateHandle = savedStateHandle,
             dataRepository = dataRepository,
+            logger = mockk(relaxed = true),
         )
 
         val result = viewModel.contentLoadingState.take(2).toList()
