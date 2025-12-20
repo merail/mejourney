@@ -20,5 +20,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(projects.core)
+    implementation(projects.domain)
     implementation(projects.design)
 }

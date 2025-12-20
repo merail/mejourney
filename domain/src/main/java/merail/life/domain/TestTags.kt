@@ -1,4 +1,4 @@
-package merail.life.core.constants
+package merail.life.domain
 
 object TestTags {
     const val ERROR_DIALOG_CONTAINER = "ErrorDialogContainer"

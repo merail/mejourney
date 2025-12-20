@@ -1,13 +1,13 @@
 package merail.life.data.test.repository
 
 import kotlinx.coroutines.flow.flowOf
-import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.ContentModel
 import merail.life.data.api.model.HomeElementModel
 import merail.life.data.api.model.HomeFilterType
 import merail.life.data.api.model.SelectorFilterType
+import merail.life.domain.TestHomeElements
 import javax.inject.Inject
 import javax.inject.Singleton
 

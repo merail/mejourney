@@ -8,7 +8,7 @@ import androidx.navigation.NavDestination
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import merail.life.core.constants.TestHomeElements
+import merail.life.domain.TestHomeElements
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.home.main.navigation.HomeRoute
 import merail.life.home.selector.navigation.SelectorRoute

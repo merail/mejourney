@@ -1,50 +1,8 @@
-
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.gradle.kotlin.dsl.android
-
 plugins {
     alias(libs.plugins.library.plugin)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
-}
-
-android {
-    buildFeatures {
-        buildConfig = true
-    }
-
-    val localProperties = gradleLocalProperties(rootDir, providers)
-
-    buildTypes {
-        debug {
-            buildConfigField(
-                type = "String",
-                name = "DOMAIN_URL",
-                value = "\"${localProperties.getProperty("domainUrl")}\"",
-            )
-
-            buildConfigField(
-                type = "String",
-                name = "ACCESS_TOKEN",
-                value = "\"${localProperties.getProperty("accessToken")}\"",
-            )
-        }
-
-        release {
-            buildConfigField(
-                type = "String",
-                name = "DOMAIN_URL",
-                value = "\"${localProperties.getProperty("domainUrl")}\"",
-            )
-
-            buildConfigField(
-                type = "String",
-                name = "ACCESS_TOKEN",
-                value = "\"${localProperties.getProperty("accessToken")}\"",
-            )
-        }
-    }
 }
 
 dependencies {
@@ -65,5 +23,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(projects.core)
+    implementation(projects.domain)
     implementation(projects.data.api)
 }

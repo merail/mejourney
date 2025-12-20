@@ -11,9 +11,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.collections.immutable.toImmutableList
-import merail.life.core.constants.TestHomeElements
-import merail.life.core.constants.TestTags
 import merail.life.data.api.model.HomeElementModel
+import merail.life.domain.TestHomeElements
+import merail.life.domain.TestTags
 import merail.life.home.main.HomeContent
 import merail.life.home.main.HomeLoadingState
 import merail.life.home.model.toHomeItems

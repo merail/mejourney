@@ -21,12 +21,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import merail.life.core.constants.TestTags
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
 import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.domain.TestTags
 import merail.life.home.model.HomeItem
 
 @Composable

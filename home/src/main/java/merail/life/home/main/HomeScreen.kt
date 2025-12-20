@@ -43,7 +43,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import merail.life.core.constants.TestTags
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
@@ -53,6 +52,7 @@ import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
 import merail.life.design.unselectedTabTextColor
+import merail.life.domain.TestTags
 import merail.life.home.R
 import merail.life.home.main.tabs.CommonList
 import merail.life.home.main.tabs.CountriesList

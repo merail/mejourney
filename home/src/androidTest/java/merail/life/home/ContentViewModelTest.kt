@@ -12,10 +12,10 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.ContentModel
+import merail.life.domain.TestHomeElements
 import merail.life.home.content.ContentViewModel
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.home.content.state.ContentLoadingState

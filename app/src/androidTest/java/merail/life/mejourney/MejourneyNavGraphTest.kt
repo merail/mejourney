@@ -14,11 +14,11 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import merail.life.core.constants.TestHomeElements
-import merail.life.core.constants.TestTags
 import merail.life.core.log.IMejourneyLogger
 import merail.life.core.navigation.NavigationRoute
 import merail.life.data.test.di.TestDataModule
+import merail.life.domain.TestHomeElements
+import merail.life.domain.TestTags
 import merail.life.home.content.navigation.ContentRoute
 import merail.life.mejourney.navigation.MejourneyNavHost
 import org.junit.Before

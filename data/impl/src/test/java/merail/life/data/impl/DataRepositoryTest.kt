@@ -18,7 +18,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import merail.life.core.constants.TestHomeElements
 import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
 import merail.life.data.api.model.HomeFilterType
@@ -30,6 +29,7 @@ import merail.life.data.impl.server.ServerApi
 import merail.life.data.impl.server.ServerRepository
 import merail.life.data.impl.server.dto.ContentDto
 import merail.life.data.impl.server.dto.CoverDto
+import merail.life.domain.TestHomeElements
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

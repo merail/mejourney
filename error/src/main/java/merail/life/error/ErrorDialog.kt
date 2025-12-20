@@ -23,10 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
-import merail.life.core.constants.TestTags
 import merail.life.core.errors.ErrorType
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
+import merail.life.domain.TestTags
 
 @Composable
 fun ErrorDialog(
