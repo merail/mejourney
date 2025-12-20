@@ -81,3 +81,8 @@ Native Android API providing a smooth, consistent launch experience across devic
 
 - 📱 **Android App:** https://www.rustore.ru/catalog/app/merail.life.mejourney
 - 🖥️ **Backend (Ktor):** https://github.com/merail/mejourney-server
+
+## License
+
+This project is licensed under the MIT License.  
+See the [LICENSE](LICENSE) file for details.
