@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +23,7 @@ import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
 import merail.life.design.components.Loading
-import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.design.extensions.robustSystemBarsPadding
 import merail.life.domain.TestTags
 import merail.life.home.content.state.ContentLoadingState
 import merail.life.home.model.ContentItem
@@ -52,12 +51,10 @@ private fun Content(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .robustSystemBarsPadding()
             .padding(
-                start = 24.dp,
-                top = pureStatusBarHeight(),
-                end = 24.dp,
+                horizontal = 24.dp,
             )
-            .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
             .testTag(TestTags.CONTENT_SCREEN_CONTAINER),
     ) {

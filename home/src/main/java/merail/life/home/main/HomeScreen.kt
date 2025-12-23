@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -47,7 +46,8 @@ import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
 import merail.life.design.components.Loading
-import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.design.extensions.robustNavigationBarHeight
+import merail.life.design.extensions.robustStatusBarHeight
 import merail.life.design.selectedTabColor
 import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
@@ -164,7 +164,7 @@ private fun HomeLoader(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = pureStatusBarHeight(),
+                        top = robustStatusBarHeight(),
                         bottom = 12.dp,
                     ),
             ) {
@@ -253,8 +253,8 @@ private fun HomeTabs(
                 start = 24.dp,
                 top = 8.dp,
                 end = 24.dp,
+                bottom = robustNavigationBarHeight(),
             )
-            .navigationBarsPadding()
             .clip(RoundedCornerShape(64)),
     ) {
         list.forEachIndexed { index, tabElement ->

@@ -25,7 +25,7 @@ import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
-import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.design.extensions.robustStatusBarHeight
 import merail.life.domain.TestTags
 import merail.life.home.model.HomeItem
 
@@ -43,7 +43,7 @@ internal fun ColumnScope.PlacesList(
                 top = if (isLoading) {
                     0.dp
                 } else {
-                    pureStatusBarHeight()
+                    robustStatusBarHeight()
                 },
                 end = 4.dp,
                 bottom = 4.dp,

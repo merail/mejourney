@@ -45,9 +45,6 @@ internal fun ColumnScope.CommonList(
             key = {
                 it.id
             },
-            contentType = {
-                it
-            },
         ) {
             Column(
                 modifier = Modifier

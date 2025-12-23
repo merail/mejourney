@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -31,7 +30,7 @@ import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
 import merail.life.design.components.Loading
-import merail.life.design.extensions.pureStatusBarHeight
+import merail.life.design.extensions.robustSystemBarsPadding
 import merail.life.domain.TestTags
 import merail.life.home.model.HomeItem
 import merail.life.home.selector.state.SelectionLoadingState
@@ -90,12 +89,10 @@ private fun SelectorItem(
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
+            .robustSystemBarsPadding()
             .padding(
-                start = 4.dp,
-                top = pureStatusBarHeight(),
-                end = 4.dp,
+                horizontal = 4.dp,
             )
-            .navigationBarsPadding()
             .clip(
                 shape = RoundedCornerShape(12.dp),
             )
