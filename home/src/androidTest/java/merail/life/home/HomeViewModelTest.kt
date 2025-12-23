@@ -36,6 +36,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * `HomeViewModelTest` Unit tests for the `HomeViewModel`. These tests validate the coordination
+ * between multiple Use Cases (`LoadHomeElements`, `LoadSnowfallState`, `LoadHomeElementsByTab`)
+ * to ensure the UI state accurately reflects data loading progress, errors, and filtered results.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class HomeViewModelTest {
@@ -96,6 +101,11 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies that on initialization, the ViewModel correctly emits
+     * a sequence of states: starting with an empty loader, moving to a loader
+     * with cached data, and finishing with a success state.
+     */
     @Test
     fun `HomeViewModel init loads successfully`() = runTest {
         every {
@@ -134,6 +144,11 @@ class HomeViewModelTest {
         assertEquals(elements.toHomeItems(), resultLoading3.items)
     }
 
+    /**
+     * Ensures that if the data stream encounters a failure during initialization,
+     * the ViewModel transitions to an `Error` state and preserves the exception
+     * for the UI to handle.
+     */
     @Test
     fun `HomeViewModel init returns Error correctly`() = runTest {
         val throwable = RuntimeException("fail")
@@ -162,6 +177,11 @@ class HomeViewModelTest {
         assertEquals(throwable, (state as HomeLoadingState.Error).exception)
     }
 
+    /**
+     * Validates that the ViewModel correctly fetches and exposes
+     * the "snowfall" feature flag status from the remote configuration
+     * during its setup phase.
+     */
     @Test
     fun `HomeViewModel init sets snowfall state correctly`() = runTest {
         coEvery {
@@ -185,6 +205,11 @@ class HomeViewModelTest {
         assertTrue(isSnowfallEnabled)
     }
 
+    /**
+     * Confirms that when a user filters data (e.g., by selecting a specific tab),
+     * the ViewModel successfully triggers the database fetch and updates the state
+     * with the filtered result set.
+     */
     @Test
     fun `getHomeItems loads successfully`() = runTest {
         coEvery {

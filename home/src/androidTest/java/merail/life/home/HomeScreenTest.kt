@@ -21,6 +21,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * `HomeScreenTest` Instrumented UI tests for the Home screen using Jetpack Compose.
+ * These tests verify the visual representation of different loading states,
+ * user interactions like long-pressing elements, and the correct switching of content layouts
+ * when interacting with the navigation tabs.
+ */
 @RunWith(AndroidJUnit4::class)
 class HomeScreenTest {
 
@@ -39,6 +45,10 @@ class HomeScreenTest {
         ),
     ).toHomeItems().toImmutableList()
 
+    /**
+     * Ensures that a full-screen (global) loader is displayed during the initial data fetch
+     * and is correctly replaced by the content once the data is loaded.
+     */
     @Test
     fun `global loader is visible when first launch`() {
         var state = mutableStateOf<HomeLoadingState>(HomeLoadingState.Loading())
@@ -60,6 +70,10 @@ class HomeScreenTest {
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").assertIsDisplayed()
     }
 
+    /**
+     * Verifies that when the screen already has data but is performing a background update,
+     * a non-intrusive top loader is shown instead of the global one.
+     */
     @Test
     fun `top loader is visible when not first launch`() {
         var state = mutableStateOf<HomeLoadingState>(
@@ -85,6 +99,10 @@ class HomeScreenTest {
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").assertIsDisplayed()
     }
 
+    /**
+     * Validates that performing a long-press on a list item correctly triggers
+     * the display of supplementary information, such as the title and description.
+     */
     @Test
     fun `additional info is shown when long click on element`() {
         var state = mutableStateOf<HomeLoadingState>(
@@ -109,6 +127,10 @@ class HomeScreenTest {
         composeTestRule.onNodeWithText(TestHomeElements.DESCRIPTION_1).assertIsDisplayed()
     }
 
+    /**
+     * Confirms that clicking on different tabs (Years, Countries, Places)
+     * correctly swaps the UI container to the corresponding list type.
+     */
     @Test
     fun `home content changes by click on tab`() {
         val state = mutableStateOf(HomeLoadingState.Success(items))

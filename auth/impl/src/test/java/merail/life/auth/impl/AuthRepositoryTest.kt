@@ -23,6 +23,11 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.Executor
 
+/**
+ * `AuthRepositoryTest` Unit tests for the `AuthRepository` class. These tests verify
+ * the authentication flow, retry logic using Firebase Auth, and the retrieval
+ * of feature flags from Firebase Remote Config.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuthRepositoryTest {
 
@@ -44,6 +49,10 @@ class AuthRepositoryTest {
         )
     }
 
+    /**
+     * Verifies that the repository correctly updates its state to "authorized"
+     * when the anonymous sign-in process succeeds on the first attempt.
+     */
     @Test
     fun `authorize() success`() = runTest {
         every { firebaseAuth.signInAnonymously() } returns mockAuthTaskSuccess()
@@ -53,6 +62,10 @@ class AuthRepositoryTest {
         assertTrue(authRepository.isAuthorized().value)
     }
 
+    /**
+     * Ensures that the repository successfully authorizes if an initial sign-in failure
+     * occurs but the subsequent retry succeeds.
+     */
     @Test
     fun `authorize() retry once then success`() = runTest {
         every { firebaseAuth.signInAnonymously() }.returnsMany(
@@ -65,6 +78,10 @@ class AuthRepositoryTest {
         assertTrue(authRepository.isAuthorized().value)
     }
 
+    /**
+     * Validates that the repository throws an exception when the sign-in process fails
+     * repeatedly and exceeds the maximum allowed retry limit.
+     */
     @Test(expected = Exception::class)
     fun `authorize() fails after retries`() = runTest {
         every { firebaseAuth.signInAnonymously() }.returnsMany(
@@ -74,11 +91,19 @@ class AuthRepositoryTest {
         authRepository.authorize()
     }
 
+    /**
+     * Confirms that the initial authorization state is false before
+     * any authentication attempt has been made.
+     */
     @Test
     fun `isAuthorized() returns default false`() = runTest {
         assertFalse(authRepository.isAuthorized().first())
     }
 
+    /**
+     * Verifies that the repository correctly fetches and returns the specific
+     * boolean value (feature flag) from Firebase Remote Config.
+     */
     @Test
     fun `isSnowfallEnabled returns remote config value`() = runTest {
         val mockFetchAndActivateTaskSuccess = mockFetchAndActivateTaskSuccess()

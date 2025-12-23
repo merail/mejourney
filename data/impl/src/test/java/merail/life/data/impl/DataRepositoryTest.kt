@@ -34,6 +34,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+/**
+ * `DataRepositoryTest` Unit tests for the `DataRepository` class. These tests verify
+ * the orchestration of data between the local Room database and the remote API,
+ * ensuring correct state emissions (InProgress, Success) and the accuracy of filtering
+ * logic for home elements.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class DataRepositoryTest {
 
@@ -169,6 +175,10 @@ class DataRepositoryTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies the full synchronization flow: emitting an initial loading state, followed
+     * by cached data from the database, and finally the updated data fetched from the server.
+     */
     @Test
     fun `getHomeElements returns InProgress then Result`() = runTest {
         val result = dataRepository.getHomeElements().toList()
@@ -199,6 +209,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.ID_9, resultSuccessData[4].id)
     }
 
+    /**
+     * Ensures that retrieving local data correctly emits a loading state
+     * before delivering the final filtered results from the database.
+     */
     @Test
     fun `getHomeElementsFromDatabase returns InProgress then Result`() = runTest {
         val result = dataRepository.getHomeElementsFromDatabase(
@@ -220,6 +234,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.ID_7, resultData[1].id)
     }
 
+    /**
+     * Validates that fetching detailed content transitions correctly
+     * from an `InProgress` state to a `Success` state with the expected content data.
+     */
     @Test
     fun `getContent returns InProgress then Result`() = runTest {
         val result = dataRepository.getContent(TestHomeElements.CONTENT_ID_1).toList()
@@ -236,6 +254,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.CONTENT_ID_1, resultData.id)
     }
 
+    /**
+     * Confirms that the repository correctly filters database records based
+     * on the provided tab category (e.g., filtering by Country).
+     */
     @Test
     fun `getHomeElementsFromDatabase filters by tabFilter`() = runTest {
         val result = dataRepository.getHomeElementsFromDatabase(
@@ -252,6 +274,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.ID_7, resultList[1].id)
     }
 
+    /**
+     * Confirms that the repository correctly filters database records based
+     * on a specific selection criteria (e.g., filtering by a specific City or Place).
+     */
     @Test
     fun `getHomeElementsFromDatabase filters by selectorFilter`() = runTest {
         val result = dataRepository.getHomeElementsFromDatabase(
