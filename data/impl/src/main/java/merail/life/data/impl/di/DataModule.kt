@@ -13,6 +13,7 @@ import merail.life.data.api.IServerRepository
 import merail.life.data.impl.DataRepository
 import merail.life.data.impl.database.HOME_DATABASE_NAME
 import merail.life.data.impl.database.HomeDatabase
+import merail.life.data.impl.database.MIGRATION_1_2
 import merail.life.data.impl.server.ServerRepository
 import javax.inject.Singleton
 
@@ -41,6 +42,6 @@ abstract class DataModule {
             context = context,
             klass = HomeDatabase::class.java,
             name = HOME_DATABASE_NAME,
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 }

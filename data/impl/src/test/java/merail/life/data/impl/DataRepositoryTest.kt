@@ -59,7 +59,7 @@ class DataRepositoryTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_1,
             description = TestHomeElements.DESCRIPTION_1,
-            url = TestHomeElements.URL_1,
+            imageUrl = TestHomeElements.URL_1,
         ),
         HomeElementEntity(
             id = TestHomeElements.ID_7,
@@ -68,7 +68,7 @@ class DataRepositoryTest {
             place = TestHomeElements.PLACE_CAPPADOCIA,
             title = TestHomeElements.TITLE_7,
             description = TestHomeElements.DESCRIPTION_7,
-            url = TestHomeElements.URL_7,
+            imageUrl = TestHomeElements.URL_7,
         ),
         HomeElementEntity(
             id = TestHomeElements.ID_9,
@@ -77,7 +77,7 @@ class DataRepositoryTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_9,
             description = TestHomeElements.DESCRIPTION_9,
-            url = TestHomeElements.URL_9,
+            imageUrl = TestHomeElements.URL_9,
         ),
     )
 
