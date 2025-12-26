@@ -87,7 +87,7 @@ internal class DataRepository @Inject constructor(
 
     private suspend fun saveHomeElementsToDatabase(
         data: List<HomeElementModel>,
-    ) = homeDatabase.homeElementDao().insertAll(data.map(HomeElementModel::toEntity))
+    ) = homeDatabase.homeElementDao().syncData(data.map(HomeElementModel::toEntity))
 
     private fun Flow<List<HomeElementEntity>>.toModel(
         tabFilter: HomeFilterType?,
