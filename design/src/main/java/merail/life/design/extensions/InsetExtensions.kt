@@ -36,7 +36,9 @@ private fun getInsetHeight(
     val view = LocalView.current
     val density = LocalDensity.current
 
-    var height by remember { mutableStateOf(0.dp) }
+    var height by remember {
+        mutableStateOf(0.dp)
+    }
 
     DisposableEffect(view) {
         val listener = object : View.OnAttachStateChangeListener {

@@ -102,14 +102,6 @@ internal fun HomeContent(
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
-    var tabFilter by rememberSaveable {
-        mutableStateOf(TabFilter.COMMON)
-    }
-
-    val isLoading = rememberStableLoading(
-        isLoading = state is HomeLoadingState.Loading,
-    )
-
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -117,6 +109,14 @@ internal fun HomeContent(
             .fillMaxSize()
             .testTag(TestTags.HOME_SCREEN_CONTAINER),
     ) {
+        var tabFilter by rememberSaveable {
+            mutableStateOf(TabFilter.COMMON)
+        }
+
+        val isLoading = rememberStableLoading(
+            isLoading = state is HomeLoadingState.Loading,
+        )
+
         HomeLoader(
             isLoading = isLoading,
             isGlobalLoading = state.isGlobalLoading,
@@ -239,8 +239,7 @@ private fun HomeTabs(
                 tabFilter = tabElement.first,
                 textRes = tabElement.second,
                 isSelected = isSelected,
-                index = index,
-                onTabClick = { index, filter ->
+                onTabClick = { filter ->
                     selectedIndex = index
                     onTabClick(filter)
                 },
@@ -254,8 +253,7 @@ private fun HomeTab(
     tabFilter: TabFilter,
     @StringRes textRes: Int,
     isSelected: Boolean,
-    index: Int,
-    onTabClick: (Int, TabFilter) -> Unit,
+    onTabClick: (TabFilter) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -266,7 +264,7 @@ private fun HomeTab(
             selected = isSelected,
             onClick = {
                 if (isSelected.not()) {
-                    onTabClick(index, tabFilter)
+                    onTabClick(tabFilter)
                 }
             },
             text = {

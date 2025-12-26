@@ -3,6 +3,7 @@ package merail.life.home
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
@@ -29,6 +30,10 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class HomeScreenTest {
+
+    companion object {
+        private const val WAITING_TIME = 5_000L
+    }
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -66,7 +71,9 @@ class HomeScreenTest {
         state.value = HomeLoadingState.Success(items)
 
         composeTestRule.onNodeWithTag(TestTags.GLOBAL_LOADER).assertIsNotDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).assertIsNotDisplayed()
+        composeTestRule.waitUntil(WAITING_TIME) {
+            composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).isNotDisplayed()
+        }
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").assertIsDisplayed()
     }
 
@@ -95,7 +102,9 @@ class HomeScreenTest {
         state.value = HomeLoadingState.Success(items)
 
         composeTestRule.onNodeWithTag(TestTags.GLOBAL_LOADER).assertIsNotDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).assertIsNotDisplayed()
+        composeTestRule.waitUntil(WAITING_TIME) {
+            composeTestRule.onNodeWithTag(TestTags.TOP_LOADER).isNotDisplayed()
+        }
         composeTestRule.onNodeWithTag("${TestTags.COVER_IMAGE}_${TestHomeElements.ID_1}").assertIsDisplayed()
     }
 

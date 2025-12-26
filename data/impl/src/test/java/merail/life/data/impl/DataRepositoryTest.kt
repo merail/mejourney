@@ -150,6 +150,7 @@ class DataRepositoryTest {
             emit(coverEntities)
         }
         coEvery { homeElementDao.insertAll(any()) } just Runs
+        coEvery { homeElementDao.syncData(any()) } just Runs
 
         serverApi = mockk(relaxed = true)
         coEvery { serverApi.getCovers() } coAnswers {

@@ -58,7 +58,9 @@ internal fun rememberStableLoading(
     isLoading: Boolean,
     minDurationMs: Long = 1_000,
 ): Boolean {
-    var visible by remember { mutableStateOf(false) }
+    var visible by remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect(isLoading) {
         if (isLoading) {
