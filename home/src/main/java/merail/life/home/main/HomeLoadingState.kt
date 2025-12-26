@@ -13,6 +13,9 @@ internal sealed class HomeLoadingState(
 ) {
     var isInitialLoading = true
 
+    val isGlobalLoading: Boolean
+        get() = items.isEmpty() && isInitialLoading
+
     data class Loading(
         override val items: ImmutableList<HomeItem> = persistentListOf(),
     ) : HomeLoadingState(items)

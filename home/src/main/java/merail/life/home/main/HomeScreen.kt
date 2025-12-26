@@ -24,11 +24,9 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,6 +36,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
@@ -68,20 +67,20 @@ internal fun HomeScreen(
 ) {
     val activity = LocalActivity.current
 
-    val state = viewModel.state.collectAsState().value
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    when (state) {
-        is HomeLoadingState.Error -> LaunchedEffect(null) {
-            onError(state.exception)
+    LaunchedEffect(state) {
+        when (val currentState = state) {
+            is HomeLoadingState.Error -> onError(currentState.exception)
+            is HomeLoadingState.Success -> {
+                (activity as? NotificationsPermissionRequester)?.requestPermission()
+            }
+            is HomeLoadingState.Loading,
+            -> Unit
         }
-        is HomeLoadingState.Success -> LaunchedEffect(null) {
-            (activity as? NotificationsPermissionRequester)?.requestPermission()
-        }
-        is HomeLoadingState.Loading,
-        -> Unit
     }
 
-    val isSnowfallEnabled = viewModel.isSnowfallEnabledState.collectAsState().value
+    val isSnowfallEnabled by viewModel.isSnowfallEnabledState.collectAsStateWithLifecycle()
 
     HomeContent(
         state = state,
@@ -103,29 +102,24 @@ internal fun HomeContent(
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
-    var tabFilter by rememberSaveable { mutableStateOf(TabFilter.COMMON) }
-
-    val handleTabClick = remember(onTabClick) {
-        { selectedTab: TabFilter ->
-            tabFilter = selectedTab
-            onTabClick(selectedTab)
-        }
+    var tabFilter by rememberSaveable {
+        mutableStateOf(TabFilter.COMMON)
     }
+
+    val isLoading = rememberStableLoading(
+        isLoading = state is HomeLoadingState.Loading,
+    )
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .fillMaxSize()
             .snowfall(isSnowfallEnabled)
+            .fillMaxSize()
             .testTag(TestTags.HOME_SCREEN_CONTAINER),
     ) {
-        val isLoading = rememberStableLoading(
-            isLoading = state is HomeLoadingState.Loading,
-        )
-
         HomeLoader(
             isLoading = isLoading,
-            isGlobalLoading = state.items.isEmpty() && state.isInitialLoading,
+            isGlobalLoading = state.isGlobalLoading,
         )
 
         TabsContent(
@@ -137,7 +131,10 @@ internal fun HomeContent(
         )
 
         HomeTabs(
-            onTabClick = handleTabClick,
+            onTabClick = { selectedTab ->
+                tabFilter = selectedTab
+                onTabClick(selectedTab)
+            },
         )
     }
 }
@@ -220,6 +217,7 @@ private fun HomeTabs(
     var selectedIndex by rememberSaveable {
         mutableIntStateOf(tabsList.size - 1)
     }
+
     SecondaryTabRow(
         selectedTabIndex = selectedIndex,
         containerColor = MejourneyTheme.colors.tabsContainerColor,
@@ -237,29 +235,27 @@ private fun HomeTabs(
         tabsList.forEachIndexed { index, tabElement ->
             val isSelected = selectedIndex == index
 
-            with(tabElement) {
-                HomeTab(
-                    tabFilter = tabElement.first,
-                    textRes = tabElement.second,
-                    isSelected = isSelected,
-                    onClick = {
-                        if (!isSelected) {
-                            selectedIndex = index
-                            onTabClick(tabElement.first)
-                        }
-                    },
-                )
-            }
+            HomeTab(
+                tabFilter = tabElement.first,
+                textRes = tabElement.second,
+                isSelected = isSelected,
+                index = index,
+                onTabClick = { index, filter ->
+                    selectedIndex = index
+                    onTabClick(filter)
+                },
+            )
         }
     }
 }
 
 @Composable
-private fun Pair<TabFilter, Int>.HomeTab(
+private fun HomeTab(
     tabFilter: TabFilter,
     @StringRes textRes: Int,
     isSelected: Boolean,
-    onClick: () -> Unit,
+    index: Int,
+    onTabClick: (Int, TabFilter) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -268,7 +264,11 @@ private fun Pair<TabFilter, Int>.HomeTab(
     ) {
         Tab(
             selected = isSelected,
-            onClick = onClick,
+            onClick = {
+                if (isSelected.not()) {
+                    onTabClick(index, tabFilter)
+                }
+            },
             text = {
                 Text(
                     text = stringResource(textRes),

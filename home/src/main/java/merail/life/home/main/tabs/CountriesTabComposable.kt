@@ -3,6 +3,7 @@ package merail.life.home.main.tabs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,6 +35,9 @@ internal fun ColumnScope.CountriesList(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(32.dp),
+        contentPadding = PaddingValues(
+            bottom = 32.dp,
+        ),
         modifier = Modifier
             .padding(
                 start = 4.dp,

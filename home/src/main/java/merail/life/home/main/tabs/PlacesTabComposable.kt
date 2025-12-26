@@ -87,7 +87,10 @@ private fun PlaceItem(
                 url = item.url,
                 contentScale = ContentScale.Crop,
                 loading = {
-                    ImageLoading(Modifier.height(512.dp))
+                    ImageLoading(
+                        modifier = Modifier
+                            .height(512.dp),
+                    )
                 },
                 onLoadingSuccess =  {
                     isImageLoaded = true
@@ -104,7 +107,8 @@ private fun PlaceItem(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(
-                    vertical = 12.dp,
+                    top = 8.dp,
+                    bottom = 16.dp,
                 )
                 .graphicsLayer {
                     alpha = if (isImageLoaded) {

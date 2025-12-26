@@ -1,10 +1,7 @@
 package merail.life.home.content
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -13,12 +10,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.ContentImage
@@ -35,12 +34,14 @@ internal fun ContentScreen(
     navigateToError: (Throwable?) -> Unit,
     viewModel: ContentViewModel = hiltViewModel(),
 ) {
-    when (val uiState = viewModel.contentLoadingState.collectAsState().value) {
+    val state by viewModel.contentLoadingState.collectAsStateWithLifecycle()
+
+    when (val currentState = state) {
         is ContentLoadingState.Loading -> Loading()
-        is ContentLoadingState.Error -> LaunchedEffect(null) {
-            navigateToError(uiState.exception)
+        is ContentLoadingState.Error -> LaunchedEffect(currentState) {
+            navigateToError(currentState.exception)
         }
-        is ContentLoadingState.Success -> Content(uiState.item)
+        is ContentLoadingState.Success -> Content(currentState.item)
     }
 }
 
@@ -48,6 +49,8 @@ internal fun ContentScreen(
 private fun Content(
     item: ContentItem,
 ) {
+    val contentParts = remember(item.id) { item.splitWithImages() }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,14 +71,8 @@ private fun Content(
                 ),
         )
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp),
-        )
-
         var index = 0
-        item.splitWithImages().forEach { text ->
+        contentParts.forEach { text ->
             if (text == IMAGE_DELIMITER) {
                 if (index < item.imagesUrls.size) {
                     ContentImage(

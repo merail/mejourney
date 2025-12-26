@@ -19,7 +19,10 @@ fun ContentImage(
         model = LocalContext.current.createMediaRequest(url),
         contentDescription = null,
         loading = {
-            ImageLoading(Modifier.height(512.dp))
+            ImageLoading(
+                modifier = Modifier
+                    .height(512.dp),
+            )
         },
         contentScale = contentScale,
         modifier = modifier,

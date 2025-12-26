@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -32,18 +33,22 @@ internal fun rememberNavigateToContent(
     tabFilter: TabFilter,
     items: ImmutableList<HomeItem>,
     navigateToSelector: (SelectorFilter) -> Unit,
-): (String) -> Unit = remember(items, tabFilter, navigateToSelector) {
-    { id ->
-        items.find { item ->
-            item.id == id
-        }?.run {
-            navigateToSelector(
-                when (tabFilter) {
-                    TabFilter.YEAR -> SelectorFilter.Year(year)
-                    TabFilter.COUNTRY -> SelectorFilter.Country(country)
-                    else -> SelectorFilter.Place(place)
-                }
-            )
+): (String) -> Unit {
+    val currentItems by rememberUpdatedState(items)
+    val currentFilter by rememberUpdatedState(tabFilter)
+    val currentNavigate by rememberUpdatedState(navigateToSelector)
+
+    return remember {
+        { id ->
+            currentItems.find { it.id == id }?.run {
+                currentNavigate(
+                    when (currentFilter) {
+                        TabFilter.YEAR -> SelectorFilter.Year(year)
+                        TabFilter.COUNTRY -> SelectorFilter.Country(country)
+                        else -> SelectorFilter.Place(place)
+                    }
+                )
+            }
         }
     }
 }

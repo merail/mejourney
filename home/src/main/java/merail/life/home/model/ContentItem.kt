@@ -6,12 +6,14 @@ import merail.life.core.extensions.splitWithDelimiter
 import merail.life.data.api.model.ContentModel
 
 internal data class ContentItem(
+    val id: String,
     val title: String,
     val text: String,
     val imagesUrls: ImmutableList<String>,
 )
 
 internal fun ContentModel.toContentItem() = ContentItem(
+    id = id,
     title = title,
     text = text,
     imagesUrls = imagesUrls.toImmutableList(),

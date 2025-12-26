@@ -3,6 +3,7 @@ package merail.life.home.main.tabs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +38,9 @@ internal fun ColumnScope.YearsList(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(
+            bottom = 24.dp,
+        ),
         modifier = Modifier
             .padding(
                 start = 4.dp,
