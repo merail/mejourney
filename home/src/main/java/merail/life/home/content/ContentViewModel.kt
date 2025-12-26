@@ -29,7 +29,7 @@ internal class ContentViewModel @Inject constructor(
         private const val TAG = "ContentViewModel"
     }
 
-    private val contentId = savedStateHandle.toRoute<ContentRoute>().contentId
+    private val contentId = savedStateHandle.toRoute<ContentRoute>().contentForeignId
 
     val contentLoadingState = dataRepository
         .getContent(contentId)
