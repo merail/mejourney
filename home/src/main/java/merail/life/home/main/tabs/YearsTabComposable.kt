@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,9 +24,9 @@ import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
-import merail.life.design.extensions.robustStatusBarHeight
 import merail.life.domain.TestTags
 import merail.life.home.R
+import merail.life.home.main.rememberTopPaddingAnimation
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -39,11 +40,10 @@ internal fun ColumnScope.YearsList(
         modifier = Modifier
             .padding(
                 start = 4.dp,
-                top = if (isLoading) {
-                    0.dp
-                } else {
-                    robustStatusBarHeight()
-                },
+                top = rememberTopPaddingAnimation(
+                    isLoading = isLoading,
+                    label = "YearsTopPaddingAnimation",
+                ),
                 end = 4.dp,
                 bottom = 4.dp,
             )
@@ -77,19 +77,24 @@ private fun YearItem(
             mutableStateOf(false)
         }
 
-        if (isImageLoaded) {
-            Text(
-                text = stringResource(
-                    id = R.string.years_tab_element_title,
-                    item.year,
-                ),
-                style = MejourneyTheme.typography.titleLarge,
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                    ),
-            )
-        }
+        Text(
+            text = stringResource(
+                id = R.string.years_tab_element_title,
+                item.year,
+            ),
+            style = MejourneyTheme.typography.titleLarge,
+            modifier = Modifier
+                .padding(
+                    start = 16.dp,
+                )
+                .graphicsLayer {
+                    alpha = if (isImageLoaded) {
+                        1f
+                    } else {
+                        0f
+                    }
+                },
+        )
 
         Card(
             colors = MejourneyTheme.colors.cardColors,

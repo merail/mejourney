@@ -24,24 +24,21 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.idapgroup.snowfall.snowfall
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import merail.life.core.permissions.NotificationsPermissionRequester
 import merail.life.data.api.model.SelectorFilterType
 import merail.life.design.MejourneyTheme
@@ -53,7 +50,6 @@ import merail.life.design.tabsContainerColor
 import merail.life.design.unselectedTabColor
 import merail.life.design.unselectedTabTextColor
 import merail.life.domain.TestTags
-import merail.life.home.R
 import merail.life.home.main.tabs.CommonList
 import merail.life.home.main.tabs.CountriesList
 import merail.life.home.main.tabs.PlacesList
@@ -107,53 +103,55 @@ internal fun HomeContent(
     navigateToContent: (String) -> Unit = {},
     onTabClick: (TabFilter) -> Unit = {},
 ) {
+    var tabFilter by rememberSaveable { mutableStateOf(TabFilter.COMMON) }
+
+    val handleTabClick = remember(onTabClick) {
+        { selectedTab: TabFilter ->
+            tabFilter = selectedTab
+            onTabClick(selectedTab)
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
-            .run {
-                if (isSnowfallEnabled) {
-                    snowfall(
-                        density = 0.005,
-                    )
-                } else {
-                    this
-                }
-            }
+            .snowfall(isSnowfallEnabled)
             .testTag(TestTags.HOME_SCREEN_CONTAINER),
     ) {
-        HomeLoader(state)
+        val isLoading = rememberStableLoading(
+            isLoading = state is HomeLoadingState.Loading,
+        )
 
-        var tabFilter by rememberSaveable {
-            mutableStateOf(TabFilter.COMMON)
-        }
+        HomeLoader(
+            isLoading = isLoading,
+            isGlobalLoading = state.items.isEmpty() && state.isInitialLoading,
+        )
 
         TabsContent(
             tabFilter = tabFilter,
             items = state.items,
-            isLoading = state is HomeLoadingState.Loading,
+            isLoading = isLoading,
             navigateToSelector = navigateToSelector,
             navigateToContent = navigateToContent,
         )
 
         HomeTabs(
-            onTabClick = {
-                tabFilter = it
-                onTabClick(it)
-            },
+            onTabClick = handleTabClick,
         )
     }
 }
 
 @Composable
 private fun HomeLoader(
-    state: HomeLoadingState,
+    isLoading: Boolean,
+    isGlobalLoading: Boolean,
 ) {
-    if (state.items.isEmpty()) {
+    if (isGlobalLoading) {
         Loading()
     } else {
         AnimatedVisibility(
-            visible = state is HomeLoadingState.Loading,
+            visible = isLoading,
             enter = expandVertically(),
             exit = shrinkVertically(),
             modifier = Modifier
@@ -186,15 +184,11 @@ private fun ColumnScope.TabsContent(
     navigateToSelector: (SelectorFilter) -> Unit,
     navigateToContent: (String) -> Unit,
 ) {
-    val navigateToSelectorInternal = items.navigateToContentInternal {
-        navigateToSelector(
-            when (tabFilter) {
-                TabFilter.YEAR -> SelectorFilter.Year(year)
-                TabFilter.COUNTRY -> SelectorFilter.Country(country)
-                else -> SelectorFilter.Place(place)
-            }
-        )
-    }
+    val navigateToSelectorInternal = rememberNavigateToContent(
+        tabFilter = tabFilter,
+        items = items,
+        navigateToSelector = navigateToSelector,
+    )
 
     when (tabFilter) {
         TabFilter.YEAR -> YearsList(
@@ -219,32 +213,15 @@ private fun ColumnScope.TabsContent(
     }
 }
 
-private fun List<HomeItem>.navigateToContentInternal(
-    block: HomeItem.() -> Unit,
-): (String) -> Unit = { id: String -> find { item ->
-        item.id == id
-    }?.let {
-        block(it)
-    }
-}
-
-
-private val list = persistentListOf(
-    Pair(TabFilter.YEAR, R.string.main_tab_years_name),
-    Pair(TabFilter.COUNTRY, R.string.main_tab_countries_name),
-    Pair(TabFilter.PLACE, R.string.main_tab_places_name),
-    Pair(TabFilter.COMMON, R.string.main_tab_all_name),
-)
-
 @Composable
 private fun HomeTabs(
     onTabClick: (TabFilter) -> Unit,
 ) {
-    val selectedIndex = rememberSaveable {
-        mutableIntStateOf(list.size - 1)
+    var selectedIndex by rememberSaveable {
+        mutableIntStateOf(tabsList.size - 1)
     }
     SecondaryTabRow(
-        selectedTabIndex = selectedIndex.intValue,
+        selectedTabIndex = selectedIndex,
         containerColor = MejourneyTheme.colors.tabsContainerColor,
         indicator = {},
         divider = {},
@@ -257,12 +234,20 @@ private fun HomeTabs(
             )
             .clip(RoundedCornerShape(64)),
     ) {
-        list.forEachIndexed { index, tabElement ->
+        tabsList.forEachIndexed { index, tabElement ->
+            val isSelected = selectedIndex == index
+
             with(tabElement) {
                 HomeTab(
-                    selectedIndex = selectedIndex,
-                    index = index,
-                    onTabClick = onTabClick,
+                    tabFilter = tabElement.first,
+                    textRes = tabElement.second,
+                    isSelected = isSelected,
+                    onClick = {
+                        if (!isSelected) {
+                            selectedIndex = index
+                            onTabClick(tabElement.first)
+                        }
+                    },
                 )
             }
         }
@@ -271,60 +256,44 @@ private fun HomeTabs(
 
 @Composable
 private fun Pair<TabFilter, Int>.HomeTab(
-    selectedIndex: MutableState<Int>,
-    index: Int,
-    onTabClick: (TabFilter) -> Unit,
+    tabFilter: TabFilter,
+    @StringRes textRes: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .height(40.dp)
             .padding(4.dp),
     ) {
-        val isSelected = selectedIndex.value == index
         Tab(
             selected = isSelected,
-            onClick = {
-                if (selectedIndex.value != index) {
-                    selectedIndex.value = index
-                    onTabClick(first)
-                }
-            },
+            onClick = onClick,
             text = {
-                HomeTabText(
-                    textRes = second,
-                    color = if (selectedIndex.value == index) {
+                Text(
+                    text = stringResource(textRes),
+                    color = if (isSelected) {
                         MejourneyTheme.colors.textPrimary
                     } else {
                         MejourneyTheme.colors.unselectedTabTextColor
                     },
+                    style = MejourneyTheme.typography.labelLarge,
+                    modifier = Modifier
+                        .wrapContentWidth(
+                            unbounded = true,
+                        ),
                 )
             },
             modifier = Modifier
                 .clip(RoundedCornerShape(64))
                 .background(
-                    color = if (selectedIndex.value == index) {
+                    color = if (isSelected) {
                         MejourneyTheme.colors.selectedTabColor
                     } else {
                         MejourneyTheme.colors.unselectedTabColor
                     },
                 )
-                .testTag("${TestTags.HOME_TAB}_$index"),
+                .testTag("${TestTags.HOME_TAB}_${tabFilter.ordinal}"),
         )
     }
-}
-
-@Composable
-private fun HomeTabText(
-    @StringRes textRes: Int,
-    color: Color,
-) {
-    Text(
-        text = stringResource(textRes),
-        color = color,
-        style = MejourneyTheme.typography.labelLarge,
-        modifier = Modifier
-            .wrapContentWidth(
-                unbounded = true,
-            ),
-    )
 }
