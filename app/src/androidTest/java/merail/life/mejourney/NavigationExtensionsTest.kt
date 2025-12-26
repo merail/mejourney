@@ -67,7 +67,7 @@ internal class NavigationExtensionsTest {
         val route = intent.getRouteIfExists()
 
         assertTrue(route is ContentRoute)
-        assertEquals(TestHomeElements.ID_1, (route as ContentRoute).contentId)
+        assertEquals(TestHomeElements.ID_1, (route as ContentRoute).contentForeignId)
     }
 
     /**

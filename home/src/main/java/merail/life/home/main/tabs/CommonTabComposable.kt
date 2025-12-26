@@ -7,6 +7,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -33,6 +34,9 @@ internal fun ColumnScope.CommonList(
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
+        contentPadding = PaddingValues(
+            bottom = 4.dp,
+        ),
         verticalItemSpacing = 4.dp,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
@@ -49,29 +53,40 @@ internal fun ColumnScope.CommonList(
                 it
             },
         ) {
-            Column(
-                modifier = Modifier
-                    .animateContentSize(),
-            ) {
-                var isImageLongClicked by remember {
-                    mutableStateOf(false)
-                }
-
-                CoverImage(
-                    id = it.id,
-                    url = it.url,
-                    navigateTo = navigateToContent,
-                    onLongClick = {
-                        isImageLongClicked = isImageLongClicked.not()
-                    },
-                )
-
-                AnimatedImageText(
-                    isVisible = isImageLongClicked,
-                    item = it,
-                )
-            }
+            CommonItem(
+                item = it,
+                navigateToContent = navigateToContent,
+            )
         }
+    }
+}
+
+@Composable
+private fun CommonItem(
+    item: HomeItem,
+    navigateToContent: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .animateContentSize(),
+    ) {
+        var isImageLongClicked by remember {
+            mutableStateOf(false)
+        }
+
+        CoverImage(
+            id = item.id,
+            url = item.imageUrl,
+            navigateTo = navigateToContent,
+            onLongClick = {
+                isImageLongClicked = isImageLongClicked.not()
+            },
+        )
+
+        AnimatedImageText(
+            isVisible = isImageLongClicked,
+            item = item,
+        )
     }
 }
 

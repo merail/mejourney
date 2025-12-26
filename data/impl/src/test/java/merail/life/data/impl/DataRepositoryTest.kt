@@ -34,6 +34,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+/**
+ * `DataRepositoryTest` Unit tests for the `DataRepository` class. These tests verify
+ * the orchestration of data between the local Room database and the remote API,
+ * ensuring correct state emissions (InProgress, Success) and the accuracy of filtering
+ * logic for home elements.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class DataRepositoryTest {
 
@@ -53,7 +59,7 @@ class DataRepositoryTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_1,
             description = TestHomeElements.DESCRIPTION_1,
-            url = TestHomeElements.URL_1,
+            imageUrl = TestHomeElements.URL_1,
         ),
         HomeElementEntity(
             id = TestHomeElements.ID_7,
@@ -62,7 +68,7 @@ class DataRepositoryTest {
             place = TestHomeElements.PLACE_CAPPADOCIA,
             title = TestHomeElements.TITLE_7,
             description = TestHomeElements.DESCRIPTION_7,
-            url = TestHomeElements.URL_7,
+            imageUrl = TestHomeElements.URL_7,
         ),
         HomeElementEntity(
             id = TestHomeElements.ID_9,
@@ -71,7 +77,7 @@ class DataRepositoryTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_9,
             description = TestHomeElements.DESCRIPTION_9,
-            url = TestHomeElements.URL_9,
+            imageUrl = TestHomeElements.URL_9,
         ),
     )
 
@@ -144,6 +150,7 @@ class DataRepositoryTest {
             emit(coverEntities)
         }
         coEvery { homeElementDao.insertAll(any()) } just Runs
+        coEvery { homeElementDao.syncData(any()) } just Runs
 
         serverApi = mockk(relaxed = true)
         coEvery { serverApi.getCovers() } coAnswers {
@@ -169,6 +176,10 @@ class DataRepositoryTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies the full synchronization flow: emitting an initial loading state, followed
+     * by cached data from the database, and finally the updated data fetched from the server.
+     */
     @Test
     fun `getHomeElements returns InProgress then Result`() = runTest {
         val result = dataRepository.getHomeElements().toList()
@@ -199,6 +210,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.ID_9, resultSuccessData[4].id)
     }
 
+    /**
+     * Ensures that retrieving local data correctly emits a loading state
+     * before delivering the final filtered results from the database.
+     */
     @Test
     fun `getHomeElementsFromDatabase returns InProgress then Result`() = runTest {
         val result = dataRepository.getHomeElementsFromDatabase(
@@ -220,6 +235,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.ID_7, resultData[1].id)
     }
 
+    /**
+     * Validates that fetching detailed content transitions correctly
+     * from an `InProgress` state to a `Success` state with the expected content data.
+     */
     @Test
     fun `getContent returns InProgress then Result`() = runTest {
         val result = dataRepository.getContent(TestHomeElements.CONTENT_ID_1).toList()
@@ -236,6 +255,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.CONTENT_ID_1, resultData.id)
     }
 
+    /**
+     * Confirms that the repository correctly filters database records based
+     * on the provided tab category (e.g., filtering by Country).
+     */
     @Test
     fun `getHomeElementsFromDatabase filters by tabFilter`() = runTest {
         val result = dataRepository.getHomeElementsFromDatabase(
@@ -252,6 +275,10 @@ class DataRepositoryTest {
         assertEquals(TestHomeElements.ID_7, resultList[1].id)
     }
 
+    /**
+     * Confirms that the repository correctly filters database records based
+     * on a specific selection criteria (e.g., filtering by a specific City or Place).
+     */
     @Test
     fun `getHomeElementsFromDatabase filters by selectorFilter`() = runTest {
         val result = dataRepository.getHomeElementsFromDatabase(

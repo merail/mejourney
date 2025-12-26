@@ -3,9 +3,7 @@ package merail.life.home.main.useCases
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import merail.life.core.log.IMejourneyLogger
-import merail.life.core.mappers.RequestResult
 import merail.life.data.api.IDataRepository
-import merail.life.data.api.model.HomeElementModel
 import merail.life.home.main.HomeViewModel.Companion.TAG
 import merail.life.home.main.toState
 import merail.life.home.model.TabFilter
@@ -20,5 +18,7 @@ internal class LoadHomeElementsByTabUseCase @Inject constructor(
         tabFilter = filter.toModel(),
     ).onEach {
         logger.d(TAG, "Getting home elements list by $filter. $it")
-    }.map(RequestResult<List<HomeElementModel>>::toState)
+    }.map {
+        it.toState(false)
+    }
 }

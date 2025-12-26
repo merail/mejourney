@@ -10,7 +10,7 @@ import merail.life.home.content.ContentScreen
 
 @Serializable
 data class ContentRoute(
-    val contentId: String,
+    val contentForeignId: String,
 ) : NavigationRoute {
     companion object {
         const val ROUTE_NAME = "content"

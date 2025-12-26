@@ -26,7 +26,7 @@ class TestDataRepository @Inject constructor(): IDataRepository {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_1,
             description = TestHomeElements.DESCRIPTION_1,
-            url = TestHomeElements.URL_1,
+            imageUrl = TestHomeElements.URL_1,
         ),
         HomeElementModel(
             id = TestHomeElements.ID_2,
@@ -35,7 +35,7 @@ class TestDataRepository @Inject constructor(): IDataRepository {
             place = TestHomeElements.PLACE_KARELIA,
             title = TestHomeElements.TITLE_2,
             description = TestHomeElements.DESCRIPTION_2,
-            url = TestHomeElements.URL_2,
+            imageUrl = TestHomeElements.URL_2,
         ),
     )
 

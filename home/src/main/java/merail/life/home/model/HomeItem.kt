@@ -9,7 +9,7 @@ internal data class HomeItem(
     val place: String,
     val title: String,
     val description: String,
-    val url: String,
+    val imageUrl: String,
 )
 
 internal fun HomeElementModel.toHomeItem() = HomeItem(
@@ -19,7 +19,7 @@ internal fun HomeElementModel.toHomeItem() = HomeItem(
     place = place,
     title = title,
     description = description,
-    url = url,
+    imageUrl = imageUrl,
 )
 
 internal fun List<HomeElementModel>.toHomeItems() = map(HomeElementModel::toHomeItem)

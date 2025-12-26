@@ -11,6 +11,11 @@ import merail.life.home.model.toHomeItems
 internal sealed class HomeLoadingState(
     open val items: ImmutableList<HomeItem>,
 ) {
+    var isInitialLoading = true
+
+    val isGlobalLoading: Boolean
+        get() = items.isEmpty() && isInitialLoading
+
     data class Loading(
         override val items: ImmutableList<HomeItem> = persistentListOf(),
     ) : HomeLoadingState(items)
@@ -25,7 +30,9 @@ internal sealed class HomeLoadingState(
     ) : HomeLoadingState(items)
 }
 
-internal fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
+internal fun RequestResult<List<HomeElementModel>>.toState(
+    isInitialLoading: Boolean,
+) = when (this) {
     is RequestResult.InProgress -> HomeLoadingState.Loading(
         items = data?.toHomeItems().orEmpty().toImmutableList(),
     )
@@ -36,4 +43,6 @@ internal fun RequestResult<List<HomeElementModel>>.toState() = when (this) {
     is RequestResult.Success -> HomeLoadingState.Success(
         items = data.toHomeItems().toImmutableList(),
     )
+}.apply {
+    this.isInitialLoading = isInitialLoading
 }

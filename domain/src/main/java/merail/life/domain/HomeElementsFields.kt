@@ -8,5 +8,5 @@ object HomeElementsFields {
     const val TITLE = "title"
     const val DESCRIPTION = "description"
 
-    const val URL = "url"
+    const val IMAGE_URL = "image_url"
 }

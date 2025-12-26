@@ -3,6 +3,7 @@ package merail.life.home.main.tabs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,14 +16,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
-import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.domain.TestTags
+import merail.life.home.main.rememberTopPaddingAnimation
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -33,14 +35,16 @@ internal fun ColumnScope.CountriesList(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(32.dp),
+        contentPadding = PaddingValues(
+            bottom = 32.dp,
+        ),
         modifier = Modifier
             .padding(
                 start = 4.dp,
-                top = if (isLoading) {
-                    0.dp
-                } else {
-                    pureStatusBarHeight()
-                },
+                top = rememberTopPaddingAnimation(
+                    isLoading = isLoading,
+                    label = "CountriesTopPaddingAnimation",
+                ),
                 end = 4.dp,
                 bottom = 4.dp,
             )
@@ -76,9 +80,10 @@ private fun CountryItem(
             var isImageLoaded by remember {
                 mutableStateOf(false)
             }
+
             CoverImage(
                 id = item.id,
-                url = item.url,
+                url = item.imageUrl,
                 onLoadingSuccess =  {
                     isImageLoaded = true
                 },
@@ -87,14 +92,19 @@ private fun CountryItem(
                     .height(256.dp),
             )
 
-            if (isImageLoaded) {
-                Text(
-                    text = item.country,
-                    style = MejourneyTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .padding(16.dp),
-                )
-            }
+            Text(
+                text = item.country,
+                style = MejourneyTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .graphicsLayer {
+                        alpha = if (isImageLoaded) {
+                            1f
+                        } else {
+                            0f
+                        }
+                    },
+            )
         }
     }
 }

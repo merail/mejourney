@@ -27,6 +27,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * `ContentViewModelTest` Unit tests for the `ContentViewModel`. These tests ensure
+ * that the ViewModel correctly handles the initialization logic, retrieves the necessary IDs
+ * from the `SavedStateHandle`, and transforms data repository flows
+ * into UI-ready states (`ContentLoadingState`).
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class ContentViewModelTest {
@@ -66,6 +72,11 @@ class ContentViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies the state machine logic: it ensures the ViewModel initially emits
+     * a `Loading` state and successfully transitions to a `Success` state
+     * once the repository provides the content data.
+     */
     @Test
     fun `ContentViewModel loads content successfully`() = runTest {
         every { dataRepository.getContent(CONTENT_FOREIGN_ID) } returns flowOf(

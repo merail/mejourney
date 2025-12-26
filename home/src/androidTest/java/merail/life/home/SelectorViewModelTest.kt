@@ -27,6 +27,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * `SelectorViewModelTest` Unit tests for the `SelectorViewModel`. These tests focus
+ * on the ViewModel's ability to extract navigation arguments (filters)
+ * from the `SavedStateHandle` and coordinate with the repository to fetch and expose
+ * filtered database records as UI states.
+ */
 @RunWith(AndroidJUnit4::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class SelectorViewModelTest {
@@ -52,7 +58,7 @@ class SelectorViewModelTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_1,
             description = TestHomeElements.DESCRIPTION_1,
-            url = TestHomeElements.URL_1,
+            imageUrl = TestHomeElements.URL_1,
         ),
         HomeElementModel(
             id = TestHomeElements.ID_8,
@@ -61,7 +67,7 @@ class SelectorViewModelTest {
             place = TestHomeElements.PLACE_MURMANSK,
             title = TestHomeElements.TITLE_8,
             description = TestHomeElements.DESCRIPTION_8,
-            url = TestHomeElements.URL_8,
+            imageUrl = TestHomeElements.URL_8,
         ),
         HomeElementModel(
             id = TestHomeElements.ID_9,
@@ -70,7 +76,7 @@ class SelectorViewModelTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_9,
             description = TestHomeElements.DESCRIPTION_9,
-            url = TestHomeElements.URL_9,
+            imageUrl = TestHomeElements.URL_9,
         ),
     )
 
@@ -89,6 +95,11 @@ class SelectorViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies that the ViewModel correctly uses the filter provided at initialization
+     * to request data and successfully transitions from a `Loading` state to a `Success` state
+     * with the expected list of items.
+     */
     @Test
     fun `SelectorViewModel loads selection successfully`() = runTest {
         every {

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -25,8 +26,8 @@ import merail.life.design.MejourneyTheme
 import merail.life.design.cardColors
 import merail.life.design.components.CoverImage
 import merail.life.design.components.ImageLoading
-import merail.life.design.extensions.pureStatusBarHeight
 import merail.life.domain.TestTags
+import merail.life.home.main.rememberTopPaddingAnimation
 import merail.life.home.model.HomeItem
 
 @Composable
@@ -40,11 +41,10 @@ internal fun ColumnScope.PlacesList(
         modifier = Modifier
             .padding(
                 start = 4.dp,
-                top = if (isLoading) {
-                    0.dp
-                } else {
-                    pureStatusBarHeight()
-                },
+                top = rememberTopPaddingAnimation(
+                    isLoading = isLoading,
+                    label = "PlacesTopPaddingAnimation",
+                ),
                 end = 4.dp,
                 bottom = 4.dp,
             )
@@ -84,10 +84,13 @@ private fun PlaceItem(
         ) {
             CoverImage(
                 id = item.id,
-                url = item.url,
+                url = item.imageUrl,
                 contentScale = ContentScale.Crop,
                 loading = {
-                    ImageLoading(Modifier.height(512.dp))
+                    ImageLoading(
+                        modifier = Modifier
+                            .height(512.dp),
+                    )
                 },
                 onLoadingSuccess =  {
                     isImageLoaded = true
@@ -98,16 +101,22 @@ private fun PlaceItem(
             )
         }
 
-        if (isImageLoaded) {
-            Text(
-                text = item.place,
-                style = MejourneyTheme.typography.titleLarge,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(
-                        vertical = 12.dp,
-                    ),
-            )
-        }
+        Text(
+            text = item.place,
+            style = MejourneyTheme.typography.titleLarge,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(
+                    top = 8.dp,
+                    bottom = 16.dp,
+                )
+                .graphicsLayer {
+                    alpha = if (isImageLoaded) {
+                        1f
+                    } else {
+                        0f
+                    }
+                },
+        )
     }
 }

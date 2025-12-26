@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import merail.life.data.impl.database.dto.HomeElementEntity
 
@@ -14,4 +15,14 @@ internal interface HomeElementDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(homeElements: List<HomeElementEntity>)
+
+    @Query("DELETE FROM homeElementEntity WHERE id NOT IN (:remainingIds)")
+    suspend fun deleteMissing(remainingIds: List<String>)
+
+    @Transaction
+    suspend fun syncData(entities: List<HomeElementEntity>) {
+        deleteMissing(entities.map(HomeElementEntity::id))
+
+        insertAll(entities)
+    }
 }

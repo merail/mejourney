@@ -1,46 +1,100 @@
 package merail.life.design.extensions
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemGestures
+import android.view.View
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 @Composable
-fun pureStatusBarHeight(): Dp {
+fun Modifier.robustSystemBarsPadding() = padding(
+    top = getInsetHeight(InsetType.TOP),
+    bottom = getInsetHeight(InsetType.BOTTOM),
+)
+
+@Composable
+fun robustStatusBarHeight() = getInsetHeight(InsetType.TOP)
+
+@Composable
+fun robustNavigationBarHeight() = getInsetHeight(InsetType.BOTTOM)
+
+@Composable
+private fun getInsetHeight(
+    insetType: InsetType,
+): Dp {
+    val view = LocalView.current
     val density = LocalDensity.current
 
-    var cached by rememberSaveable { mutableStateOf(0f) }
+    var height by remember {
+        mutableStateOf(0.dp)
+    }
 
-    val current = with(density) {
-        val cutoutPx = WindowInsets.displayCutout.getTop(this)
-        if (cutoutPx > 0) {
-            return@with cutoutPx.toDp()
+    DisposableEffect(view) {
+        val listener = object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                height = getInsetHeight(
+                    view = v,
+                    density = density,
+                    insetType = insetType,
+                )
+            }
+
+            override fun onViewDetachedFromWindow(v: View) = Unit
         }
 
-        val gesturesTopPx = WindowInsets.systemGestures.getTop(this)
-        if (gesturesTopPx > 0) {
-            return@with gesturesTopPx.toDp()
+        view.addOnAttachStateChangeListener(listener)
+
+        if (view.isAttachedToWindow) {
+            height = getInsetHeight(
+                view = view,
+                density = density,
+                insetType = insetType,
+            )
         }
 
-        val statusBarsPx = WindowInsets.statusBars.getTop(this)
-        statusBarsPx.toDp()
+        onDispose {
+            view.removeOnAttachStateChangeListener(listener)
+        }
     }
 
-    if (current > 0.dp && current.value != cached) {
-        cached = current.value
+    return height
+}
+
+private fun getInsetHeight(
+    view: View,
+    density: Density,
+    insetType: InsetType,
+): Dp {
+    var height = 0.dp
+
+    ViewCompat.getRootWindowInsets(view)?.let { insets ->
+        val insetHeight = if (insetType == InsetType.BOTTOM) {
+            insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+        } else {
+            insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+        }
+
+        if (insetHeight > 0) {
+            height = with(density) { insetHeight.toDp() }
+        }
     }
 
-    return if (cached > 0) {
-        cached.dp
-    } else {
-        current
-    }
+    return height
+}
+
+private enum class InsetType {
+    BOTTOM,
+    TOP,
+    ;
 }

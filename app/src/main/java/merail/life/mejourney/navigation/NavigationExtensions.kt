@@ -42,7 +42,7 @@ fun NavController.navigateFromPush(
         }
 
         ContentRoute::class.qualifiedName -> {
-            if (currentContentId != (intentRoute as ContentRoute).contentId) {
+            if (currentContentId != (intentRoute as ContentRoute).contentForeignId) {
                 navigate(intentRoute)
             }
         }

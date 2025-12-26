@@ -14,7 +14,7 @@ internal data class HomeElementEntity(
     @ColumnInfo(name = HomeElementsFields.PLACE) val place: String,
     @ColumnInfo(name = HomeElementsFields.TITLE) val title: String,
     @ColumnInfo(name = HomeElementsFields.DESCRIPTION) val description: String,
-    @ColumnInfo(name = HomeElementsFields.URL) val url: String,
+    @ColumnInfo(name = HomeElementsFields.IMAGE_URL) val imageUrl: String,
 )
 
 internal fun HomeElementEntity.toModel() = HomeElementModel(
@@ -24,7 +24,7 @@ internal fun HomeElementEntity.toModel() = HomeElementModel(
     place = place,
     title = title,
     description = description,
-    url = url,
+    imageUrl = imageUrl,
 )
 
 internal fun HomeElementModel.toEntity() = HomeElementEntity(
@@ -34,5 +34,5 @@ internal fun HomeElementModel.toEntity() = HomeElementEntity(
     place = place,
     title = title,
     description = description,
-    url = url,
+    imageUrl = imageUrl,
 )
