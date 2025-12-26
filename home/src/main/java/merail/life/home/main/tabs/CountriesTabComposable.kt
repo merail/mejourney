@@ -83,7 +83,7 @@ private fun CountryItem(
 
             CoverImage(
                 id = item.id,
-                url = item.url,
+                url = item.imageUrl,
                 onLoadingSuccess =  {
                     isImageLoaded = true
                 },

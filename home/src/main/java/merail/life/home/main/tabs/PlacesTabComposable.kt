@@ -84,7 +84,7 @@ private fun PlaceItem(
         ) {
             CoverImage(
                 id = item.id,
-                url = item.url,
+                url = item.imageUrl,
                 contentScale = ContentScale.Crop,
                 loading = {
                     ImageLoading(

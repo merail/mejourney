@@ -41,7 +41,7 @@ class HomeScreenTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_1,
             description = TestHomeElements.DESCRIPTION_1,
-            url = TestHomeElements.URL_1,
+            imageUrl = TestHomeElements.URL_1,
         ),
     ).toHomeItems().toImmutableList()
 

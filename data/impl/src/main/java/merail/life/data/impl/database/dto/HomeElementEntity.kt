@@ -24,7 +24,7 @@ internal fun HomeElementEntity.toModel() = HomeElementModel(
     place = place,
     title = title,
     description = description,
-    url = imageUrl,
+    imageUrl = imageUrl,
 )
 
 internal fun HomeElementModel.toEntity() = HomeElementEntity(
@@ -34,5 +34,5 @@ internal fun HomeElementModel.toEntity() = HomeElementEntity(
     place = place,
     title = title,
     description = description,
-    imageUrl = url,
+    imageUrl = imageUrl,
 )

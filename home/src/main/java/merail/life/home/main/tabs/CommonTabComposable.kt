@@ -76,7 +76,7 @@ private fun CommonItem(
 
         CoverImage(
             id = item.id,
-            url = item.url,
+            url = item.imageUrl,
             navigateTo = navigateToContent,
             onLongClick = {
                 isImageLongClicked = isImageLongClicked.not()

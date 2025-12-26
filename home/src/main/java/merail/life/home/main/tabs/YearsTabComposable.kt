@@ -105,7 +105,7 @@ private fun YearItem(
         ) {
             CoverImage(
                 id = item.id,
-                url = item.url,
+                url = item.imageUrl,
                 loading = {
                     ImageLoading(Modifier.height(224.dp))
                 },

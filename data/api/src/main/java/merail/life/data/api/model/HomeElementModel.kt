@@ -7,5 +7,5 @@ data class HomeElementModel(
     val place: String,
     val title: String,
     val description: String,
-    val url: String,
+    val imageUrl: String,
 )

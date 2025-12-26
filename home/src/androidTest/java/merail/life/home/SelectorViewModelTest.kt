@@ -58,7 +58,7 @@ class SelectorViewModelTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_1,
             description = TestHomeElements.DESCRIPTION_1,
-            url = TestHomeElements.URL_1,
+            imageUrl = TestHomeElements.URL_1,
         ),
         HomeElementModel(
             id = TestHomeElements.ID_8,
@@ -67,7 +67,7 @@ class SelectorViewModelTest {
             place = TestHomeElements.PLACE_MURMANSK,
             title = TestHomeElements.TITLE_8,
             description = TestHomeElements.DESCRIPTION_8,
-            url = TestHomeElements.URL_8,
+            imageUrl = TestHomeElements.URL_8,
         ),
         HomeElementModel(
             id = TestHomeElements.ID_9,
@@ -76,7 +76,7 @@ class SelectorViewModelTest {
             place = TestHomeElements.PLACE_MOSCOW,
             title = TestHomeElements.TITLE_9,
             description = TestHomeElements.DESCRIPTION_9,
-            url = TestHomeElements.URL_9,
+            imageUrl = TestHomeElements.URL_9,
         ),
     )
 

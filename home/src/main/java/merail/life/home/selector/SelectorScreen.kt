@@ -119,7 +119,7 @@ private fun SelectorItem(
         ) {
             CoverImage(
                 id = item.id,
-                url = item.url,
+                url = item.imageUrl,
                 navigateTo = navigateToContent,
                 contentScale = ContentScale.Crop,
                 loading = {

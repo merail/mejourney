@@ -18,7 +18,7 @@ internal class ServerRepository @Inject constructor(
             place = it.place,
             title = it.title,
             description = it.description,
-            url = BuildConfig.DOMAIN_URL + it.imageUrl,
+            imageUrl = BuildConfig.DOMAIN_URL + it.imageUrl,
         )
     }
 
