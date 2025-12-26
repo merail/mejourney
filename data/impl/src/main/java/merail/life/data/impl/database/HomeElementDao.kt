@@ -21,9 +21,7 @@ internal interface HomeElementDao {
 
     @Transaction
     suspend fun syncData(entities: List<HomeElementEntity>) {
-        val serverIds = entities.map { it.id }
-
-        deleteMissing(serverIds)
+        deleteMissing(entities.map(HomeElementEntity::id))
 
         insertAll(entities)
     }
