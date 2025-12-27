@@ -1,5 +1,7 @@
 name: Build Release APK
 
+run-name: v${{ github.event.inputs.versionName }} (code ${{ github.event.inputs.versionCode }})
+
 on:
   workflow_dispatch:
     inputs:
