@@ -52,6 +52,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
 
             signingConfig = signingConfigs.getByName("release")
 
@@ -96,6 +97,12 @@ android {
             "FrequentlyChangingValue",
             "AutoboxingStateCreation",
         )
+    }
+}
+
+baselineProfile {
+    filter {
+        include("merail.life.mejourney.**")
     }
 }
 
