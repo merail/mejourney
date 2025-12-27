@@ -1,9 +1,11 @@
 package merail.life.home
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +49,7 @@ class HomeViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
+    private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var dataRepository: IDataRepository
     private lateinit var authRepository: IAuthRepository
     private lateinit var loadHomeElementsUseCase: LoadHomeElementsUseCase
@@ -77,6 +80,8 @@ class HomeViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        savedStateHandle = SavedStateHandle()
 
         dataRepository = mockk()
         authRepository = mockk()
@@ -120,6 +125,7 @@ class HomeViewModelTest {
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
+            savedStateHandle = savedStateHandle,
             loadHomeElementsUseCase = loadHomeElementsUseCase,
             loadSnowfallStateUseCase = loadSnowfallStateUseCase,
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
@@ -164,6 +170,7 @@ class HomeViewModelTest {
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
+            savedStateHandle = savedStateHandle,
             loadHomeElementsUseCase = loadHomeElementsUseCase,
             loadSnowfallStateUseCase = loadSnowfallStateUseCase,
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
@@ -175,6 +182,50 @@ class HomeViewModelTest {
 
         assertTrue(state is HomeLoadingState.Error)
         assertEquals(throwable, (state as HomeLoadingState.Error).exception)
+    }
+
+    /**
+     * Verifies that if SavedStateHandle already contains a filter (e.g., after process death),
+     * the ViewModel initialization triggers [loadHomeElementsByTabUseCase] instead of
+     * the default [loadHomeElementsUseCase].
+     */
+    @Test
+    fun `HomeViewModel init with saved filter loads filtered data`() = runTest {
+        val savedFilter = TabFilter.COUNTRY
+        val filteredData = listOf(elements[0])
+
+        savedStateHandle[HomeViewModel.KEY_TAB_FILTER] = savedFilter
+
+        every {
+            dataRepository.getHomeElementsFromDatabase(
+                tabFilter = savedFilter.toModel(),
+                selectorFilter = null,
+            )
+        } returns flowOf(RequestResult.Success(filteredData))
+
+        val viewModel = HomeViewModel(
+            authRepository = authRepository,
+            savedStateHandle = savedStateHandle,
+            loadHomeElementsUseCase = loadHomeElementsUseCase,
+            loadSnowfallStateUseCase = loadSnowfallStateUseCase,
+            loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
+        )
+
+        advanceUntilIdle()
+
+        val state = viewModel.state.value
+
+        assertTrue(state is HomeLoadingState.Success)
+        assertEquals(filteredData.toHomeItems(), state.items)
+
+        assertEquals(savedFilter, savedStateHandle.get<TabFilter>(HomeViewModel.KEY_TAB_FILTER))
+
+        verify(exactly = 1) {
+            dataRepository.getHomeElementsFromDatabase(savedFilter.toModel(), null)
+        }
+        verify(exactly = 0) {
+            dataRepository.getHomeElements()
+        }
     }
 
     /**
@@ -193,6 +244,7 @@ class HomeViewModelTest {
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
+            savedStateHandle = savedStateHandle,
             loadHomeElementsUseCase = loadHomeElementsUseCase,
             loadSnowfallStateUseCase = loadSnowfallStateUseCase,
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
@@ -233,6 +285,7 @@ class HomeViewModelTest {
 
         val viewModel = HomeViewModel(
             authRepository = authRepository,
+            savedStateHandle = savedStateHandle,
             loadHomeElementsUseCase = loadHomeElementsUseCase,
             loadSnowfallStateUseCase = loadSnowfallStateUseCase,
             loadHomeElementsByTabUseCase = loadHomeElementsByTabUseCase,
