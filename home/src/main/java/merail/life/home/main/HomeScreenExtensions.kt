@@ -56,7 +56,7 @@ internal fun rememberNavigateToContent(
 @Composable
 internal fun rememberStableLoading(
     isLoading: Boolean,
-    minDurationMs: Long = 1_000,
+    minDurationMs: Long = 400,
 ): Boolean {
     var visible by remember {
         mutableStateOf(false)
