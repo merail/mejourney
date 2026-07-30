@@ -16,7 +16,7 @@ internal class LoadSnowfallStateUseCase @Inject constructor(
     }.fold(
         onSuccess = {
             logger.d(HomeViewModel.TAG, "Snowfall state fetch. Success")
-            true
+            it
         },
         onFailure = { throwable ->
             logger.w(HomeViewModel.TAG, "Snowfall state fetch. Failure", throwable)

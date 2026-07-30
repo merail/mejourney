@@ -25,7 +25,7 @@ internal class AuthRepository @Inject constructor(
     private val isAuthorized = MutableStateFlow(false)
 
     init {
-        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_con2fig_defaults)
     }
 
     override suspend fun authorize() = withContext(Dispatchers.IO) {
